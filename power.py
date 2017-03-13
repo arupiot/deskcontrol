@@ -2,6 +2,7 @@ from tinkerforge.bricklet_dual_relay import BrickletDualRelay
 from navigation import StateModule
 from config import RELAY_POSITIONS
 
+
 class PowerModule(StateModule):
     name = "Power Control"
     controller = None
@@ -14,23 +15,26 @@ class PowerModule(StateModule):
         super(PowerModule, self).__init__(controller)
         print "Created PowerModule"
 
-
     def draw(self, clear=True):
+        if not self.controller.screen:
+            return
         if clear:
             self.controller.screen.clear_display()
         if not len(self.relays):
             self.controller.ipcon.enumerate()
-            self.controller.screen.write_line(3, 0,
+            self.controller.screen.write_line(
+                3, 0,
                 "  no relays")
             return
         relays = self.relays[self.relays.keys()[self.current]]
         self.controller.screen.write_line(2, 0, "  " + relays["name"])
         state = relays["instance"].get_state()[relays["relay"]]
-        if state: state = "Off"
-        else: state = "On "
+        if state:
+            state = "Off"
+        else:
+            state = "On "
         self.controller.screen.write_line(
             4, 0, "  " + str(state))
-
 
     def switch_relay(self):
         relays = self.relays[self.relays.keys()[self.current]]
@@ -41,14 +45,12 @@ class PowerModule(StateModule):
             relays["instance"].set_state(not state[0], state[1])
         self.draw(False)
 
-
     def power_off(self):
         if not self.afk:
             self.afk = True
             for relay in self.relays:
                 #  TODO: Less hacky pls
                 self.relays[relay]["instance"].set_state(False, True)
-
 
     def power_on(self):
         if self.afk:
@@ -57,21 +59,19 @@ class PowerModule(StateModule):
                 #  TODO: Less hacky pls
                 self.relays[relay]["instance"].set_state(False, False)
 
-
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
-            self.relays["relay"+position] = {
+            self.relays["relay" + position] = {
                 "instance": BrickletDualRelay(uid, self.controller.ipcon),
                 "name": RELAY_POSITIONS[position][0],
                 "relay": 0,
             }
-            self.relays["relay"+position+"+"] = {
-                "instance": self.relays["relay"+position]["instance"],
+            self.relays["relay" + position + "+"] = {
+                "instance": self.relays["relay" + position]["instance"],
                 "name": RELAY_POSITIONS[position][1],
                 "relay": 1,
             }
             print "Created Relay"
-
 
     def navigate(self, direction):
         if direction == "back":
@@ -86,10 +86,9 @@ class PowerModule(StateModule):
             if self.current >= len(self.relays):
                 self.current = 0
             elif self.current < 0:
-                self.current = len(self.relays)-1
+                self.current = len(self.relays) - 1
             # print "Output: " + str(list(self.outputs)[self.current])
             self.draw()
-
 
     def tick(self):
         self.draw(clear=False)
