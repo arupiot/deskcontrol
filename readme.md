@@ -1,4 +1,4 @@
-# ${1:IoT Desk Controller}
+# IoT Desk Controller
 Code to provide local controls for the Arup IoT desk. Utilises the tinkerforge hardware stack.
 
 ## Hardware
