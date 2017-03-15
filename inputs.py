@@ -2,7 +2,6 @@ from tinkerforge.bricklet_joystick import BrickletJoystick
 from tinkerforge.bricklet_multi_touch import BrickletMultiTouch
 from navigation import StateModule
 
-
 class InputModule(StateModule):
     controller = None
     inputs = {}
@@ -11,6 +10,7 @@ class InputModule(StateModule):
         self.controller = controller
         super(InputModule, self).__init__(controller)
         print "Created InputModule"
+
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 210:
@@ -34,6 +34,7 @@ class InputModule(StateModule):
                 self.multitouch)
             #  print "Created Multitouch Input"
 
+
     def joystick_position(self, x, y):
         if "SchedulerModule" in self.controller.modules:
             self.controller.modules["SchedulerModule"].motion_detected()
@@ -47,8 +48,10 @@ class InputModule(StateModule):
         elif x == -100:
             self.controller.navigate("forward")
 
+
     def joystick_pushed(self):
         self.controller.navigate("enter")
+
 
     def multitouch(self, state):
         if "SchedulerModule" in self.controller.modules:

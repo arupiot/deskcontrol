@@ -2,19 +2,16 @@
 HOST = "localhost"
 PORT = 4223
 
-LIGHTING_IP = "10.0.0.101"
-
 MODULES = [
     ("MenuModule", "navigation"),
     ("InputModule", "inputs"),
     ("SchedulerModule", "scheduler"),
-]
-
+    ]
 MENU_MODULES = [
     ("SensorModule", "sensors"),
     ("LightingModule", "lighting"),
     ("PowerModule", "power"),
-]
+    ]
 
 VA_POSITIONS = {
     'a': "Laptop Charger Power",

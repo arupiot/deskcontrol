@@ -1,7 +1,6 @@
 from PIL import Image
 from tinkerforge.bricklet_oled_128x64 import BrickletOLED128x64
 
-
 def draw_matrix(scr, start_column, start_row, column_count, row_count, pixels):
     pages = []
     for row in range(row_count):
@@ -20,7 +19,7 @@ def draw_matrix(scr, start_column, start_row, column_count, row_count, pixels):
         for column in range(column_count):
             data.append(pages[row][column])
     scr.new_window(start_column, start_column + column_count - 1,
-                   start_row, start_row + row_count - 1)
+                    start_row, start_row + row_count - 1)
     for i in range(0, len(data), 64):
         block = data[i:i + 64]
         scr.write(block + [0] * (64 - len(block)))
