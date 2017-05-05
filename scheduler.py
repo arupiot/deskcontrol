@@ -28,10 +28,8 @@ class SchedulerModule(StateModule):
             self.controller.modules["PowerModule"].power_on()
         #print("Motion Detected")
 
-
     #def detection_cycle_ended(self):
     #    print("Detection Cycle Ended")
-
 
     def setup_detection(self, uid):
         self.detector = BrickletMotionDetector(uid, self.controller.ipcon)
