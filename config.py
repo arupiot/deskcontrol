@@ -1,5 +1,5 @@
 
-HOST = "10.0.0.10"
+HOST = "localhost"
 PORT = 4223
 
 DESK_ID = "A"
