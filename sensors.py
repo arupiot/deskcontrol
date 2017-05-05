@@ -7,6 +7,7 @@ from tinkerforge.bricklet_ambient_light_v2 import BrickletAmbientLightV2
 from tinkerforge.bricklet_co2 import BrickletCO2
 from navigation import StateModule
 from config import VA_POSITIONS
+from screen import draw_image
 
 class SensorModule(StateModule):
     name = "Sensor Values"
@@ -25,37 +26,42 @@ class SensorModule(StateModule):
             self.controller.screen.clear_display()
         if not len(self.sensors):
             self.controller.ipcon.enumerate()
-            self.controller.screen.write_line(4, 0,
-                "   no sensors detected")
+            draw_image(self.controller, "NotConnected")
             return
         sensor = self.sensors[self.sensors.keys()[self.current]]
-        self.controller.screen.write_line(2, 0, "  " + sensor["name"])
         if sensor["type"] == "temperature":
-            self.controller.screen.write_line(4, 0, "    " +
+            if clear: draw_image(self.controller, "Temperature")
+            self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_temperature()/100.0) + " degC"
                 )
         if sensor["type"] == "irtemp":
-            self.controller.screen.write_line(4, 0, "    " +
+            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_ambient_temperature()/10.0) +
                 " degC"
                 )
         if sensor["type"] == "humidity":
-            self.controller.screen.write_line(4, 0, "    " +
+            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_humidity()/10.0) + " %RH"
                 )
         if sensor["type"] == "sound":
-            self.controller.screen.write_line(4, 0, "    " +
+            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_intensity())
                 )
         if sensor["type"] == "co2":
-            self.controller.screen.write_line(4, 0, "    " +
+            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_co2_concentration()) + " ppm"
                 )
         if sensor["type"] == "light":
-            self.controller.screen.write_line(4, 0, "    " +
+            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_illuminance()/100) + " lux"
                 )
         if sensor["type"] == "power":
+            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
             volts = sensor["instance"].get_voltage()/1000
             current = sensor["instance"].get_current()/1000
             power = volts * current

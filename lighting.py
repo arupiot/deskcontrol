@@ -1,5 +1,6 @@
 #from tinkerforge.bricklet_analog_out_v2 import BrickletAnalogOutV2
 from navigation import StateModule
+from screen import draw_image
 
 class LightingModule(StateModule):
     name = "Lighting Control"
@@ -18,8 +19,7 @@ class LightingModule(StateModule):
             self.controller.screen.clear_display()
         if not len(self.outputs):
             self.controller.ipcon.enumerate()
-            self.controller.screen.write_line(3, 0,
-                "  no lighting controller")
+            draw_image(self.controller, "NotConnected")
             return
         outputs = self.outputs[self.outputs.keys()[self.current]]
         self.controller.screen.write_line(2, 0, "  " + outputs["name"])

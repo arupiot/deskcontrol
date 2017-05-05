@@ -1,3 +1,4 @@
+import os
 from screen import screen_setup, draw_image
 
 class StateModule(object):
@@ -28,20 +29,23 @@ class MenuModule(StateModule):
 
 
     def draw(self, clear=True):
-        if clear:
-            self.controller.screen.clear_display()
-        #  draw_image(self.controller, self.items[self.current][1])
-        pos = 0
-        start = max(0, min(self.current - 2, len(self.items) - 5))
-        while pos < min(5, len(self.items)):
-            self.controller.screen.write_line(pos+2, 0,
-                "  " + self.items[start+pos][1])
-            self.controller.screen.write_line(pos+2, 23, " ")
-            pos = pos + 1
-        cursor = min(start+self.current, max(
-                     min(self.current, 2),
-                     self.current + 5 - len(self.items)))
-        self.controller.screen.write_line(cursor+2, 23, ">")
+        if os.path.isfile("images/" +
+                          str(self.items[self.current][0]) + ".png"):
+            draw_image(self.controller, self.items[self.current][0])
+        else:
+            if clear:
+                self.controller.screen.clear_display()
+            pos = 0
+            start = max(0, min(self.current - 2, len(self.items) - 5))
+            while pos < min(5, len(self.items)):
+                self.controller.screen.write_line(pos+2, 0,
+                    "  " + self.items[start+pos][1])
+                self.controller.screen.write_line(pos+2, 23, " ")
+                pos = pos + 1
+            cursor = min(start+self.current, max(
+                         min(self.current, 2),
+                         self.current + 5 - len(self.items)))
+            self.controller.screen.write_line(cursor+2, 23, ">")
 
     def add_menu_item(self, module):
         self.items.append((module.id, module.name))
