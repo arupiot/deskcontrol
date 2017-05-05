@@ -26,7 +26,7 @@ class SchedulerModule(StateModule):
         self.last_motion = datetime.now()
         if "PowerModule" in self.controller.modules:
             self.controller.modules["PowerModule"].power_on()
-        print("Motion Detected")
+        #print("Motion Detected")
 
 
     #def detection_cycle_ended(self):

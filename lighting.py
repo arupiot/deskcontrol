@@ -1,4 +1,4 @@
-from tinkerforge.bricklet_analog_out_v2 import BrickletAnalogOutV2
+#from tinkerforge.bricklet_analog_out_v2 import BrickletAnalogOutV2
 from navigation import StateModule
 
 class LightingModule(StateModule):
@@ -30,13 +30,14 @@ class LightingModule(StateModule):
 
 
     def try_bricklet(self, uid, device_identifier, position):
-        if device_identifier == 256:
-            self.outputs["task"] = {
-                "instance": BrickletAnalogOutV2(uid, self.controller.ipcon),
-                "name": "Task Lighting",
-                "type": "dimmer",
-            }
-            print "Created Analogue Output"
+        pass
+    #    if device_identifier == 256:
+    #        self.outputs["task"] = {
+    #            "instance": BrickletAnalogOutV2(uid, self.controller.ipcon),
+    #            "name": "Task Lighting",
+    #            "type": "dimmer",
+    #        }
+    #        print "Created Analogue Output"
 
 
     def navigate(self, direction):

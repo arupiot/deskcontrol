@@ -1,6 +1,6 @@
 from tinkerforge.bricklet_dual_relay import BrickletDualRelay
 from navigation import StateModule
-from config import RELAY_POSITIONS
+from config import RELAY_POSITIONS, DESK_ID
 
 class PowerModule(StateModule):
     name = "Power Control"
@@ -33,13 +33,14 @@ class PowerModule(StateModule):
 
 
     def switch_relay(self):
-        relays = self.relays[self.relays.keys()[self.current]]
-        state = relays["instance"].get_state()
-        if relays["relay"]:
-            relays["instance"].set_state(state[0], not state[1])
-        else:
-            relays["instance"].set_state(not state[0], state[1])
-        self.draw(False)
+        if self.relays:
+            relays = self.relays[self.relays.keys()[self.current]]
+            state = relays["instance"].get_state()
+            if relays["relay"]:
+                relays["instance"].set_state(state[0], not state[1])
+            else:
+                relays["instance"].set_state(not state[0], state[1])
+            self.draw(False)
 
 
     def power_off(self):
@@ -70,6 +71,7 @@ class PowerModule(StateModule):
                 "name": RELAY_POSITIONS[position][1],
                 "relay": 1,
             }
+            self.relays["relay"+position]["instance"] = DESK_ID
             print "Created Relay"
 
 

@@ -49,11 +49,12 @@ class MenuModule(StateModule):
 
 
     def try_bricklet(self, uid, device_identifier, position):
-        if device_identifier == 263:
-            screen_setup(self.controller, uid)
-            print "Screen Initialised"
-            return True
-        return False
+        if not self.controller.screen:
+            if device_identifier == 263:
+                screen_setup(self.controller, uid)
+                print "Screen Initialised"
+                return True
+            return False
 
 
     def navigate(self, direction):

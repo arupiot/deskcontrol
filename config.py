@@ -1,6 +1,8 @@
 
-HOST = "localhost"
+HOST = "10.0.0.10"
 PORT = 4223
+
+DESK_ID = "A"
 
 MODULES = [
     ("MenuModule", "navigation"),
