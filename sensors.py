@@ -30,38 +30,38 @@ class SensorModule(StateModule):
             return
         sensor = self.sensors[self.sensors.keys()[self.current]]
         if sensor["type"] == "temperature":
-            if clear: draw_image(self.controller, "Temperature")
+            if clear: draw_image(self.controller, sensor["type"])
             self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_temperature()/100.0) + " degC"
                 )
         if sensor["type"] == "irtemp":
-            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            if clear: draw_image(self.controller, sensor["type"])
             self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_ambient_temperature()/10.0) +
                 " degC"
                 )
         if sensor["type"] == "humidity":
-            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            if clear: draw_image(self.controller, sensor["type"])
             self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_humidity()/10.0) + " %RH"
                 )
         if sensor["type"] == "sound":
-            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            if clear: draw_image(self.controller, sensor["type"])
             self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_intensity())
                 )
         if sensor["type"] == "co2":
-            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            if clear: draw_image(self.controller, sensor["type"])
             self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_co2_concentration()) + " ppm"
                 )
         if sensor["type"] == "light":
-            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            if clear: draw_image(self.controller, sensor["type"])
             self.controller.screen.write_line(4, 8,
                 str(sensor["instance"].get_illuminance()/100) + " lux"
                 )
         if sensor["type"] == "power":
-            self.controller.screen.write_line(2, 0, "  " + sensor["name"])
+            if clear: draw_image(self.controller, sensor["type"])
             volts = sensor["instance"].get_voltage()/1000
             current = sensor["instance"].get_current()/1000
             power = volts * current
