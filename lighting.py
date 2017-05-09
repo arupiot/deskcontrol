@@ -1,9 +1,8 @@
-#from tinkerforge.bricklet_analog_out_v2 import BrickletAnalogOutV2
+from tinkerforge.bricklet_led_strip import BrickletLEDStrip
 from navigation import StateModule
-from screen import draw_image
 
 class LightingModule(StateModule):
-    name = "Lighting Control"
+    name = "lighting"
     controller = None
     outputs = {}
     current = 0
@@ -16,28 +15,27 @@ class LightingModule(StateModule):
 
     def draw(self, clear=True):
         if clear:
-            self.controller.screen.clear_display()
+            self.controller.screen.device.clear_display()
         if not len(self.outputs):
             self.controller.ipcon.enumerate()
-            draw_image(self.controller, "NotConnected")
+            self.controller.screen.draw("values", {})
             return
         outputs = self.outputs[self.outputs.keys()[self.current]]
-        self.controller.screen.write_line(2, 0, "  " + outputs["name"])
+        self.controller.screen.device.write_line(2, 0, "  " + outputs["name"])
         if outputs["type"] == "dimmer":
             percentage = outputs["instance"].get_output_voltage()/12000*100
-            self.controller.screen.write_line(
+            self.controller.screen.device.write_line(
                 4, 0, "  " + str(percentage) + " %")
 
 
     def try_bricklet(self, uid, device_identifier, position):
-        pass
-    #    if device_identifier == 256:
-    #        self.outputs["task"] = {
-    #            "instance": BrickletAnalogOutV2(uid, self.controller.ipcon),
-    #            "name": "Task Lighting",
-    #            "type": "dimmer",
-    #        }
-    #        print "Created Analogue Output"
+        if device_identifier == 231:
+            self.outputs["task"] = {
+                "instance": BrickletLEDStrip(uid, self.controller.ipcon),
+                "name": "Task Lighting",
+                "type": "dimmer",
+            }
+            print "Created Analogue Output"
 
 
     def navigate(self, direction):

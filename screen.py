@@ -1,5 +1,7 @@
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from tinkerforge.bricklet_oled_128x64 import BrickletOLED128x64
+
+FONT = 'images/Times New Roman.ttf'
 
 def draw_matrix(scr, start_column, start_row, column_count, row_count, pixels):
     pages = []
@@ -24,25 +26,75 @@ def draw_matrix(scr, start_column, start_row, column_count, row_count, pixels):
         block = data[i:i + 64]
         scr.write(block + [0] * (64 - len(block)))
 
+class Screen():
+    controller = None
+    device = None
 
-def draw_image(controller, image):
-    image = Image.open("images/" + str(image) + ".png")
-    image_data = image.load()
-    pixels = []
-    for row in range(64):
-        pixels.append([])
-        for column in range(128):
-            if column < image.size[0] and row < image.size[1]:
-                pixel = image_data[column, row] > 0
+    def __init__(self, controller, uid):
+        self.controller = controller
+        self.device = BrickletOLED128x64(uid, self.controller.ipcon)
+        self.device.clear_display()
+        self.device.set_display_configuration(0, False)
+        self.draw_splash()
+
+
+    def draw_splash(self):
+        image = Image.open("images/splash.png")
+        self.process_image(image)
+
+    def process_image(self, image):
+        image = image.convert("1")
+        image_data = image.load()
+        pixels = []
+        for row in range(64):
+            pixels.append([])
+            for column in range(128):
+                if column < image.size[0] and row < image.size[1]:
+                    pixel = image_data[column, row] > 0
+                else:
+                    pixel = False
+                pixels[row].append(pixel)
+        draw_matrix(self.device, 0, 0, 128, 8, pixels)
+
+
+    def draw(self, layout, params):
+        if layout in ["menu", "values"]:
+            image = Image.open("images/menu.png")
+        else:
+            image = Image.open("images/nothing.png")
+        forward = Image.open("images/forward.png")
+        back = Image.open("images/back.png")
+        if "icon" in params:
+            icon = Image.open("images/" + params["icon"] + ".png")
+
+        if layout == "menu":
+            font_t = ImageFont.truetype(FONT, 24)
+            d = ImageDraw.Draw(image)
+            image.paste(forward, (110, 20))
+            image.paste(icon, (90, 10))
+            d.text((10,30), params["title"].title(), fill=255, font=font_t)
+
+        elif layout == "values":
+            image.paste(back, (-5, 20))
+
+            font_t = ImageFont.truetype(FONT, 18)
+            font_v = ImageFont.truetype(FONT, 20)
+            d = ImageDraw.Draw(image)
+
+            if "title" not in params:
+                d.text((20, 12), "Nothing\nConnected", fill=255, font=font_t)
             else:
-                pixel = False
-            pixels[row].append(pixel)
-    draw_matrix(controller.screen, 0, 0, 128, 8, pixels)
+                d.text((15, 7), params["title"].title(), fill=255, font=font_t)
+                d.text((20, 28), params["value"], fill=255, font=font_v)
 
+        elif layout == "edit":
+            image.paste(back, (-5, 20))
 
-def screen_setup(controller, uid):
-    if not controller.screen:
-        controller.screen = BrickletOLED128x64(uid, controller.ipcon)
-        controller.screen.clear_display()
-        controller.screen.set_display_configuration(0, False)
-        draw_image(controller, "splash")
+            font_t = ImageFont.truetype(FONT, 18)
+            font_v = ImageFont.truetype(FONT, 20)
+            d = ImageDraw.Draw(image)
+
+            d.text((15, 7), params["title"].title(), fill=255, font=font_t)
+            d.text((20, 28), params["value"], fill=255, font=font_v)
+
+        self.process_image(image)

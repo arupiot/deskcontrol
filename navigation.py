@@ -1,5 +1,4 @@
-import os
-from screen import screen_setup, draw_image
+from screen import Screen
 
 class StateModule(object):
     modid = None
@@ -29,23 +28,22 @@ class MenuModule(StateModule):
 
 
     def draw(self, clear=True):
-        if os.path.isfile("images/" +
-                          str(self.items[self.current][0]) + ".png"):
-            draw_image(self.controller, self.items[self.current][0])
-        else:
-            if clear:
-                self.controller.screen.clear_display()
-            pos = 0
-            start = max(0, min(self.current - 2, len(self.items) - 5))
-            while pos < min(5, len(self.items)):
-                self.controller.screen.write_line(pos+2, 0,
-                    "  " + self.items[start+pos][1])
-                self.controller.screen.write_line(pos+2, 23, " ")
-                pos = pos + 1
-            cursor = min(start+self.current, max(
-                         min(self.current, 2),
-                         self.current + 5 - len(self.items)))
-            self.controller.screen.write_line(cursor+2, 23, ">")
+        self.controller.screen.draw("menu",
+            {"title": self.items[self.current][1],
+             "icon": self.items[self.current][1]})
+        #    if clear:
+        #        self.controller.screen.clear_display()
+        #    pos = 0
+        #    start = max(0, min(self.current - 2, len(self.items) - 5))
+        #    while pos < min(5, len(self.items)):
+        #        self.controller.screen.write_line(pos+2, 0,
+        #            "  " + self.items[start+pos][1])
+        #        self.controller.screen.write_line(pos+2, 23, " ")
+        #        pos = pos + 1
+        #    cursor = min(start+self.current, max(
+        #                 min(self.current, 2),
+        #                 self.current + 5 - len(self.items)))
+        #    self.controller.screen.write_line(cursor+2, 23, ">")
 
     def add_menu_item(self, module):
         self.items.append((module.id, module.name))
@@ -55,7 +53,7 @@ class MenuModule(StateModule):
     def try_bricklet(self, uid, device_identifier, position):
         if not self.controller.screen:
             if device_identifier == 263:
-                screen_setup(self.controller, uid)
+                self.controller.screen = Screen(self.controller, uid)
                 print "Screen Initialised"
                 return True
             return False
@@ -65,7 +63,7 @@ class MenuModule(StateModule):
         if direction == "forward":
             self.controller.change_module(self.items[self.current][0])
         if direction == "back":
-            draw_image(self.controller, "splash")
+            self.controller.screen.draw_splash()
             self.controller.current_module = None
         if direction in ["down", "up"]:
             if direction == "down":

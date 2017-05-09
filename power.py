@@ -1,10 +1,9 @@
 from tinkerforge.bricklet_dual_relay import BrickletDualRelay
 from navigation import StateModule
 from config import RELAY_POSITIONS, DESK_ID
-from screen import draw_image
 
 class PowerModule(StateModule):
-    name = "Power Control"
+    name = "power"
     controller = None
     relays = {}
     current = 0
@@ -18,17 +17,17 @@ class PowerModule(StateModule):
 
     def draw(self, clear=True):
         if clear:
-            self.controller.screen.clear_display()
+            self.controller.screen.device.clear_display()
         if not len(self.relays):
             self.controller.ipcon.enumerate()
-            draw_image(self.controller, "NotConnected")
+            self.controller.screen.draw("values", {})
             return
         relays = self.relays[self.relays.keys()[self.current]]
-        self.controller.screen.write_line(2, 0, "  " + relays["name"])
+        self.controller.screen.device.write_line(2, 0, "  " + relays["name"])
         state = relays["instance"].get_state()[relays["relay"]]
         if state: state = "Off"
         else: state = "On "
-        self.controller.screen.write_line(
+        self.controller.screen.device.write_line(
             4, 0, "  " + str(state))
 
 

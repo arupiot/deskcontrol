@@ -7,10 +7,9 @@ from tinkerforge.bricklet_ambient_light_v2 import BrickletAmbientLightV2
 from tinkerforge.bricklet_co2 import BrickletCO2
 from navigation import StateModule
 from config import VA_POSITIONS
-from screen import draw_image
 
 class SensorModule(StateModule):
-    name = "Sensor Values"
+    name = "sensors"
     controller = None
     sensors = {}
     current = 0
@@ -23,58 +22,33 @@ class SensorModule(StateModule):
 
     def draw(self, clear=True):
         if clear:
-            self.controller.screen.clear_display()
+            self.controller.screen.device.clear_display()
         if not len(self.sensors):
             self.controller.ipcon.enumerate()
-            draw_image(self.controller, "NotConnected")
+            self.controller.screen.draw("values", {})
             return
         sensor = self.sensors[self.sensors.keys()[self.current]]
         if sensor["type"] == "temperature":
-            if clear: draw_image(self.controller, sensor["type"])
-            self.controller.screen.write_line(4, 8,
-                str(sensor["instance"].get_temperature()/100.0) + " degC"
-                )
+            value = str(sensor["instance"].get_temperature()/100.0) + " degC"
         if sensor["type"] == "irtemp":
-            if clear: draw_image(self.controller, sensor["type"])
-            self.controller.screen.write_line(4, 8,
-                str(sensor["instance"].get_ambient_temperature()/10.0) +
-                " degC"
-                )
+            value = str(sensor["instance"].get_ambient_temperature()/10.0) + " degC"
         if sensor["type"] == "humidity":
-            if clear: draw_image(self.controller, sensor["type"])
-            self.controller.screen.write_line(4, 8,
-                str(sensor["instance"].get_humidity()/10.0) + " %RH"
-                )
+            value = str(sensor["instance"].get_humidity()/10.0) + " %RH"
         if sensor["type"] == "sound":
-            if clear: draw_image(self.controller, sensor["type"])
-            self.controller.screen.write_line(4, 8,
-                str(sensor["instance"].get_intensity())
-                )
+            value = str(sensor["instance"].get_intensity())
         if sensor["type"] == "co2":
-            if clear: draw_image(self.controller, sensor["type"])
-            self.controller.screen.write_line(4, 8,
-                str(sensor["instance"].get_co2_concentration()) + " ppm"
-                )
+            value = str(sensor["instance"].get_co2_concentration()) + " ppm"
         if sensor["type"] == "light":
-            if clear: draw_image(self.controller, sensor["type"])
-            self.controller.screen.write_line(4, 8,
-                str(sensor["instance"].get_illuminance()/100) + " lux"
-                )
+            value = str(sensor["instance"].get_illuminance()/100) + " lux"
         if sensor["type"] == "power":
-            if clear: draw_image(self.controller, sensor["type"])
             volts = sensor["instance"].get_voltage()/1000
             current = sensor["instance"].get_current()/1000
             power = volts * current
-            self.controller.screen.write_line(4, 0, "    " +
-                str(volts) + " V"
-                )
-            self.controller.screen.write_line(5, 0, "    " +
-                str(current) + " A"
-                )
-            self.controller.screen.write_line(6, 0, "    " +
-                str(power) + " W"
-                )
-
+            value = str(volts) + " V\n"
+            value = value + str(current) + " A\n"
+            value = value + str(power) + " W"
+        self.controller.screen.draw("values",
+            {"title": sensor["type"], "value": value,})
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 216:
