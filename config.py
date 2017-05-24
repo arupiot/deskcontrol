@@ -19,6 +19,7 @@ MENU_MODULES = [
     ("SensorModule", "sensors", _("Sensors")),
     ("LightingModule", "lighting", _("Lighting")),
     ("PowerModule", "power", _("Power")),
+    ("NetworkModule", "network", _("Network")),
     ]
 
 VA_POSITIONS = {
