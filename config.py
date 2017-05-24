@@ -1,3 +1,8 @@
+#import gettext
+#t = gettext.translation('deskcontrol', 'locale')
+#_ = t.ugettext
+def _(message):
+    return message
 
 HOST = "localhost"
 PORT = 4223
@@ -5,24 +10,25 @@ PORT = 4223
 DESK_ID = "A"
 
 MODULES = [
-    ("MenuModule", "navigation"),
-    ("InputModule", "inputs"),
-    ("SchedulerModule", "scheduler"),
+    ("MenuModule", "navigation", _("Navigation")),
+    ("InputModule", "inputs", _("Inputs")),
+    ("SchedulerModule", "scheduler", _("Schedule")),
+    ("RFIDModule", "rfid", _("RFID")),
     ]
 MENU_MODULES = [
-    ("SensorModule", "sensors"),
-    ("LightingModule", "lighting"),
-    ("PowerModule", "power"),
+    ("SensorModule", "sensors", _("Sensors")),
+    ("LightingModule", "lighting", _("Lighting")),
+    ("PowerModule", "power", _("Power")),
     ]
 
 VA_POSITIONS = {
-    'a': "Laptop Charger Power",
-    'b': "Monitor Power",
-    'c': "USB Outlets",
-    'd': "Lighting Power",
+    'a': _("Laptop Charger Power"),
+    'b': _("Monitor Power"),
+    'c': _("USB Outlets"),
+    'd': _("Lighting Power"),
 }
 
 RELAY_POSITIONS = {
-    'a': ("Laptop Charger", "Monitor"),
-    'b': ("USB Outlets", "Lighting"),
+    'a': (_("Laptop Charger"), _("Monitor")),
+    'b': (_("USB Outlets"), _("Lighting")),
 }

@@ -5,6 +5,9 @@
 import sched, time
 from tinkerforge.ip_connection import IPConnection
 from config import *
+#import gettext
+#gettext.install('deskcontrol', 'locale', unicode=1)
+
 
 class Controller:
     ipcon = None

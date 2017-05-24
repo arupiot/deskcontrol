@@ -75,4 +75,4 @@ class MenuModule(StateModule):
             elif self.current < 0:
                 self.current = len(self.items)-1
             self.draw(clear=False)
-            print "Menu: " + str(self.items[self.current][1])
+            # print "Menu: " + str(self.items[self.current][1])

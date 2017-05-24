@@ -4,6 +4,7 @@ from tinkerforge.bricklet_humidity import BrickletHumidity
 from tinkerforge.bricklet_voltage_current import BrickletVoltageCurrent
 from tinkerforge.bricklet_sound_intensity import BrickletSoundIntensity
 from tinkerforge.bricklet_ambient_light_v2 import BrickletAmbientLightV2
+from tinkerforge.bricklet_distance_ir import BrickletDistanceIR
 from tinkerforge.bricklet_co2 import BrickletCO2
 from navigation import StateModule
 from config import VA_POSITIONS
@@ -44,11 +45,13 @@ class SensorModule(StateModule):
             volts = sensor["instance"].get_voltage()/1000
             current = sensor["instance"].get_current()/1000
             power = volts * current
-            value = str(volts) + " V\n"
-            value = value + str(current) + " A\n"
-            value = value + str(power) + " W"
+            # value = str(volts) + " V\n"
+            # value = value + str(current) + " A\n"
+            value = str(power) + " W"
+        if sensor["type"] == "dist":
+            value = str(sensor["instance"].get_distance()/10+13) + " cm"
         self.controller.screen.draw("values",
-            {"title": sensor["type"], "value": value,})
+            {"title": sensor["name"], "value": value,})
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 216:
@@ -100,6 +103,13 @@ class SensorModule(StateModule):
                 "type": "power",
             }
             #  print "Created Power Sensor"
+        elif device_identifier == 25:
+            self.sensors["dist"] = {
+                "instance": BrickletDistanceIR(uid, self.controller.ipcon),
+                "name": "Desk Height",
+                "type": "dist",
+            }
+            #  print "Created Power Sensor"
 
 
     def navigate(self, direction):
@@ -114,7 +124,7 @@ class SensorModule(StateModule):
                 self.current = 0
             elif self.current < 0:
                 self.current = len(self.sensors)-1
-            print "Sensor: " + str(list(self.sensors)[self.current])
+            # print "Sensor: " + str(list(self.sensors)[self.current])
             self.draw()
 
 

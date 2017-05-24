@@ -8,7 +8,7 @@ class SchedulerModule(StateModule):
     always_tick = True
 
     last_motion = None
-    poweroff = 2
+    poweroff = 1
 
     def __init__(self, controller):
         self.controller = controller
@@ -26,6 +26,7 @@ class SchedulerModule(StateModule):
         self.last_motion = datetime.now()
         if "PowerModule" in self.controller.modules:
             self.controller.modules["PowerModule"].power_on()
+            self.controller.modules["LightingModule"].set_light()
         #print("Motion Detected")
 
     #def detection_cycle_ended(self):
@@ -41,7 +42,7 @@ class SchedulerModule(StateModule):
 
 
     def tick(self):
-        if self.last_motion:
+        if self.last_motion and self.detector:
             if (self.last_motion < datetime.now() -
                     timedelta(minutes = self.poweroff)):
                 print "No motion detected - turning off"

@@ -29,6 +29,7 @@ class InputModule(StateModule):
         elif device_identifier == 234:
             self.inputs["multitouch"] = BrickletMultiTouch(
                 uid, self.controller.ipcon)
+            self.inputs["multitouch"].set_electrode_sensitivity(125)
             self.inputs["multitouch"].register_callback(
                 self.inputs["multitouch"].CALLBACK_TOUCH_STATE,
                 self.multitouch)
@@ -50,7 +51,7 @@ class InputModule(StateModule):
 
 
     def joystick_pushed(self):
-        self.controller.navigate("enter")
+        self.controller.navigate("forward")
 
 
     def multitouch(self, state):
