@@ -4,7 +4,7 @@
 def _(message):
     return message
 
-HOST = "localhost"
+HOST = "brickd"
 PORT = 4223
 
 DESK_ID = "A"
