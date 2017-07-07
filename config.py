@@ -1,8 +1,11 @@
-#import gettext
-#t = gettext.translation('deskcontrol', 'locale')
-#_ = t.ugettext
+# import gettext
+# t = gettext.translation('deskcontrol', 'locale')
+# _ = t.ugettext
+
+
 def _(message):
     return message
+
 
 HOST = "brickd"
 PORT = 4223
@@ -14,13 +17,14 @@ MODULES = [
     ("InputModule", "inputs", _("Inputs")),
     ("SchedulerModule", "scheduler", _("Schedule")),
     ("RFIDModule", "rfid", _("RFID")),
-    ]
+]
+
 MENU_MODULES = [
     ("SensorModule", "sensors", _("Sensors")),
     ("LightingModule", "lighting", _("Lighting")),
     ("PowerModule", "power", _("Power")),
     ("NetworkModule", "network", _("Network")),
-    ]
+]
 
 VA_POSITIONS = {
     'a': _("Laptop Charger Power"),

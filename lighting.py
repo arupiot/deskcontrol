@@ -1,6 +1,7 @@
 from tinkerforge.bricklet_led_strip import BrickletLEDStrip
 from navigation import StateModule
 
+
 class LightingModule(StateModule):
     name = "lighting"
     controller = None
@@ -19,12 +20,10 @@ class LightingModule(StateModule):
         {"name": "Green", "color": (0, 255, 0)},
     ]
 
-
     def __init__(self, controller):
         self.controller = controller
         super(LightingModule, self).__init__(controller)
-        print "Created LightingModule"
-
+        print("Created LightingModule")
 
     def draw(self, clear=True):
         if clear:
@@ -36,17 +35,18 @@ class LightingModule(StateModule):
         outputs = self.outputs[self.outputs.keys()[self.current]]
 
         if outputs["type"] == "dimmer":
-            self.controller.screen.draw("values",
+            self.controller.screen.draw(
+                "values",
                 {"title": outputs["name"],
-                 "value": str(self.intens) + " %",})
+                 "value": str(self.intens) + " %", })
         if outputs["type"] == "select":
-            self.controller.screen.draw("values",
+            self.controller.screen.draw(
+                "values",
                 {"title": outputs["name"],
-                 "value": str(self.colors[self.color]["name"]),})
-
+                 "value": str(self.colors[self.color]["name"]), })
 
     def try_bricklet(self, uid, device_identifier, position):
-        if device_identifier == 231 and not "taskint" in self.outputs:
+        if device_identifier == 231 and "taskint" not in self.outputs:
             self.device = BrickletLEDStrip(uid, self.controller.ipcon)
             self.outputs["taskint"] = {
                 "name": "Task Intensity",
@@ -59,8 +59,7 @@ class LightingModule(StateModule):
             self.device.set_chip_type(self.device.CHIP_TYPE_WS2811)
             self.device.set_channel_mapping(self.device.CHANNEL_MAPPING_BRG)
             self.set_light()
-            print "Created LEDBrick Output"
-
+            print("Created LEDBrick Output")
 
     def change_light(self, direction):
         if self.outputs[self.outputs.keys()[self.current]]["type"] == "dimmer":
@@ -80,15 +79,13 @@ class LightingModule(StateModule):
                 else:
                     self.color -= 1
         self.set_light()
-        #print "change " + direction + str(self.color)
-
-
+        # print "change " + direction + str(self.color)
 
     def set_light(self):
         color = self.colors[self.color]["color"]
-        color = (int(color[0]*self.intens/100),
-                 int(color[1]*self.intens/100),
-                 int(color[2]*self.intens/100))
+        color = (int(color[0] * self.intens / 100),
+                 int(color[1] * self.intens / 100),
+                 int(color[2] * self.intens / 100))
         r = [color[0] for i in range(16)]
         b = [color[1] for i in range(16)]
         g = [color[2] for i in range(16)]
@@ -98,7 +95,6 @@ class LightingModule(StateModule):
         b = [0 for i in range(16)]
         g = [0 for i in range(16)]
         self.device.set_rgb_values(17, 1, r, b, g)
-
 
     def navigate(self, direction):
         output = self.outputs[self.outputs.keys()[self.current]]
@@ -117,7 +113,7 @@ class LightingModule(StateModule):
                 if self.current >= len(self.outputs):
                     self.current = 0
                 elif self.current < 0:
-                    self.current = len(self.outputs)-1
+                    self.current = len(self.outputs) - 1
                 # print "Output: " + str(list(self.outputs)[self.current])
                 self.draw()
         else:
@@ -128,8 +124,6 @@ class LightingModule(StateModule):
             if direction in ["down", "up"]:
                 self.change_light(direction)
                 self.draw()
-
-
 
     def tick(self):
         self.draw(clear=False)

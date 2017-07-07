@@ -1,6 +1,7 @@
 from tinkerforge.bricklet_nfc_rfid import BrickletNFCRFID
 from navigation import StateModule
 
+
 class RFIDModule(StateModule):
     name = "rfid"
     controller = None
@@ -12,11 +13,12 @@ class RFIDModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(RFIDModule, self).__init__(controller)
-        print "Created RFIDModule"
+        print("Created RFIDModule")
 
     def draw(self, clear=True):
-        self.controller.screen.draw("values",
-            {"title": "Hello,", "value": "     User!",})
+        self.controller.screen.draw(
+            "values",
+            {"title": "Hello,", "value": "     User!", })
 
     def read_card(self, state, idle, nr):
         if idle:
@@ -28,9 +30,9 @@ class RFIDModule(StateModule):
             print("Found tag of type " + str(ret.tag_type) + " with ID [" +
                   " ".join(map(str, map(hex, ret.tid[:ret.tid_length]))) + "]")
             if (not self.previous and self.controller.current_module and
-                self.controller.current_module.id != "RFIDModule"):
+                    self.controller.current_module.id != "RFIDModule"):
                 self.previous = self.controller.current_module.id
-            self.controller.change_module("RFIDModule")
+                self.controller.change_module("RFIDModule")
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 246:
@@ -41,12 +43,12 @@ class RFIDModule(StateModule):
             }
             self.readers["card"]["instance"].register_callback(
                 self.readers["card"]["instance"].CALLBACK_STATE_CHANGED,
-                lambda x, y: self.read_card(x, y,
+                lambda x, y: self.read_card(
+                    x, y,
                     self.readers["card"]["instance"]))
             self.readers["card"]["instance"].request_tag_id(
                 self.readers["card"]["instance"].TAG_TYPE_MIFARE_CLASSIC)
-            print "Created Card Reader"
-
+            print("Created Card Reader")
 
     def navigate(self, direction):
         if self.previous:

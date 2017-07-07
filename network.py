@@ -3,6 +3,7 @@ import socket
 import fcntl
 import struct
 
+
 def get_ip_address(ifname):
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -11,8 +12,9 @@ def get_ip_address(ifname):
             0x8915,  # SIOCGIFADDR
             struct.pack('256s', ifname[:15])
         )[20:24])
-    except:
+    except Exception:
         return "No wlan0"
+
 
 class NetworkModule(StateModule):
     name = "network"
@@ -22,7 +24,7 @@ class NetworkModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(NetworkModule, self).__init__(controller)
-        print "Created NetworkModule"
+        print("Created NetworkModule")
 
     def try_bricklet(self, uid, device_identifier, position):
         pass
@@ -31,9 +33,9 @@ class NetworkModule(StateModule):
         self.ip = get_ip_address("wlan0")
         if clear:
             self.controller.screen.device.clear_display()
-        self.controller.screen.draw("values",
-            {"title": "IP Address", "value": str(self.ip),})
+        self.controller.screen.draw(
+            "values",
+            {"title": "IP Address", "value": str(self.ip), })
 
     def navigate(self, direction):
         self.controller.prev_module()
-

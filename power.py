@@ -2,6 +2,7 @@ from tinkerforge.bricklet_dual_relay import BrickletDualRelay
 from navigation import StateModule
 from config import RELAY_POSITIONS
 
+
 class PowerModule(StateModule):
     name = "power"
     controller = None
@@ -12,8 +13,7 @@ class PowerModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(PowerModule, self).__init__(controller)
-        print "Created PowerModule"
-
+        print("Created PowerModule")
 
     def draw(self, clear=True):
         if clear:
@@ -24,12 +24,14 @@ class PowerModule(StateModule):
             return
         relays = self.relays[self.relays.keys()[self.current]]
         state = relays["instance"].get_state()[relays["relay"]]
-        if state: state = "Off"
-        else: state = "On "
+        if state:
+            state = "Off"
+        else:
+            state = "On "
 
-        self.controller.screen.draw("values",
-            {"title": relays["name"], "value": str(state),})
-
+        self.controller.screen.draw(
+            "values",
+            {"title": relays["name"], "value": str(state), })
 
     def switch_relay(self):
         if self.relays:
@@ -43,14 +45,12 @@ class PowerModule(StateModule):
             # TODO: Fixme
             self.controller.modules["LightingModule"].set_light()
 
-
     def power_off(self):
         if not self.afk:
             self.afk = True
             for relay in self.relays:
                 #  TODO: Less hacky pls
                 self.relays[relay]["instance"].set_state(False, True)
-
 
     def power_on(self):
         if self.afk:
@@ -59,22 +59,20 @@ class PowerModule(StateModule):
                 #  TODO: Less hacky pls
                 self.relays[relay]["instance"].set_state(False, False)
 
-
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
-            self.relays["relay"+position] = {
+            self.relays["relay" + position] = {
                 "instance": BrickletDualRelay(uid, self.controller.ipcon),
                 "name": RELAY_POSITIONS[position][0],
                 "relay": 0,
             }
-            self.relays["relay"+position+"+"] = {
-                "instance": self.relays["relay"+position]["instance"],
+            self.relays["relay" + position + "+"] = {
+                "instance": self.relays["relay" + position]["instance"],
                 "name": RELAY_POSITIONS[position][1],
                 "relay": 1,
             }
-            #self.relays["relay"+position]["instance"] = DESK_ID
-            print "Created Relay"
-
+            # self.relays["relay"+position]["instance"] = DESK_ID
+            print("Created Relay")
 
     def navigate(self, direction):
         if direction == "back":
@@ -89,10 +87,9 @@ class PowerModule(StateModule):
             if self.current >= len(self.relays):
                 self.current = 0
             elif self.current < 0:
-                self.current = len(self.relays)-1
+                self.current = len(self.relays) - 1
             # print "Output: " + str(list(self.outputs)[self.current])
             self.draw()
-
 
     def tick(self):
         self.draw(clear=False)
