@@ -1,2 +1,6 @@
 tinkerforge
 pillow
+rdflib
+influxdb
+requests
+pycrypto

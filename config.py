@@ -7,11 +7,19 @@ def _(message):
     return message
 
 
-# Host where brickd is running
-HOST = "brickd"
+HOST = "localhost"
 PORT = 4223
 
-DESK_ID = "A"
+SHORT_IDENT = "0000"
+CREDS_PATH = "./"
+CREDS_PREFIX = "creds.json"
+
+INFLUX_AUTH = {
+    "host": 'server',
+    "port": 8086,
+    "user": 'root',
+    "pass": 'pass',
+    "db": 'example'}
 
 MODULES = [
     ("MenuModule", "navigation", _("Navigation")),
@@ -19,8 +27,8 @@ MODULES = [
     ("SchedulerModule", "scheduler", _("Schedule")),
     ("RFIDModule", "rfid", _("RFID")),
     ("BrickModule", "brick", _("Brick")),
-    ("IdentityModule", "identity", _("Identity")),
     ("InfluxModule", "influx", _("InfluxDB")),
+    ("IdentityModule", "identity", _("Identity")),
 ]
 
 MENU_MODULES = [
@@ -41,3 +49,13 @@ RELAY_POSITIONS = {
     'a': (_("Laptop Charger"), _("Monitor")),
     'b': (_("USB Outlets"), _("Lighting")),
 }
+
+try:
+    config_module = __import__('config_local',
+                               globals(), locals())
+
+    for setting in dir(config_module):
+        if setting == setting.upper():
+            locals()[setting] = getattr(config_module, setting)
+except Exception:
+    pass

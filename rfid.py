@@ -13,7 +13,6 @@ class RFIDModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(RFIDModule, self).__init__(controller)
-        print("Created RFIDModule")
 
     def draw(self, clear=True):
         self.controller.screen.draw(
@@ -48,7 +47,7 @@ class RFIDModule(StateModule):
                     self.readers["card"]["instance"]))
             self.readers["card"]["instance"].request_tag_id(
                 self.readers["card"]["instance"].TAG_TYPE_MIFARE_CLASSIC)
-            print("Created Card Reader")
+            # print("Created Card Reader")
 
     def navigate(self, direction):
         if self.previous:

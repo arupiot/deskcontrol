@@ -23,7 +23,6 @@ class LightingModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(LightingModule, self).__init__(controller)
-        print("Created LightingModule")
 
     def draw(self, clear=True):
         if clear:

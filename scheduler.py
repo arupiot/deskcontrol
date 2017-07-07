@@ -14,12 +14,11 @@ class SchedulerModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(SchedulerModule, self).__init__(controller)
-        print("Created SchedulerModule")
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 233:
             self.setup_detection(uid)
-            print("Setup Motion Detection")
+            # print("Setup Motion Detection")
 
     def motion_detected(self):
         self.last_motion = datetime.now()

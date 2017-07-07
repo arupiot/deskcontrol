@@ -10,7 +10,6 @@ class InputModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(InputModule, self).__init__(controller)
-        print("Created InputModule")
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 210:

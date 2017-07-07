@@ -11,6 +11,9 @@ class StateModule(object):
     def draw(self):
         pass
 
+    def try_bricklet(self, uid, device_identifier, position):
+        pass
+
     def navigate(self, direction):
         pass
 
@@ -26,7 +29,6 @@ class MenuModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(MenuModule, self).__init__(controller)
-        print("Created MenuModule")
 
     def draw(self, clear=True):
         self.controller.screen.draw(
@@ -55,7 +57,7 @@ class MenuModule(StateModule):
         if not self.controller.screen:
             if device_identifier == 263:
                 self.controller.screen = Screen(self.controller, uid)
-                print("Screen Initialised")
+                # print("Screen Initialised")
                 return True
             return False
 

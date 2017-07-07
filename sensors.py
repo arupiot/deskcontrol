@@ -19,7 +19,6 @@ class SensorModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(SensorModule, self).__init__(controller)
-        print("Created SensorModule")
 
     def draw(self, clear=True):
         if clear:
@@ -29,31 +28,37 @@ class SensorModule(StateModule):
             self.controller.screen.draw("values", {})
             return
         sensor = self.sensors[self.sensors.keys()[self.current]]
+        self.update_sensor(sensor)
+        self.controller.screen.draw(
+            "values",
+            {"title": sensor["name"],
+             "value": str(sensor["value"]) + sensor["units"], })
+
+    def update_sensor(self, sensor):
         if sensor["type"] == "temperature":
-            value = str(sensor["instance"].get_temperature() / 100.0) + " degC"
+            value = sensor["instance"].get_temperature() / 100.0
         if sensor["type"] == "irtemp":
-            value = str(
-                sensor["instance"].get_ambient_temperature() / 10.0) + " degC"
+            value = sensor["instance"].get_ambient_temperature() / 10.0
         if sensor["type"] == "humidity":
-            value = str(sensor["instance"].get_humidity() / 10.0) + " %RH"
+            value = sensor["instance"].get_humidity() / 10.0
         if sensor["type"] == "sound":
-            value = str(sensor["instance"].get_intensity())
+            value = sensor["instance"].get_intensity()
         if sensor["type"] == "co2":
-            value = str(sensor["instance"].get_co2_concentration()) + " ppm"
+            value = sensor["instance"].get_co2_concentration()
         if sensor["type"] == "light":
-            value = str(sensor["instance"].get_illuminance() / 100) + " lux"
+            value = sensor["instance"].get_illuminance() / 100
         if sensor["type"] == "power":
             volts = sensor["instance"].get_voltage() / 1000
             current = sensor["instance"].get_current() / 1000
             power = volts * current
-            # value = str(volts) + " V\n"
-            # value = value + str(current) + " A\n"
-            value = str(power) + " W"
+            value = power
         if sensor["type"] == "dist":
-            value = str(sensor["instance"].get_distance() / 10 + 13) + " cm"
-        self.controller.screen.draw(
-            "values",
-            {"title": sensor["name"], "value": value, })
+            value = sensor["instance"].get_distance() / 10 + 13
+        sensor["value"] = value
+
+    def sensor_callback(self, value):
+        # Callbacks not implemented because TF callbacks are terrible
+        pass
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 216:
@@ -61,6 +66,8 @@ class SensorModule(StateModule):
                 "instance": BrickletTemperature(uid, self.controller.ipcon),
                 "name": "Temperature",
                 "type": "temperature",
+                "value": None,
+                "units": " degC",
             }
             ret = self.sensors["temp"]
             #  print "Created Temperature Sensor"
@@ -69,6 +76,8 @@ class SensorModule(StateModule):
                 "instance": BrickletTemperatureIR(uid, self.controller.ipcon),
                 "name": "IR Temperature",
                 "type": "irtemp",
+                "value": None,
+                "units": " degC",
             }
             ret = self.sensors["irtemp"]
             #  print "Created IR Temperature Sensor"
@@ -77,6 +86,8 @@ class SensorModule(StateModule):
                 "instance": BrickletHumidity(uid, self.controller.ipcon),
                 "name": "Humidity",
                 "type": "humidity",
+                "value": None,
+                "units": " %RH",
             }
             ret = self.sensors["hum"]
             #  print "Created Humidity Sensor"
@@ -85,6 +96,8 @@ class SensorModule(StateModule):
                 "instance": BrickletAmbientLightV2(uid, self.controller.ipcon),
                 "name": "Ambient Light",
                 "type": "light",
+                "value": None,
+                "units": " lux",
             }
             ret = self.sensors["light"]
             #  print "Created Ambient Light Sensor"
@@ -93,6 +106,8 @@ class SensorModule(StateModule):
                 "instance": BrickletSoundIntensity(uid, self.controller.ipcon),
                 "name": "Sound Intensity",
                 "type": "sound",
+                "value": None,
+                "units": "",
             }
             ret = self.sensors["sound"]
             #  print "Created Sound Intensity Sensor"
@@ -101,6 +116,8 @@ class SensorModule(StateModule):
                 "instance": BrickletCO2(uid, self.controller.ipcon),
                 "name": "Carbon Dioxide",
                 "type": "co2",
+                "value": None,
+                "units": " ppm",
             }
             ret = self.sensors["co2"]
             #  print "Created CO2 Sensor"
@@ -109,6 +126,8 @@ class SensorModule(StateModule):
                 "instance": BrickletVoltageCurrent(uid, self.controller.ipcon),
                 "name": VA_POSITIONS[position],
                 "type": "power",
+                "value": None,
+                "units": " W",
             }
             ret = self.sensors["va" + position]
             #  print "Created Power Sensor"
@@ -117,11 +136,13 @@ class SensorModule(StateModule):
                 "instance": BrickletDistanceIR(uid, self.controller.ipcon),
                 "name": "Desk Height",
                 "type": "dist",
+                "value": None,
+                "units": " cm",
             }
             ret = self.sensors["dist"]
             #  print "Created Power Sensor"
-        if "InfluxModule" in self.controller.modules:
-            self.controller.modules["InfluxModule"].add_sensor(ret)
+        # if "InfluxModule" in self.controller.modules:
+        #    self.controller.modules["InfluxModule"].add_sensor(ret)
         if "BrickModule" in self.controller.modules:
             self.controller.modules["BrickModule"].add_sensor(ret)
 

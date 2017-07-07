@@ -13,7 +13,6 @@ class PowerModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(PowerModule, self).__init__(controller)
-        print("Created PowerModule")
 
     def draw(self, clear=True):
         if clear:

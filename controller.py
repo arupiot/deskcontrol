@@ -21,7 +21,7 @@ class Controller:
 
     scheduler = sched.scheduler(time.time, time.sleep)
 
-    def __init__(self, ipcon):
+    def __init__(self):
         self.ipcon = IPConnection()
         self.ipcon.connect(HOST, PORT)
 
@@ -43,7 +43,7 @@ class Controller:
             module[1], fromlist=[module[0]]), module[0])(self)
         if self.modules[module[0]].always_tick:
             self.ticklist.append(module[0])
-        print("initialised " + module[0])
+        print("Loaded " + module[0])
 
     def tick(self):
         if self.current_module:
@@ -85,6 +85,10 @@ class Controller:
 
 
 if __name__ == "__main__":
-    desk = Controller()
-    desk.tick()
-    desk.scheduler.run()
+    try:
+        desk = Controller()
+        desk.tick()
+        desk.scheduler.run()
+    except KeyboardInterrupt:
+        desk.ipcon.disconnect()
+        print("Exiting")

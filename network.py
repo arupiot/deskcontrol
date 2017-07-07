@@ -24,10 +24,6 @@ class NetworkModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(NetworkModule, self).__init__(controller)
-        print("Created NetworkModule")
-
-    def try_bricklet(self, uid, device_identifier, position):
-        pass
 
     def draw(self, clear=True):
         self.ip = get_ip_address("wlan0")
