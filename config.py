@@ -11,17 +11,18 @@ def _(message):
 HOST = "localhost"
 PORT = 4223
 
-if os.environ['HOSTNAME']:
+if 'HOSTNAME' in os.environ:
     SHORT_IDENT = os.environ['HOSTNAME'][0:6]
-else:
-    SHORT_IDENT = "XXXXXX"
 
-INFLUX_AUTH = {
-    "host": os.environ['INFLUX_HOST'],
-    "port": os.environ['INFLUX_PORT'],
-    "user": os.environ['INFLUX_USERNAME'],
-    "pass": os.environ['INFLUX_PASSWORD'],
-    "db": os.environ['INFLUX_DBNAME']}
+if all(x in os.environ for x in [
+        'INFLUX_HOST', 'INFLUX_PORT', 'INFLUX_USERNAME',
+        'INFLUX_PASSWORD', 'INFLUX_DBNAME']):
+    INFLUX_AUTH = {
+        "host": os.environ['INFLUX_HOST'],
+        "port": os.environ['INFLUX_PORT'],
+        "user": os.environ['INFLUX_USERNAME'],
+        "pass": os.environ['INFLUX_PASSWORD'],
+        "db": os.environ['INFLUX_DBNAME']}
 
 MODULES = [
     ("MenuModule", "navigation", _("Navigation")),

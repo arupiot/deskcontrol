@@ -14,29 +14,33 @@ class InfluxModule(StateModule):
         super(InfluxModule, self).__init__(controller)
 
     def connect(self, auth):
-        self.client = InfluxDBClient(
-            auth["host"],
-            auth["port"],
-            auth["user"],
-            auth["pass"],
-            auth["db"])
-        self.client.create_database(auth["db"])
+        if auth:
+            self.client = InfluxDBClient(
+                auth["host"],
+                auth["port"],
+                auth["user"],
+                auth["pass"],
+                auth["db"])
+        if self.client:
+            self.client.create_database(auth["db"])
 
     def push_value(self, key, value, tags={}):
-        data = {
-            "measurement": key,
-            "time": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
-            "tags": tags,
-            "fields": {"value": value, }
-        }
-        self.client.write_points([data])
+        if self.client:
+            data = {
+                "measurement": key,
+                "time":
+                    datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+                "tags": tags,
+                "fields": {"value": value, }
+            }
+            self.client.write_points([data])
 
     def add_sensor(self, sensor):
         # Callbacks not implemented because TF callbacks are terrible
         pass
 
     def tick(self):
-        if "SensorModule" in self.controller.modules:
+        if self.client and "SensorModule" in self.controller.modules:
             for sensor in self.controller.modules["SensorModule"].sensors:
                 if (not sensor.updated or
                         sensor.updated < (
