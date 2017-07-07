@@ -47,4 +47,5 @@ class InfluxModule(StateModule):
                         sensor)
                     self.push_value(
                         str(ident + "_" + sensor["type"]),
-                        sensor["value"])
+                        sensor["value"],
+                        {"type": sensor["type"], })

@@ -28,6 +28,7 @@ MODULES = [
     ("RFIDModule", "rfid", _("RFID")),
     ("BrickModule", "brick", _("Brick")),
     ("InfluxModule", "influx", _("InfluxDB")),
+    ("CommanderModule", "commander", _("Commander")),
     ("IdentityModule", "identity", _("Identity")),
 ]
 
