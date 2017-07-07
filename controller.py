@@ -22,7 +22,8 @@ class Controller:
     scheduler = sched.scheduler(time.time, time.sleep)
 
     def __init__(self, ipcon):
-        self.ipcon = ipcon
+        self.ipcon = IPConnection()
+        self.ipcon.connect(HOST, PORT)
 
         for module in MODULES:
             self.add_module(module)
@@ -84,10 +85,6 @@ class Controller:
 
 
 if __name__ == "__main__":
-    ipcon = IPConnection()
-    ipcon.connect(HOST, PORT)
-    desk = Controller(ipcon)
+    desk = Controller()
     desk.tick()
     desk.scheduler.run()
-
-    ipcon.disconnect()

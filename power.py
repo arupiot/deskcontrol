@@ -42,8 +42,8 @@ class PowerModule(StateModule):
             else:
                 relays["instance"].set_state(not state[0], state[1])
             self.draw(False)
-            # TODO: Fixme
-            self.controller.modules["LightingModule"].set_light()
+            if "LightingModule" in self.controller.modules:
+                self.controller.modules["LightingModule"].set_light()
 
     def power_off(self):
         if not self.afk:

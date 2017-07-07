@@ -7,6 +7,7 @@ def _(message):
     return message
 
 
+# Host where brickd is running
 HOST = "brickd"
 PORT = 4223
 
@@ -17,6 +18,9 @@ MODULES = [
     ("InputModule", "inputs", _("Inputs")),
     ("SchedulerModule", "scheduler", _("Schedule")),
     ("RFIDModule", "rfid", _("RFID")),
+    ("BrickModule", "brick", _("Brick")),
+    ("IdentityModule", "identity", _("Identity")),
+    ("InfluxModule", "influx", _("InfluxDB")),
 ]
 
 MENU_MODULES = [
