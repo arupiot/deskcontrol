@@ -1,6 +1,7 @@
 # import gettext
 # t = gettext.translation('deskcontrol', 'locale')
 # _ = t.ugettext
+import os
 
 
 def _(message):
@@ -10,16 +11,17 @@ def _(message):
 HOST = "localhost"
 PORT = 4223
 
-SHORT_IDENT = "0000"
-CREDS_PATH = "./"
-CREDS_PREFIX = "creds.json"
+if os.environ['HOSTNAME']:
+    SHORT_IDENT = os.environ['HOSTNAME'][0:6]
+else:
+    SHORT_IDENT = "XXXXXX"
 
 INFLUX_AUTH = {
-    "host": 'server',
-    "port": 8086,
-    "user": 'root',
-    "pass": 'pass',
-    "db": 'example'}
+    "host": os.environ['INFLUX_HOST'],
+    "port": os.environ['INFLUX_PORT'],
+    "user": os.environ['INFLUX_USERNAME'],
+    "pass": os.environ['INFLUX_PASSWORD'],
+    "db": os.environ['INFLUX_DBNAME']}
 
 MODULES = [
     ("MenuModule", "navigation", _("Navigation")),
