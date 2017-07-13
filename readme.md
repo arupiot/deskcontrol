@@ -33,7 +33,5 @@ sudo service deskcontrol start
 * Add menu items to disable/change motion detection timer (currently 10 mins)
 * Implement lighting control functionality (protocol tbc)
 
-## History
-March 2017 - First Revision
 ## Credits
 Ben Hussey <ben.hussey@arup.com>

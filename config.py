@@ -8,7 +8,7 @@ def _(message):
     return message
 
 
-HOST = "localhost"
+HOST = "brickd"
 PORT = 4223
 
 if 'HOSTNAME' in os.environ:

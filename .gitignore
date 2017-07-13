@@ -1,3 +1,4 @@
 *.pyc
 config_local.py
 creds.json
+setup.log
