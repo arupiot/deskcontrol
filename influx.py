@@ -20,7 +20,8 @@ class InfluxModule(StateModule):
                 auth["port"],
                 auth["user"],
                 auth["pass"],
-                auth["db"])
+                auth["db"],
+                ssl=True, verify_ssl=False, timeout=3.0,)
         if self.client:
             self.client.create_database(auth["db"])
 
