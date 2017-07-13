@@ -1,28 +1,23 @@
 # import gettext
 # t = gettext.translation('deskcontrol', 'locale')
 # _ = t.ugettext
-import os
 
 
 def _(message):
     return message
 
 
-HOST = "brickd"
+HOST = "localhost"
 PORT = 4223
 
-if 'HOSTNAME' in os.environ:
-    SHORT_IDENT = os.environ['HOSTNAME'][0:6]
+SHORT_IDENT = "XXXX"
 
-if all(x in os.environ for x in [
-        'INFLUX_HOST', 'INFLUX_PORT', 'INFLUX_USERNAME',
-        'INFLUX_PASSWORD', 'INFLUX_DBNAME']):
-    INFLUX_AUTH = {
-        "host": os.environ['INFLUX_HOST'],
-        "port": os.environ['INFLUX_PORT'],
-        "user": os.environ['INFLUX_USERNAME'],
-        "pass": os.environ['INFLUX_PASSWORD'],
-        "db": os.environ['INFLUX_DBNAME']}
+INFLUX_AUTH = {
+    "host": "127.0.0.1",
+    "port": 8086,
+    "user": "admin",
+    "pass": "admin",
+    "db": "iotdesks"}
 
 MODULES = [
     ("MenuModule", "navigation", _("Navigation")),
