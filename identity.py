@@ -5,7 +5,6 @@ from config import SHORT_IDENT, INFLUX_AUTH
 class IdentityModule(StateModule):
     name = "identity"
     controller = None
-    ident = None
 
     def __init__(self, controller):
         self.controller = controller
@@ -18,4 +17,4 @@ class IdentityModule(StateModule):
             self.controller.modules["InfluxModule"].connect(INFLUX_AUTH)
 
     def get_ident(self):
-        self.ident = SHORT_IDENT
+        return SHORT_IDENT

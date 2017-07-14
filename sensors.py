@@ -61,6 +61,7 @@ class SensorModule(StateModule):
         pass
 
     def try_bricklet(self, uid, device_identifier, position):
+        ret = None
         if device_identifier == 216:
             self.sensors["temp"] = {
                 "instance": BrickletTemperature(uid, self.controller.ipcon),
@@ -143,8 +144,10 @@ class SensorModule(StateModule):
             #  print "Created Power Sensor"
         # if "InfluxModule" in self.controller.modules:
         #    self.controller.modules["InfluxModule"].add_sensor(ret)
-        if "BrickModule" in self.controller.modules:
-            self.controller.modules["BrickModule"].add_sensor(ret)
+        if ret:
+            if "BrickModule" in self.controller.modules:
+                self.controller.modules["BrickModule"].add_sensor(ret)
+            print(ret)
 
     def navigate(self, direction):
         if direction == "back":

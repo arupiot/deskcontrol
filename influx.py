@@ -21,9 +21,9 @@ class InfluxModule(StateModule):
                 auth["user"],
                 auth["pass"],
                 auth["db"],
-                ssl=True, verify_ssl=False, timeout=3.0,)
-        if self.client:
-            self.client.create_database(auth["db"])
+                ssl=True, verify_ssl=False, timeout=2.0,)
+        # if self.client:
+        #    self.client.create_database(auth["db"])
 
     def push_value(self, key, value, tags={}):
         if self.client:
@@ -42,12 +42,18 @@ class InfluxModule(StateModule):
 
     def tick(self):
         if self.client and "SensorModule" in self.controller.modules:
-            for sensor in self.controller.modules["SensorModule"].sensors:
-                if (not sensor.updated or
-                        sensor.updated < (
-                            datetime.now() - timedelta(minutes=1))):
-                    sensor.updated = datetime.now()
-                    ident = self.controller.modules["IdentityModule"].ident
+            for key in self.controller.modules["SensorModule"].sensors:
+                sensor = self.controller.modules["SensorModule"].sensors[key]
+                update = False
+                if "updated" not in sensor:
+                    update = True
+                elif sensor["updated"] < (datetime.now() -
+                                          timedelta(minutes=1)):
+                    update = True
+                if update:
+                    sensor["updated"] = datetime.now()
+                    ident = (
+                        self.controller.modules["IdentityModule"].get_ident())
                     self.controller.modules["SensorModule"].update_sensor(
                         sensor)
                     self.push_value(
