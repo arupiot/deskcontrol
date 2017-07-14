@@ -67,6 +67,7 @@ class SensorModule(StateModule):
                 "instance": BrickletTemperature(uid, self.controller.ipcon),
                 "name": "Temperature",
                 "type": "temperature",
+                "brick": "Temperature_Sensor",
                 "value": None,
                 "units": " degC",
             }
@@ -77,6 +78,7 @@ class SensorModule(StateModule):
                 "instance": BrickletTemperatureIR(uid, self.controller.ipcon),
                 "name": "IR Temperature",
                 "type": "irtemp",
+                "brick": "IRTemperature_Sensor",
                 "value": None,
                 "units": " degC",
             }
@@ -87,6 +89,7 @@ class SensorModule(StateModule):
                 "instance": BrickletHumidity(uid, self.controller.ipcon),
                 "name": "Humidity",
                 "type": "humidity",
+                "brick": "Humidity_Sensor",
                 "value": None,
                 "units": " %RH",
             }
@@ -97,6 +100,7 @@ class SensorModule(StateModule):
                 "instance": BrickletAmbientLightV2(uid, self.controller.ipcon),
                 "name": "Ambient Light",
                 "type": "light",
+                "brick": "LightingSystem_Luminance_Sensor",
                 "value": None,
                 "units": " lux",
             }
@@ -107,6 +111,7 @@ class SensorModule(StateModule):
                 "instance": BrickletSoundIntensity(uid, self.controller.ipcon),
                 "name": "Sound Intensity",
                 "type": "sound",
+                "brick": "Noise_Sensor",
                 "value": None,
                 "units": "",
             }
@@ -117,6 +122,7 @@ class SensorModule(StateModule):
                 "instance": BrickletCO2(uid, self.controller.ipcon),
                 "name": "Carbon Dioxide",
                 "type": "co2",
+                "brick": "CO2_Sensor",
                 "value": None,
                 "units": " ppm",
             }
@@ -127,6 +133,7 @@ class SensorModule(StateModule):
                 "instance": BrickletVoltageCurrent(uid, self.controller.ipcon),
                 "name": VA_POSITIONS[position],
                 "type": "power",
+                "brick": "Electrical_Power_Meter_" + position,
                 "value": None,
                 "units": " W",
             }
@@ -137,6 +144,7 @@ class SensorModule(StateModule):
                 "instance": BrickletDistanceIR(uid, self.controller.ipcon),
                 "name": "Desk Height",
                 "type": "dist",
+                "brick": "Range_Sensor",
                 "value": None,
                 "units": " cm",
             }

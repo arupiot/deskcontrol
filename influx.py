@@ -27,8 +27,10 @@ class InfluxModule(StateModule):
 
     def push_value(self, key, value, tags={}):
         if self.client:
+
+            ident = self.controller.modules["IdentityModule"].get_ident()
             data = {
-                "measurement": key,
+                "measurement": str(ident + "_" + key),
                 "time":
                     datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
                 "tags": tags,
@@ -52,11 +54,9 @@ class InfluxModule(StateModule):
                     update = True
                 if update:
                     sensor["updated"] = datetime.now()
-                    ident = (
-                        self.controller.modules["IdentityModule"].get_ident())
                     self.controller.modules["SensorModule"].update_sensor(
                         sensor)
                     self.push_value(
-                        str(ident + "_" + sensor["type"]),
+                        str(sensor["brick"]),
                         sensor["value"],
                         {"type": sensor["type"], })

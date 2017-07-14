@@ -20,15 +20,33 @@ class SchedulerModule(StateModule):
             self.setup_detection(uid)
             # print("Setup Motion Detection")
 
+    def push_value(self):
+        if "InfluxModule" in self.controller.modules:
+            self.controller.modules["InfluxModule"].push_value(
+                str(self.detector["brick"]),
+                self.detector["value"],
+                {"type": self.detector["type"], })
+
+    def push_raw(self, value):
+        if "InfluxModule" in self.controller.modules:
+            self.controller.modules["InfluxModule"].push_value(
+                str(self.detector["brick"] + "_raw"),
+                value,
+                {"type": self.detector["type"], })
+
     def motion_detected(self):
         self.last_motion = datetime.now()
+        prev = self.detector["value"]
+        self.detector["value"] = "True"
         if "PowerModule" in self.controller.modules:
             self.controller.modules["PowerModule"].power_on()
             self.controller.modules["LightingModule"].set_light()
-        # print("Motion Detected")
+        if not prev:
+            self.push_value()
+        self.push_raw("True")
 
-    # def detection_cycle_ended(self):
-    #    print("Detection Cycle Ended")
+    def motion_ended(self):
+        self.push_raw("False")
 
     def setup_detection(self, uid):
         # self.detector.register_callback(
@@ -38,12 +56,17 @@ class SchedulerModule(StateModule):
             "instance": BrickletMotionDetector(uid, self.controller.ipcon),
             "name": "Detector",
             "type": "pir",
+            "brick": "Motion_Sensor",
+            "value": None,
         }
         self.detector["instance"].register_callback(
             self.detector["instance"].CALLBACK_MOTION_DETECTED,
             self.motion_detected)
-        if "InfluxModule" in self.controller.modules:
-            self.controller.modules["InfluxModule"].add_sensor(self.detector)
+
+        self.detector["instance"].register_callback(
+            self.detector["instance"].CALLBACK_DETECTION_CYCLE_ENDED,
+            self.motion_ended)
+
         if "BrickModule" in self.controller.modules:
             self.controller.modules["BrickModule"].add_sensor(self.detector)
 
@@ -53,5 +76,7 @@ class SchedulerModule(StateModule):
                     timedelta(minutes=self.poweroff)):
                 print("No motion detected - turning off")
                 self.last_motion = None
+                self.detector["value"] = "False"
+                self.push_value()
                 if "PowerModule" in self.controller.modules:
                     self.controller.modules["PowerModule"].power_off()
