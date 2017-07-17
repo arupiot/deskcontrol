@@ -8,9 +8,9 @@
 # Description:       Desk Control Service
 ### END INIT INFO
 
-SCRIPT="sudo python /home/tf/deskcontrol/controller.py"
-RUNIN=/home/tf/deskcontrol/
-RUNAS=tf
+SCRIPT="sudo python /home/pi/deskcontrol/controller.py"
+RUNIN=/home/pi/deskcontrol/
+RUNAS=pi
 NAME=deskcontrol
 
 PIDFILE=/var/run/$NAME.pid
