@@ -100,7 +100,7 @@ class SensorModule(StateModule):
                 "instance": BrickletAmbientLightV2(uid, self.controller.ipcon),
                 "name": "Ambient Light",
                 "type": "light",
-                "brick": "LightingSystem_Luminance_Sensor",
+                "brick": "LightingSystem_Illuminance_Sensor",
                 "value": None,
                 "units": " lux",
             }

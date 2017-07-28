@@ -18,7 +18,10 @@ class SchedulerModule(StateModule):
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 233:
             self.setup_detection(uid)
-            # print("Setup Motion Detection")
+            print("Setup Motion Detection for PIR")
+        else:
+            self.setup_detection(uid)
+            print("Setup Motion Detection for other motion device")
 
     def push_value(self):
         if "InfluxModule" in self.controller.modules:
@@ -36,7 +39,10 @@ class SchedulerModule(StateModule):
 
     def motion_detected(self):
         self.last_motion = datetime.now()
-        prev = self.detector["value"]
+        # print(self.detector)
+        prev = None
+        if self.detector:
+            prev = self.detector["value"]
         self.detector["value"] = "True"
         if "PowerModule" in self.controller.modules:
             self.controller.modules["PowerModule"].power_on()

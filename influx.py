@@ -20,8 +20,10 @@ class InfluxModule(StateModule):
                 auth["port"],
                 auth["user"],
                 auth["pass"],
-                auth["db"],
-                ssl=True, verify_ssl=False, timeout=2.0,)
+                auth["db"],)
+                # ssl=True, verify_ssl=False, timeout=2.0,)
+        if self.client:
+            print("InfluxDB connection: ", self.client)
         # if self.client:
         #    self.client.create_database(auth["db"])
 
@@ -29,14 +31,31 @@ class InfluxModule(StateModule):
         if self.client:
 
             ident = self.controller.modules["IdentityModule"].get_ident()
-            data = {
+            data = [{
                 "measurement": str(ident + "_" + key),
                 "time":
                     datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
                 "tags": tags,
                 "fields": {"value": value, }
-            }
-            self.client.write_points([data])
+            }]
+# {
+#         "measurement": "cpu_load_short",
+#         "tags": {
+#             "host": "server01",
+#             "region": "us-west"
+#         },
+#         "time": "2009-11-10T23:00:00Z",
+#         "fields": {
+#             "value": 0.64
+#         }
+#     }
+# {'fields': {'value': 35},
+#  'time': '2017-07-28T23:10:42Z',
+#  'tags': {'type': 'light'},
+#  'measurement': 'XXXX_LightingSystem_Luminance_Sensor'}
+
+            print(data)
+            self.client.write_points(data)
 
     def add_sensor(self, sensor):
         # Callbacks not implemented because TF callbacks are terrible
