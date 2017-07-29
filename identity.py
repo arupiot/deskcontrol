@@ -11,8 +11,8 @@ class IdentityModule(StateModule):
         super(IdentityModule, self).__init__(controller)
         # print(get_config())
 
-        # Influx Auth should come from identify system, not config
-        # Currently relys on order of modules being loaded to be correct...
+        # Influx Auth should come from identity system, not config
+        # Currently relies on order of modules being loaded to be correct...
         if "InfluxModule" in self.controller.modules:
             self.controller.modules["InfluxModule"].connect(INFLUX_AUTH)
 

@@ -6,6 +6,12 @@ from tinkerforge.bricklet_sound_intensity import BrickletSoundIntensity
 from tinkerforge.bricklet_ambient_light_v2 import BrickletAmbientLightV2
 from tinkerforge.bricklet_distance_ir import BrickletDistanceIR
 from tinkerforge.bricklet_co2 import BrickletCO2
+from tinkerforge.bricklet_color import BrickletColor
+from tinkerforge.bricklet_barometer import BrickletBarometer
+from tinkerforge.bricklet_line import BrickletLine
+from tinkerforge.bricklet_hall_effect import BrickletHallEffect
+from tinkerforge.bricklet_accelerometer import BrickletAccelerometer
+from tinkerforge.bricklet_moisture import BrickletMoisture
 from navigation import StateModule
 from config import VA_POSITIONS
 
@@ -54,6 +60,20 @@ class SensorModule(StateModule):
             value = power
         if sensor["type"] == "dist":
             value = sensor["instance"].get_distance() / 10 + 13
+        if sensor["type"] == "colour_temp":
+            value = sensor["instance"].get_color_temperature()
+        if sensor["type"] == "air_pressure":
+            value = int(sensor["instance"].get_air_pressure()/1000.0*100.0+0.5)/100.0
+        if sensor["type"] == "reflectivity":
+            value = sensor["instance"].get_reflectivity()
+        if sensor["type"] == "magfield":
+            value = sensor["instance"].get_edge_count(False)
+        if sensor["type"] == "acceleration":
+            x,y,z = sensor["instance"].get_acceleration()
+            value = z
+        if sensor["type"] == "moisture":
+            value = sensor["instance"].get_moisture_value()
+        # print(sensor["type"],value)
         sensor["value"] = value
 
     def sensor_callback(self, value):
@@ -72,7 +92,7 @@ class SensorModule(StateModule):
                 "units": " degC",
             }
             ret = self.sensors["temp"]
-            #  print "Created Temperature Sensor"
+            #  print("Created Temperature Sensor")
         elif device_identifier == 217:
             self.sensors["irtemp"] = {
                 "instance": BrickletTemperatureIR(uid, self.controller.ipcon),
@@ -83,7 +103,7 @@ class SensorModule(StateModule):
                 "units": " degC",
             }
             ret = self.sensors["irtemp"]
-            #  print "Created IR Temperature Sensor"
+            #  print("Created IR Temperature Sensor")
         elif device_identifier == 27:
             self.sensors["hum"] = {
                 "instance": BrickletHumidity(uid, self.controller.ipcon),
@@ -94,7 +114,7 @@ class SensorModule(StateModule):
                 "units": " %RH",
             }
             ret = self.sensors["hum"]
-            #  print "Created Humidity Sensor"
+            print("Created Humidity Sensor")
         elif device_identifier == 259:
             self.sensors["light"] = {
                 "instance": BrickletAmbientLightV2(uid, self.controller.ipcon),
@@ -105,7 +125,7 @@ class SensorModule(StateModule):
                 "units": " lux",
             }
             ret = self.sensors["light"]
-            #  print "Created Ambient Light Sensor"
+            print("Created Ambient Light Sensor")
         elif device_identifier == 238:
             self.sensors["sound"] = {
                 "instance": BrickletSoundIntensity(uid, self.controller.ipcon),
@@ -116,7 +136,7 @@ class SensorModule(StateModule):
                 "units": "",
             }
             ret = self.sensors["sound"]
-            #  print "Created Sound Intensity Sensor"
+            print("Created Sound Intensity Sensor")
         elif device_identifier == 262:
             self.sensors["co2"] = {
                 "instance": BrickletCO2(uid, self.controller.ipcon),
@@ -127,7 +147,7 @@ class SensorModule(StateModule):
                 "units": " ppm",
             }
             ret = self.sensors["co2"]
-            #  print "Created CO2 Sensor"
+            print("Created CO2 Sensor")
         elif device_identifier == 227:
             self.sensors["va" + position] = {
                 "instance": BrickletVoltageCurrent(uid, self.controller.ipcon),
@@ -138,7 +158,7 @@ class SensorModule(StateModule):
                 "units": " W",
             }
             ret = self.sensors["va" + position]
-            #  print "Created Power Sensor"
+            print("Created Power Sensor")
         elif device_identifier == 25:
             self.sensors["dist"] = {
                 "instance": BrickletDistanceIR(uid, self.controller.ipcon),
@@ -149,7 +169,75 @@ class SensorModule(StateModule):
                 "units": " cm",
             }
             ret = self.sensors["dist"]
-            #  print "Created Power Sensor"
+            print("Created Distance Ranger IR Sensor")
+        elif device_identifier == 243:
+            self.sensors["colour_temp"] = {
+                "instance": BrickletColor(uid, self.controller.ipcon),
+                "name": "Colour Temp",
+                "type": "colour_temp",
+                "brick": "Colour_Temperature_Sensor",
+                "value": None,
+                "units": " K",
+            }
+            ret = self.sensors["colour_temp"]
+            print("Created Colour Temperature Sensor")
+        elif device_identifier == 221:
+            self.sensors["air_pressure"] = {
+                "instance": BrickletBarometer(uid, self.controller.ipcon),
+                "name": "Air Pressure",
+                "type": "air_pressure",
+                "brick": "Air_Pressure_Sensor",
+                "value": None,
+                "units": " mbar",
+            }
+            ret = self.sensors["air_pressure"]
+            print("Created Air Pressure Sensor")
+        elif device_identifier == 241:
+            self.sensors["reflectivity"] = {
+                "instance": BrickletLine(uid, self.controller.ipcon),
+                "name": "Reflectivity",
+                "type": "reflectivity",
+                "brick": "Line_Sensor",
+                "value": None,
+                "units": " ",
+            }
+            ret = self.sensors["reflectivity"]
+            print("Created Line Reflectivity Sensor")
+        elif device_identifier == 240:
+            self.sensors["magfield"] = {
+                "instance": BrickletHallEffect(uid, self.controller.ipcon),
+                "name": "Magn. Field",
+                "type": "magfield",
+                "brick": "Magnetic_Field_Sensor",
+                "value": None,
+                "units": " ",
+            }
+            ret = self.sensors["magfield"]
+            print("Created Magnetic Field Sensor")
+        elif device_identifier == 250:
+            self.sensors["acceleration"] = {
+                "instance": BrickletAccelerometer(uid, self.controller.ipcon),
+                "name": "Vibration",
+                "type": "acceleration",
+                "brick": "Accelerometer_Sensor",
+                "value": None,
+                "units": " g",
+            }
+            ret = self.sensors["acceleration"]
+            print("Created Accelerometer Sensor")
+        elif device_identifier == 232:
+            self.sensors["moisture"] = {
+                "instance": BrickletMoisture(uid, self.controller.ipcon),
+                "name": "Moisture",
+                "type": "moisture",
+                "brick": "Moisture_Sensor",
+                "value": None,
+                "units": " ",
+            }
+            ret = self.sensors["moisture"]
+            print("Created Moisture Sensor")
+
+
         # if "InfluxModule" in self.controller.modules:
         #    self.controller.modules["InfluxModule"].add_sensor(ret)
         if ret:
@@ -169,7 +257,7 @@ class SensorModule(StateModule):
                 self.current = 0
             elif self.current < 0:
                 self.current = len(self.sensors) - 1
-            # print "Sensor: " + str(list(self.sensors)[self.current])
+            # print("Sensor: " + str(list(self.sensors)[self.current]))
             self.draw()
 
     def tick(self):

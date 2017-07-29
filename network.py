@@ -15,6 +15,11 @@ def get_ip_address(ifname):
     except Exception:
         return "No wlan0"
 
+def get_ip_address():
+    try:
+        return(socket.gethostbyname(socket.gethostname()))
+    except Exception:
+        return "No connection"
 
 class NetworkModule(StateModule):
     name = "network"
@@ -26,7 +31,7 @@ class NetworkModule(StateModule):
         super(NetworkModule, self).__init__(controller)
 
     def draw(self, clear=True):
-        self.ip = get_ip_address("wlan0")
+        self.ip = get_ip_address() #get_ip_address("wlan0")
         if clear:
             self.controller.screen.device.clear_display()
         self.controller.screen.draw(

@@ -46,6 +46,7 @@ class SchedulerModule(StateModule):
         self.detector["value"] = "True"
         if "PowerModule" in self.controller.modules:
             self.controller.modules["PowerModule"].power_on()
+        if "LightingModule" in self.controller.modules:
             self.controller.modules["LightingModule"].set_light()
         if not prev:
             self.push_value()

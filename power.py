@@ -87,7 +87,7 @@ class PowerModule(StateModule):
                 self.current = 0
             elif self.current < 0:
                 self.current = len(self.relays) - 1
-            # print "Output: " + str(list(self.outputs)[self.current])
+            # print("Output: " + str(list(self.outputs)[self.current]))
             self.draw()
 
     def tick(self):

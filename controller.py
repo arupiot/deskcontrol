@@ -39,8 +39,7 @@ class Controller:
         self.ipcon.enumerate()
 
     def add_module(self, module):
-        self.modules[module[0]] = getattr(__import__(
-            module[1], fromlist=[module[0]]), module[0])(self)
+        self.modules[module[0]] = getattr(__import__(module[1], fromlist=[module[0]]), module[0])(self)
         if self.modules[module[0]].always_tick:
             self.ticklist.append(module[0])
         print("Loaded " + module[0])

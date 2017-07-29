@@ -17,7 +17,8 @@ INFLUX_AUTH = {
     "port": 8086,
     "user": "admin",
     "pass": "admin",
-    "db": "iotdesks"}
+    "db": "iotdesks"
+    }
 
 MODULES = [
     ("MenuModule", "navigation", _("Navigation")),
@@ -32,7 +33,7 @@ MODULES = [
 
 MENU_MODULES = [
     ("SensorModule", "sensors", _("Sensors")),
-    #("LightingModule", "lighting", _("Lighting")),
+    ("LightingModule", "lighting", _("Lighting")),
     #("PowerModule", "power", _("Power")),
     ("NetworkModule", "network", _("Network")),
 ]

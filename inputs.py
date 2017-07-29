@@ -24,7 +24,7 @@ class InputModule(StateModule):
                 self.joystick_pushed)
             self.inputs["joystick"].set_position_callback_threshold(
                 "o", -99, 99, -99, 99)
-            #  print "Created Joystick Input"
+            #  print("Created Joystick Input")
         elif device_identifier == 234:
             self.inputs["multitouch"] = BrickletMultiTouch(
                 uid, self.controller.ipcon)
@@ -32,7 +32,7 @@ class InputModule(StateModule):
             self.inputs["multitouch"].register_callback(
                 self.inputs["multitouch"].CALLBACK_TOUCH_STATE,
                 self.multitouch)
-            #  print "Created Multitouch Input"
+            #  print("Created Multitouch Input")
 
     def joystick_position(self, x, y):
         if "SchedulerModule" in self.controller.modules:
