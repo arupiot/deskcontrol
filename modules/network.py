@@ -10,13 +10,8 @@ def get_ip_address():
 
 
 class NetworkModule(StateModule):
-    name = "network"
-    controller = None
+    menu_title = "Network"
     ip = None
-
-    def __init__(self, controller):
-        self.controller = controller
-        super(NetworkModule, self).__init__(controller)
 
     def draw(self, clear=True):
         self.ip = get_ip_address()  # get_ip_address("wlan0")

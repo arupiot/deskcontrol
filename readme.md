@@ -6,18 +6,6 @@ Intended to run on a tinkerforge redbrick but can run anywhere so long as you ca
 
 Will auto-detect bricklets compatible with the code and provide sensor readings / control of relays on a 128x64 OLED - joystick or multitouch can be used to navigate the menu.
 
-VA_POSITIONS and RELAY_POSITIONS in config.py define which Voltage/Current bricklet and relay gets assigned to which label in the menu:
-
-Voltage/Current Assignment:
-* Port A: Laptop Charger Power (two of the 12V sockets)
-* Port B: Monitor Power (the other 12V socket)
-* Port C: USB Sockets (external facing only)
-* Port D: Lighting
-
-Relay Assignment:
-* Port A: 1- Laptop Charger, 2- Monitor
-* Port B: 1- USB Sockets, 2- Lighting
-
 ## Installation
 Testing:
 Start with ./python controller.py

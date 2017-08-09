@@ -13,6 +13,7 @@ from tinkerforge.bricklet_hall_effect import BrickletHallEffect
 from tinkerforge.bricklet_accelerometer import BrickletAccelerometer
 from tinkerforge.bricklet_moisture import BrickletMoisture
 from tinkerforge.bricklet_dual_relay import BrickletDualRelay
+from tinkerforge.bricklet_motion_detector import BrickletMotionDetector
 
 SENSORS = {
     "temp": {
@@ -21,7 +22,7 @@ SENSORS = {
         "units": "degC",
         "brick_tag": "Temperature_Sensor",
         "value_func": "get_temperature",
-        "value_multiplier": 0.01,
+        "multiplier": 0.01,
         "callback_func": "CALLBACK_TEMPERATURE",
     },
     "irtemp": {
@@ -30,7 +31,7 @@ SENSORS = {
         "units": "degC",
         "brick_tag": "IRTemperature_Sensor",
         "value_func": "get_object_temperature",
-        "value_multiplier": 0.1,
+        "multiplier": 0.1,
         "callback_func": "CALLBACK_OBJECT_TEMPERATURE",
     },
     "humidity": {
@@ -39,7 +40,7 @@ SENSORS = {
         "units": "%RH",
         "brick_tag": "Humidity_Sensor",
         "value_func": "get_humidity",
-        "value_multiplier": 0.1,
+        "multiplier": 0.1,
         "callback_func": "CALLBACK_HUMIDITY",
     },
     "light": {
@@ -48,8 +49,8 @@ SENSORS = {
         "units": "lux",
         "brick_tag": "LightingSystem_Illuminance_Sensor",
         "value_func": "get_illuminance",
-        "value_multiplier": 0.01,
-        "callback_func": "CALLBACK_HUMIDITY",
+        "multiplier": 0.01,
+        "callback_func": "CALLBACK_ILLUMINANCE",
     },
     "sound": {
         "name": "Sound Intensity",
@@ -73,7 +74,7 @@ SENSORS = {
         "units": "V",
         "brick_tag": "Electrical_Power_Meter",
         "value_func": "get_voltage",
-        "value_multiplier": 0.01,
+        "multiplier": 0.01,
         "value_offset": 0,
         "callback_func": "CALLBACK_VOLTAGE",
     },
@@ -83,7 +84,7 @@ SENSORS = {
         "units": "A",
         "brick_tag": "Electrical_Power_Meter",
         "value_func": "get_current",
-        "value_multiplier": 0.01,
+        "multiplier": 0.01,
         "callback_func": "CALLBACK_CURRENT",
     },
     "power": {
@@ -92,7 +93,7 @@ SENSORS = {
         "units": "W",
         "brick_tag": "Electrical_Power_Meter",
         "value_func": "get_power",
-        "value_multiplier": 0.01,
+        "multiplier": 0.01,
         "callback_func": "CALLBACK_POWER",
     },
     "dist": {
@@ -101,7 +102,7 @@ SENSORS = {
         "units": "cm",
         "brick_tag": "Range_Sensor",
         "value_func": "get_distance",
-        "value_multiplier": 0.1,
+        "multiplier": 0.1,
         "callback_func": "CALLBACK_DISTANCE",
     },
     "colour_temp": {
@@ -118,7 +119,7 @@ SENSORS = {
         "units": "mbar",
         "brick_tag": "Air_Pressure_Sensor",
         "value_func": "get_air_pressure",
-        "value_multiplier": 0.001,
+        "multiplier": 0.001,
         "callback_func": "CALLBACK_AIR_PRESSURE",
     },
     "reflectivity": {
@@ -143,7 +144,7 @@ SENSORS = {
         "units": "g",
         "brick_tag": "Accelerometer_Sensor",
         "value_func": "get_acceleration",
-        "value_multiplier": 0.001,
+        "multiplier": 0.001,
         "callback_func": "CALLBACK_ACCELERATION",
     },
     "moisture": {
@@ -167,5 +168,12 @@ SENSORS = {
         "units": "",
         "brick_tag": "Relay_Sensor",
         "value_func": "get_state",
+    },
+    "motion": {
+        "name": "Motion Detector",
+        "class": BrickletMotionDetector,
+        "units": "",
+        "brick_tag": "Motion_Detector",
+        "value_func": "get_motion_detected",
     },
 }

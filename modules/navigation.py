@@ -2,11 +2,11 @@ from screen import Screen
 
 
 class StateModule(object):
-    modid = None
     always_tick = False
 
-    def __init__(self, previous):
+    def __init__(self, controller):
         self.id = self.__class__.__name__
+        self.controller = controller
 
     def draw(self):
         pass
@@ -22,13 +22,8 @@ class StateModule(object):
 
 
 class MenuModule(StateModule):
-    controller = None
     items = []
     current = 0
-
-    def __init__(self, controller):
-        self.controller = controller
-        super(MenuModule, self).__init__(controller)
 
     def draw(self, clear=True):
         self.controller.screen.draw(
@@ -50,8 +45,7 @@ class MenuModule(StateModule):
         #    self.controller.screen.write_line(cursor+2, 23, ">")
 
     def add_menu_item(self, module):
-        self.items.append((module.id, module.name))
-        #  print "added " + module.name + " to menu"
+        self.items.append((module.id, module.menu_title))
 
     def try_bricklet(self, uid, device_identifier, position):
         if not self.controller.screen:

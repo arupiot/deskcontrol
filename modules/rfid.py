@@ -3,16 +3,10 @@ from navigation import StateModule
 
 
 class RFIDModule(StateModule):
-    name = "rfid"
-    controller = None
     readers = {}
     previous = None
     tick_count = 0
     tag_type = 0
-
-    def __init__(self, controller):
-        self.controller = controller
-        super(RFIDModule, self).__init__(controller)
 
     def draw(self, clear=True):
         self.controller.screen.draw(

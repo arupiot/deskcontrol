@@ -13,29 +13,19 @@ class Sensor():
         sensor = SENSORS[sensor_type]
         self.sensor_type = sensor_type
         self.controller = controller
-        self.uid = str(uid) + "_" + sensor_type
         self.instance = sensor["class"](uid, controller.ipcon)
         for attr in [
                 "brick_tag", "value_func", "units", "multiplier", "offset"]:
             if attr in sensor:
                 setattr(self, attr, sensor[attr])
-        self.get_value()
+        self.uid = str(uid) + "_" + self.brick_tag
         if "callback_func" in sensor:
             self.instance.register_callback(
                 getattr(self.instance, sensor["callback_func"]),
                 self.callback)
+        self.get_value()
 
-    def callback(self, value):
-        self.value = value
-        self.updated = datetime.now()
-        self.publish()
-
-    def get_value(self):
-        if self.sensor_type == "magfield":
-            value = getattr(self.instance, self.value_func)(False)
-        else:
-            value = getattr(self.instance, self.value_func)()
-
+    def parse_value(self, value):
         if self.sensor_type == "relay_a":
             value = value[0]
         elif self.sensor_type == "relay_b":
@@ -51,10 +41,25 @@ class Sensor():
             value = CCT
 
         if isinstance(value, numbers.Number):
-            if self.multiplier:
+            if hasattr(self, "multiplier"):
                 value = value * self.multiplier
-            if self.offset:
+            if hasattr(self, "offset"):
                 value = value + self.offset
+
+        return value
+
+    def callback(self, value=None):
+        self.value = self.parse_value(value)
+        self.updated = datetime.now()
+        self.publish()
+
+    def get_value(self):
+        if self.sensor_type == "magfield":
+            value = getattr(self.instance, self.value_func)(False)
+        else:
+            value = getattr(self.instance, self.value_func)()
+
+        value = self.parse_value(value)
 
         self.value = value
         self.updated = datetime.now()
@@ -73,14 +78,9 @@ class Sensor():
 
 
 class SensorModule(StateModule):
-    name = "sensors"
-    controller = None
+    menu_title = "Sensors"
     sensors = {}
     current = 0
-
-    def __init__(self, controller):
-        self.controller = controller
-        super(SensorModule, self).__init__(controller)
 
     def draw(self, clear=True):
         if clear:

@@ -3,8 +3,8 @@ from navigation import StateModule
 
 
 class LightingModule(StateModule):
-    name = "lighting"
-    controller = None
+    menu_title = "Lighting"
+
     outputs = {}
     edit = False
     device = None
@@ -19,10 +19,6 @@ class LightingModule(StateModule):
         {"name": "Magenta", "color": (255, 0, 255)},
         {"name": "Green", "color": (0, 255, 0)},
     ]
-
-    def __init__(self, controller):
-        self.controller = controller
-        super(LightingModule, self).__init__(controller)
 
     def draw(self, clear=True):
         if clear:

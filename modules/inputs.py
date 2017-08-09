@@ -4,12 +4,7 @@ from navigation import StateModule
 
 
 class InputModule(StateModule):
-    controller = None
     inputs = {}
-
-    def __init__(self, controller):
-        self.controller = controller
-        super(InputModule, self).__init__(controller)
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 210:

@@ -1,18 +1,12 @@
-from tinkerforge.bricklet_dual_relay import BrickletDualRelay
 from navigation import StateModule
 from sensors import Sensor
 
 
 class PowerModule(StateModule):
-    name = "power"
-    controller = None
+    menu_title = "Power"
     relays = {}
     current = 0
     afk = False
-
-    def __init__(self, controller):
-        self.controller = controller
-        super(PowerModule, self).__init__(controller)
 
     def draw(self, clear=True):
         if clear:
@@ -34,12 +28,12 @@ class PowerModule(StateModule):
 
     def switch_relay(self):
         if self.relays:
-            relays = self.relays[self.relays.keys()[self.current]]
-            state = relays["instance"].get_state()
-            if relays["relay"]:
-                relays["instance"].set_state(state[0], not state[1])
+            relay = self.relays[self.relays.keys()[self.current]]
+            state = relay.instance.get_state()
+            if relay.instance:
+                relay.instance.set_state(state[0], not state[1])
             else:
-                relays["instance"].set_state(not state[0], state[1])
+                relay.instance.set_state(not state[0], state[1])
             self.draw(False)
             if "LightingModule" in self.controller.modules:
                 self.controller.modules["LightingModule"].set_light()
@@ -49,31 +43,20 @@ class PowerModule(StateModule):
             self.afk = True
             for relay in self.relays:
                 #  TODO: Less hacky pls
-                self.relays[relay]["instance"].set_state(False, True)
+                self.relays[relay].instance.set_state(False, True)
 
     def power_on(self):
         if self.afk:
             self.afk = False
             for relay in self.relays:
                 #  TODO: Less hacky pls
-                self.relays[relay]["instance"].set_state(False, False)
+                self.relays[relay].instance.set_state(False, False)
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
-            relay1 = Sensor(self.controller, "temp", uid)
-            relay2 = Sensor(self.controller, "temp", uid)
-            self.relays["relay" + position] = {
-                "instance": BrickletDualRelay(uid, self.controller.ipcon),
-                "name": RELAY_POSITIONS[position][0],
-                "relay": 0,
-            }
-            self.relays["relay" + position + "+"] = {
-                "instance": self.relays["relay" + position]["instance"],
-                "name": RELAY_POSITIONS[position][1],
-                "relay": 1,
-            }
-            # self.relays["relay"+position]["instance"] = DESK_ID
-            print("Created Relay")
+            for x in ["relay_a", "relay_b"]:
+                s = Sensor(self.controller, x, uid)
+                self.relays[s.uid] = s
 
     def navigate(self, direction):
         if direction == "back":

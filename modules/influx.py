@@ -5,27 +5,27 @@ from config import INFLUX_AUTH
 
 
 class InfluxModule(StateModule):
-    name = "influx"
-    controller = None
     client = None
     always_tick = True
 
     def __init__(self, controller):
-        self.controller = controller
         super(InfluxModule, self).__init__(controller)
         controller.publishers.append(self.publish)
         self.connect(INFLUX_AUTH)
 
     def connect(self, auth):
-        if auth:
+        try:
             self.client = InfluxDBClient(
                 auth["host"], auth["port"], auth["user"], auth["pass"],
                 auth["db"],)
+        except Exception as e:
+            print("Error connecting to InfluxDB:")
+            print(e)
 
-    def publish(self, key, value, tags={}):
+    def publish(self, controller, key, value, tags={}):
         try:
+            ident = self.controller.identity
             if self.client:
-                ident = self.controller.modules["IdentityModule"].get_ident()
                 data = [{
                     "measurement": str(ident + "_" + key),
                     "time": (
@@ -35,24 +35,15 @@ class InfluxModule(StateModule):
                     "fields": {"value": value, }
                 }]
             self.client.write_points(data)
+            print("published %s" % str(ident + "_" + key))
         except Exception as e:
+            print("Error publishing to InfluxDB:")
             print(e)
 
     def tick(self):
         if self.client and "SensorModule" in self.controller.modules:
             for key in self.controller.modules["SensorModule"].sensors:
                 sensor = self.controller.modules["SensorModule"].sensors[key]
-                update = False
-                if "updated" not in sensor:
-                    update = True
-                elif sensor["updated"] < (datetime.now() -
-                                          timedelta(minutes=1)):
-                    update = True
-                if update:
-                    sensor["updated"] = datetime.now()
-                    self.controller.modules["SensorModule"].update_sensor(
-                        sensor)
-                    self.publish(
-                        str(sensor["brick"]),
-                        sensor["value"],
-                        {"type": sensor["type"], })
+                if sensor.updated < (datetime.now() -
+                                     timedelta(minutes=1)):
+                    sensor.get_value()
