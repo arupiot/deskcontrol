@@ -2,3 +2,5 @@ tinkerforge
 pillow
 rdflib
 influxdb
+numpy
+colour

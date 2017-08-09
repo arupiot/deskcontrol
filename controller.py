@@ -11,6 +11,8 @@ from config import *
 
 
 class Controller:
+    identity = SHORT_IDENT
+
     ipcon = None
     current_module = None
     previous_module = None
@@ -18,6 +20,7 @@ class Controller:
 
     modules = {}
     ticklist = []
+    publishers = []
 
     scheduler = sched.scheduler(time.time, time.sleep)
 
@@ -39,7 +42,8 @@ class Controller:
         self.ipcon.enumerate()
 
     def add_module(self, module):
-        self.modules[module[0]] = getattr(__import__(module[1], fromlist=[module[0]]), module[0])(self)
+        self.modules[module[0]] = getattr(
+            __import__(module[1], fromlist=[module[0]]), module[0])(self)
         if self.modules[module[0]].always_tick:
             self.ticklist.append(module[0])
         print("Loaded " + module[0])
@@ -81,6 +85,10 @@ class Controller:
             return
         for state in self.modules:
             self.modules[state].try_bricklet(uid, device_identifier, position)
+
+    def publish(self, key, value):
+        for callback in publishers:
+            callback(self, key, value)
 
 
 if __name__ == "__main__":

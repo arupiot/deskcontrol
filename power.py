@@ -1,6 +1,6 @@
 from tinkerforge.bricklet_dual_relay import BrickletDualRelay
 from navigation import StateModule
-from config import RELAY_POSITIONS
+from sensors import Sensor
 
 
 class PowerModule(StateModule):
@@ -60,6 +60,8 @@ class PowerModule(StateModule):
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
+            relay1 = Sensor(self.controller, "temp", uid)
+            relay2 = Sensor(self.controller, "temp", uid)
             self.relays["relay" + position] = {
                 "instance": BrickletDualRelay(uid, self.controller.ipcon),
                 "name": RELAY_POSITIONS[position][0],

@@ -1,12 +1,3 @@
-# import gettext
-# t = gettext.translation('deskcontrol', 'locale')
-# _ = t.ugettext
-
-
-def _(message):
-    return message
-
-
 HOST = "localhost"
 PORT = 4223
 
@@ -18,37 +9,24 @@ INFLUX_AUTH = {
     "user": "admin",
     "pass": "admin",
     "db": "iotdesks"
-    }
+}
 
 MODULES = [
-    ("MenuModule", "navigation", _("Navigation")),
-    ("InputModule", "inputs", _("Inputs")),
-    ("SchedulerModule", "scheduler", _("Schedule")),
-    ("RFIDModule", "rfid", _("RFID")),
-    ("BrickModule", "brick", _("Brick")),
-    ("InfluxModule", "influx", _("InfluxDB")),
-    ("CommanderModule", "commander", _("Commander")),
-    ("IdentityModule", "identity", _("Identity")),
+    ("MenuModule", "navigation", "Navigation"),
+    ("InputModule", "inputs", "Inputs"),
+    ("SchedulerModule", "scheduler", "Schedule"),
+    ("RFIDModule", "rfid", "RFID"),
+    ("BrickModule", "brick", "Brick"),
+    ("InfluxModule", "influx", "InfluxDB"),
+    ("CommanderModule", "commander", "Commander"),
 ]
 
 MENU_MODULES = [
-    ("SensorModule", "sensors", _("Sensors")),
-    ("LightingModule", "lighting", _("Lighting")),
-    #("PowerModule", "power", _("Power")),
-    ("NetworkModule", "network", _("Network")),
+    ("SensorModule", "sensors", "Sensors"),
+    ("LightingModule", "lighting", "Lighting"),
+    # ("PowerModule", "power", "Power"),
+    ("NetworkModule", "network", "Network"),
 ]
-
-VA_POSITIONS = {
-    'a': _("Laptop Charger Power"),
-    'b': _("Monitor Power"),
-    'c': _("USB Outlets"),
-    'd': _("Lighting Power"),
-}
-
-RELAY_POSITIONS = {
-    'a': (_("Laptop Charger"), _("Monitor")),
-    'b': (_("USB Outlets"), _("Lighting")),
-}
 
 try:
     config_module = __import__('config_local',

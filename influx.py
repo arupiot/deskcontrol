@@ -1,6 +1,7 @@
 from navigation import StateModule
 from influxdb import InfluxDBClient
 from datetime import datetime, timedelta
+from config import INFLUX_AUTH
 
 
 class InfluxModule(StateModule):
@@ -12,54 +13,30 @@ class InfluxModule(StateModule):
     def __init__(self, controller):
         self.controller = controller
         super(InfluxModule, self).__init__(controller)
+        controller.publishers.append(self.publish)
+        self.connect(INFLUX_AUTH)
 
     def connect(self, auth):
         if auth:
             self.client = InfluxDBClient(
-                auth["host"],
-                auth["port"],
-                auth["user"],
-                auth["pass"],
+                auth["host"], auth["port"], auth["user"], auth["pass"],
                 auth["db"],)
-                # ssl=True, verify_ssl=False, timeout=2.0,)
-        if self.client:
-            print("InfluxDB connection: ", self.client)
-        # if self.client:
-        #    self.client.create_database(auth["db"])
 
-    def push_value(self, key, value, tags={}):
-        if self.client:
-
-            ident = self.controller.modules["IdentityModule"].get_ident()
-            data = [{
-                "measurement": str(ident + "_" + key),
-                "time":
-                    datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
-                "tags": tags,
-                "fields": {"value": value, }
-            }]
-# {
-#         "measurement": "cpu_load_short",
-#         "tags": {
-#             "host": "server01",
-#             "region": "us-west"
-#         },
-#         "time": "2009-11-10T23:00:00Z",
-#         "fields": {
-#             "value": 0.64
-#         }
-#     }
-# {'fields': {'value': 35},
-#  'time': '2017-07-28T23:10:42Z',
-#  'tags': {'type': 'light'},
-#  'measurement': 'XXXX_LightingSystem_Luminance_Sensor'}
-
-            print(data)
+    def publish(self, key, value, tags={}):
+        try:
+            if self.client:
+                ident = self.controller.modules["IdentityModule"].get_ident()
+                data = [{
+                    "measurement": str(ident + "_" + key),
+                    "time": (
+                        datetime.utcnow().replace(microsecond=0).isoformat() +
+                        "Z"),
+                    "tags": tags,
+                    "fields": {"value": value, }
+                }]
             self.client.write_points(data)
-
-    def add_sensor(self, sensor):
-        # Callbacks not implemented because TF callbacks are terrible
-        pass
+        except Exception as e:
+            print(e)
 
     def tick(self):
         if self.client and "SensorModule" in self.controller.modules:
@@ -75,7 +52,7 @@ class InfluxModule(StateModule):
                     sensor["updated"] = datetime.now()
                     self.controller.modules["SensorModule"].update_sensor(
                         sensor)
-                    self.push_value(
+                    self.publish(
                         str(sensor["brick"]),
                         sensor["value"],
                         {"type": sensor["type"], })
