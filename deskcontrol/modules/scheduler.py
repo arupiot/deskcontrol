@@ -1,6 +1,5 @@
 from navigation import StateModule
 from datetime import datetime, timedelta
-from tinkerforge.bricklet_motion_detector import BrickletMotionDetector
 from sensors import Sensor
 
 
