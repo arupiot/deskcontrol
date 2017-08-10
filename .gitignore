@@ -1,4 +1,9 @@
 *.pyc
-config_local.py
+*config_local.py
 creds.json
 setup.log
+.idea/
+venv/
+*.DS_Store
+*.env
+*config_local_pi.py

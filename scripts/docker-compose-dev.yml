@@ -1,0 +1,27 @@
+version: '3'
+services:
+  dev_brickd:
+    container_name: dev_brickd
+    privileged: true
+    image: "augment00/augment00-brickd:latest"
+    volumes:
+      - "/etc/opt/augment00:/etc/opt/augment00"
+    restart: always
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "tcp+tls://logs5.papertrailapp.com:23038"
+        tag: "test"
+  dev_deskcontrol:
+    container_name: dev_deskcontrol
+    privileged: true
+    links:
+      - dev_brickd:brickd
+    depends_on:
+      - dev_brickd
+    image: "augment00/augment00-deskcontrol:latest"
+    volumes:
+      - "/etc/opt/augment00:/etc/opt/augment00"
+      - "/opt/augment00/dev/deskcontrol:/opt/augment00/dev/deskcontrol"
+    env_file: .env
+    command: "python /opt/augment00/dev/deskcontrol/controller.py"
