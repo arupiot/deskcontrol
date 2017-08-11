@@ -11,6 +11,8 @@ INFLUX_AUTH = {
     "db": "iotdesks"
 }
 
+FIREBASE_AUTH = None
+
 MODULES = [
     ("MenuModule", "navigation", "Navigation"),
     ("InputModule", "inputs", "Inputs"),
@@ -31,6 +33,8 @@ MENU_MODULES = [
 try:
     config_module = __import__('config_local',
                                globals(), locals())
+
+    print "config_module", config_module
 
     for setting in dir(config_module):
         if setting == setting.upper():

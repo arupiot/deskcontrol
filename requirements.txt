@@ -4,3 +4,4 @@ rdflib
 influxdb
 numpy
 colour
+-e git+https://github.com/augment00/a00_command.git#egg=a00_command
