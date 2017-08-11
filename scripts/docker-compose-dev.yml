@@ -6,12 +6,6 @@ services:
     image: "augment00/augment00-brickd:latest"
     volumes:
       - "/etc/opt/augment00:/etc/opt/augment00"
-    restart: always
-    logging:
-      driver: "syslog"
-      options:
-        syslog-address: "tcp+tls://logs6.papertrailapp.com:23012"
-        tag: "12518459-bda0-4401-9779-41d0aac0b780 brickd"
   dev_deskcontrol:
     container_name: dev_deskcontrol
     privileged: true
@@ -25,8 +19,3 @@ services:
       - "/opt/augment00/dev/deskcontrol:/opt/augment00/dev/deskcontrol"
     env_file: .env
     command: "python -u /opt/augment00/dev/deskcontrol/controller.py"
-    logging:
-      driver: "syslog"
-      options:
-        syslog-address: "tcp+tls://logs6.papertrailapp.com:23012"
-        tag: "12518459-bda0-4401-9779-41d0aac0b780 deskcontrol"
