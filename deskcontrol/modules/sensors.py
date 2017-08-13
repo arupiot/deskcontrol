@@ -117,7 +117,7 @@ class SensorModule(StateModule):
         elif device_identifier == 25:
             sensor = Sensor(self.controller, "dist", uid)
         elif device_identifier == 243:
-            sensor = Sensor(self.controller, "color_temp", uid)
+            sensor = Sensor(self.controller, "colour_temp", uid)
         elif device_identifier == 221:
             sensor = Sensor(self.controller, "air_pressure", uid)
         elif device_identifier == 241:
