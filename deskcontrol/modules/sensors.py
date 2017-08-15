@@ -2,8 +2,6 @@ from datetime import datetime
 from navigation import StateModule
 from sensor_types import SENSORS
 import numbers
-import colour
-import numpy as np
 
 
 class Sensor():
@@ -30,15 +28,14 @@ class Sensor():
             value = value[0]
         elif self.sensor_type == "relay_b":
             value = value[1]
-        elif self.sensor_type == "acceleration":
+        elif self.sensor_type == "acceleration_x":
+            value = value[0]
+        elif self.sensor_type == "acceleration_y":
+            value = value[1]
+        elif self.sensor_type == "acceleration_z":
             value = value[2]
-        elif self.sensor_type == "colour_temp":
+        elif self.sensor_type == "colour":
             r, g, b, c = [int(x / 257) for x in value]
-            RGB = np.array([r, g, b])
-            XYZ = colour.sRGB_to_XYZ(RGB / 255)
-            xy = colour.XYZ_to_xy(XYZ)
-            CCT = colour.xy_to_CCT_Hernandez1999(xy)
-            value = CCT
 
         if isinstance(value, numbers.Number):
             if hasattr(self, "multiplier"):
@@ -117,7 +114,8 @@ class SensorModule(StateModule):
         elif device_identifier == 25:
             sensor = Sensor(self.controller, "dist", uid)
         elif device_identifier == 243:
-            sensor = Sensor(self.controller, "color_temp", uid)
+            sensor = Sensor(self.controller, "colour", uid)
+            sensor = Sensor(self.controller, "colour_temp", uid)
         elif device_identifier == 221:
             sensor = Sensor(self.controller, "air_pressure", uid)
         elif device_identifier == 241:
@@ -125,7 +123,9 @@ class SensorModule(StateModule):
         elif device_identifier == 240:
             sensor = Sensor(self.controller, "magfield", uid)
         elif device_identifier == 250:
-            sensor = Sensor(self.controller, "acceleration", uid)
+            sensor = Sensor(self.controller, "acceleration_x", uid)
+            sensor = Sensor(self.controller, "acceleration_y", uid)
+            sensor = Sensor(self.controller, "acceleration_z", uid)
         elif device_identifier == 232:
             sensor = Sensor(self.controller, "moisture", uid)
 
