@@ -25,6 +25,7 @@ class InfluxModule(StateModule):
     def publish(self, controller, key, value, tags={}):
         try:
             ident = self.controller.identity
+            #print("Sensor: ",ident)
             if self.client:
                 data = [{
                     "measurement": str(ident + "_" + key),

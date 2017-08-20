@@ -22,8 +22,9 @@ class SchedulerModule(StateModule):
             self.detector = MotionSensor(self.controller, "motion", uid)
 
     def publish_raw(self, value):
-        self.controller.publish(
-            self.detector.uid + "_raw", str(value))
+        if self.detector:
+           self.controller.publish(
+               self.detector.uid + "_raw", str(value))
 
     def motion_detected(self):
         self.last_motion = datetime.now()
@@ -31,12 +32,12 @@ class SchedulerModule(StateModule):
         prev = None
         if self.detector:
             prev = self.detector.value
-        self.detector.value = 1
+            self.detector.value = 1
         if "PowerModule" in self.controller.modules:
             self.controller.modules["PowerModule"].power_on()
         if "LightingModule" in self.controller.modules:
             self.controller.modules["LightingModule"].set_light()
-        if not prev:
+        if not prev and self.detector:
             self.detector.publish()
         self.publish_raw(1)
 
@@ -54,7 +55,7 @@ class SchedulerModule(StateModule):
             self.controller.modules["BrickModule"].add_sensor(self.detector)
 
     def tick(self):
-        if self.last_motion and "instance" in self.detector:
+        if self.detector and self.last_motion and "instance" in self.detector:
             if (self.last_motion < datetime.now() -
                     timedelta(minutes=self.poweroff)):
                 print("No motion detected - turning off")
