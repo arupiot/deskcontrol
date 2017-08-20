@@ -3,4 +3,4 @@ pillow
 rdflib
 influxdb
 numpy
-colour
+colour-science
