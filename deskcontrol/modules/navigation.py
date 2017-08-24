@@ -29,7 +29,7 @@ class MenuModule(StateModule):
         self.controller.screen.draw(
             "menu",
             {"title": self.items[self.current][1],
-             "icon": self.items[self.current][1]})
+             "icon": self.items[self.current][1].lower()})
         #    if clear:
         #        self.controller.screen.clear_display()
         #    pos = 0
@@ -51,7 +51,7 @@ class MenuModule(StateModule):
         if not self.controller.screen:
             if device_identifier == 263:
                 self.controller.screen = Screen(self.controller, uid)
-                # print("Screen Initialised")
+                print("Screen Initialised")
                 return True
             return False
 
@@ -71,4 +71,4 @@ class MenuModule(StateModule):
             elif self.current < 0:
                 self.current = len(self.items) - 1
             self.draw(clear=False)
-            # print "Menu: " + str(self.items[self.current][1])
+            print("Menu: " + str(self.items[self.current][1]))

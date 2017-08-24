@@ -9,6 +9,7 @@ class Sensor():
         if sensor_type not in SENSORS:
             raise Exception
         sensor = SENSORS[sensor_type]
+        self.name = sensor["name"]
         self.sensor_type = sensor_type
         self.controller = controller
         self.instance = sensor["class"](uid, controller.ipcon)
@@ -34,8 +35,11 @@ class Sensor():
             value = value[1]
         elif self.sensor_type == "acceleration_z":
             value = value[2]
+        elif self.sensor_type == "acceleration":
+            x, y, z = value
         elif self.sensor_type == "colour":
             r, g, b, c = [int(x / 257) for x in value]
+            print(r,g,b,c)
 
         if isinstance(value, numbers.Number):
             if hasattr(self, "multiplier"):
@@ -47,6 +51,7 @@ class Sensor():
 
     def callback(self, value=None):
         self.value = self.parse_value(value)
+        print(self.value)
         self.updated = datetime.now()
         self.publish()
 
@@ -122,10 +127,11 @@ class SensorModule(StateModule):
             sensor = Sensor(self.controller, "reflectivity", uid)
         elif device_identifier == 240:
             sensor = Sensor(self.controller, "magfield", uid)
-        elif device_identifier == 250:
-            sensor = Sensor(self.controller, "acceleration_x", uid)
-            sensor = Sensor(self.controller, "acceleration_y", uid)
-            sensor = Sensor(self.controller, "acceleration_z", uid)
+        #elif device_identifier == 250:
+        #     sensor = Sensor(self.controller,"acceleration", uid)
+        #    sensor = Sensor(self.controller, "acceleration_x", uid)
+        #    sensor = Sensor(self.controller, "acceleration_y", uid)
+        #    sensor = Sensor(self.controller, "acceleration_z", uid)
         elif device_identifier == 232:
             sensor = Sensor(self.controller, "moisture", uid)
 

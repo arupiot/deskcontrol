@@ -146,6 +146,15 @@ SENSORS = {
         "value_func": "get_edge_count",
         "callback_func": "CALLBACK_EDGE_COUNT",
     },
+    "acceleration": {
+        "name": "Vibratio",
+        "class": BrickletAccelerometer,
+        "units": "g",
+        "brick_tag": "Accelerometer_Sensor",
+        "value_func": "get_acceleration",
+        "multiplier": 0.001,
+        "callback_func": "CALLBACK_ACCELERATION",
+    },
     "acceleration_x": {
         "name": "Vibration X-Axis",
         "class": BrickletAccelerometer,
