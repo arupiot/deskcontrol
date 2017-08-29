@@ -7,6 +7,8 @@ Intended to run on a tinkerforge redbrick but can run anywhere so long as you ca
 Will auto-detect bricklets compatible with the code and provide sensor readings / control of relays on a 128x64 OLED - joystick or multitouch can be used to navigate the menu.
 
 ## Installation
+Requires python-cryptography (use apt-get over pip)
+Install pip dependancies
 Testing:
 Start with ./python controller.py
 

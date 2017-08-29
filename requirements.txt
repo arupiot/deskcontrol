@@ -3,3 +3,5 @@ pillow
 rdflib
 influxdb
 colour
+pyjwt
+paho-mqtt

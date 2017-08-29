@@ -8,8 +8,8 @@
 # Description:       Desk Control Service
 ### END INIT INFO
 
-SCRIPT="sudo python /home/pi/deskcontrol/controller.py"
-RUNIN=/home/pi/deskcontrol/
+SCRIPT="sudo python /home/pi/deskcontrol/deskcontrol/controller.py"
+RUNIN=/home/pi/deskcontrol/deskcontrol/
 RUNAS=pi
 NAME=deskcontrol
 
