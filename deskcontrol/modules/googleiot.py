@@ -30,6 +30,9 @@ class GoogleIoTModule(StateModule):
 
     def __init__(self, controller):
         super(GoogleIoTModule, self).__init__(controller)
+        self.connect()
+
+    def connect(self):
         args = GCLOUD_CONFIG
         self.client = mqtt.Client(
             client_id=(
@@ -47,6 +50,8 @@ class GoogleIoTModule(StateModule):
                 args['algorithm']))
 
         self.client.tls_set(ca_certs=args['ca_certs'])
+
+        self.client.on_disconnect = self.on_disconnect
 
         self.client.connect(
             args['mqtt_bridge_hostname'],
@@ -74,12 +79,7 @@ class GoogleIoTModule(StateModule):
             print(e)
 
     def tick(self):
-        if self.client and "SensorModule" in self.controller.modules:
-            for key in self.controller.modules["SensorModule"].sensors:
-                sensor = self.controller.modules["SensorModule"].sensors[key]
-                if sensor.updated < (datetime.now() -
-                                     timedelta(minutes=1)):
-                    sensor.get_value()
+        pass
 
     def create_jwt(self, project_id, private_key_file, algorithm):
         token = {
@@ -92,3 +92,6 @@ class GoogleIoTModule(StateModule):
             private_key = f.read()
 
         return jwt.encode(token, private_key, algorithm=algorithm)
+
+    def on_disconnect(self, unused_client, unused_userdata, rc):
+        self.connect()
