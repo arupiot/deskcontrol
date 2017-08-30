@@ -41,6 +41,8 @@ MENU_MODULES = [
     ("NetworkModule", "network", "Network"),
 ]
 
+SCHEMA_POST_URL = ""
+
 try:
     config_module = __import__('config_local',
                                globals(), locals())
