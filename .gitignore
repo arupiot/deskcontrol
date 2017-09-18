@@ -1,4 +1,5 @@
 *.pyc
+*.pem
 config_local.py
 creds.json
 setup.log

@@ -24,6 +24,7 @@ SENSORS = {
         "value_func": "get_temperature",
         "multiplier": 0.01,
         "callback_func": "CALLBACK_TEMPERATURE",
+        "variance": 0.1,
     },
     "irtemp": {
         "name": "IR Temperature",
@@ -33,6 +34,7 @@ SENSORS = {
         "value_func": "get_object_temperature",
         "multiplier": 0.1,
         "callback_func": "CALLBACK_OBJECT_TEMPERATURE",
+        "variance": 0.1,
     },
     "humidity": {
         "name": "Humidity",
@@ -42,6 +44,7 @@ SENSORS = {
         "value_func": "get_humidity",
         "multiplier": 0.1,
         "callback_func": "CALLBACK_HUMIDITY",
+        "variance": 0.1,
     },
     "light": {
         "name": "Ambient Light",
@@ -51,6 +54,7 @@ SENSORS = {
         "value_func": "get_illuminance",
         "multiplier": 0.01,
         "callback_func": "CALLBACK_ILLUMINANCE",
+        "variance": 5,
     },
     "sound": {
         "name": "Sound Intensity",
@@ -104,6 +108,7 @@ SENSORS = {
         "value_func": "get_distance",
         "multiplier": 0.1,
         "callback_func": "CALLBACK_DISTANCE",
+        "change_limit": 1,
     },
     "colour": {
         "name": "Colour",

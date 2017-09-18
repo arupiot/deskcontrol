@@ -14,11 +14,12 @@ class Sensor():
         self.sensor_type = sensor_type
         self.controller = controller
         self.instance = sensor["class"](uid, controller.ipcon)
-        self.update_time = 60
+        self.update_time = 300
         self.change_limit = 5
+        self.variance = 1
         for attr in [
                 "brick_tag", "value_func", "units", "multiplier", "offset",
-                "update_time", "change_limit"]:
+                "update_time", "change_limit", "variance"]:
             if attr in sensor:
                 setattr(self, attr, sensor[attr])
         self.uid = str(uid) + "_" + self.brick_tag
@@ -68,13 +69,15 @@ class Sensor():
 
         value = self.parse_value(value)
 
-        self.value = value
         self.updated = datetime.now()
+        self.value = value
         return self.value
 
     def publish(self):
         if (self.published < datetime.now() -
                 timedelta(seconds=self.change_limit)):
+            self.published_value = self.value
+            self.published = datetime.now()
             self.controller.publish(
                 "sensors",
                 sensor_data(self.controller,
@@ -82,14 +85,21 @@ class Sensor():
                             str(self.value),
                             {"type": self.brick_tag, }, ))
 
-    def update_values(self):
+    def roc(self):
         if (self.updated < datetime.now() -
-                timedelta(seconds=self.update_time)):
+                timedelta(seconds=self.change_limit)):
+            if not self.published_value:
+                self.published_value = self.value
             self.get_value()
-            self.publish()
+            if (self.value <= self.published_value - self.variance or
+                    self.value >= self.published_value + self.variance):
+                self.publish()
+            if (self.published < datetime.now() -
+                    timedelta(seconds=self.update_time)):
+                self.publish()
 
     def __str__(self):
-        if not self.value:  # todo: check for out of date value
+        if not self.value:
             self.get_value()
         if not self.value:
             return "None"
@@ -175,5 +185,5 @@ class SensorModule(StateModule):
 
     def tick(self):
         for pk in self.sensors:
-            self.sensors[pk].update_values()
+            self.sensors[pk].roc()
         self.draw(clear=False)
