@@ -44,7 +44,6 @@ SENSORS = {
         "value_func": "get_humidity",
         "multiplier": 0.1,
         "callback_func": "CALLBACK_HUMIDITY",
-        "variance": 0.5,
     },
     "light": {
         "name": "Ambient Light",
