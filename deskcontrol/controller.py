@@ -87,9 +87,9 @@ class Controller:
         for state in self.modules:
             self.modules[state].try_bricklet(uid, device_identifier, position)
 
-    def publish(self, key, value):
+    def publish(self, topic, data):
         for callback in self.publishers:
-            callback(self, key, value)
+            callback(self, topic, data)
 
 
 if __name__ == "__main__":

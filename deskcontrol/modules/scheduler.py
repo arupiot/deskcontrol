@@ -1,6 +1,7 @@
 from navigation import StateModule
 from datetime import datetime, timedelta
 from sensors import Sensor
+from helpers import sensor_data
 
 
 class MotionSensor(Sensor):
@@ -24,7 +25,10 @@ class SchedulerModule(StateModule):
     def publish_raw(self, value):
         if self.detector:
             self.controller.publish(
-                self.detector.uid + "_raw", str(value))
+                "sensors",
+                sensor_data(self.controller,
+                            self.detector.uid + "_raw",
+                            str(value)))
 
     def motion_detected(self):
         self.last_motion = datetime.now()

@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from navigation import StateModule
 from sensor_types import SENSORS
 import numbers
+from helpers import sensor_data
 
 
 class Sensor():
@@ -13,8 +14,11 @@ class Sensor():
         self.sensor_type = sensor_type
         self.controller = controller
         self.instance = sensor["class"](uid, controller.ipcon)
+        self.update_time = 60
+        self.change_limit = 5
         for attr in [
-                "brick_tag", "value_func", "units", "multiplier", "offset"]:
+                "brick_tag", "value_func", "units", "multiplier", "offset",
+                "update_time", "change_limit"]:
             if attr in sensor:
                 setattr(self, attr, sensor[attr])
         self.uid = str(uid) + "_" + self.brick_tag
@@ -23,6 +27,8 @@ class Sensor():
                 getattr(self.instance, sensor["callback_func"]),
                 self.callback)
         self.get_value()
+        self.published = datetime.utcfromtimestamp(0)
+        self.publish()
 
     def parse_value(self, value):
         if self.sensor_type == "relay_a":
@@ -39,7 +45,7 @@ class Sensor():
             x, y, z = value
         elif self.sensor_type == "colour":
             r, g, b, c = [int(x / 257) for x in value]
-            print(r,g,b,c)
+            print(r, g, b, c)
 
         if isinstance(value, numbers.Number):
             if hasattr(self, "multiplier"):
@@ -51,7 +57,6 @@ class Sensor():
 
     def callback(self, value=None):
         self.value = self.parse_value(value)
-        print(self.value)
         self.updated = datetime.now()
         self.publish()
 
@@ -65,11 +70,23 @@ class Sensor():
 
         self.value = value
         self.updated = datetime.now()
-        self.publish()
         return self.value
 
     def publish(self):
-        self.controller.publish(self.uid, str(self.value))
+        if (self.published < datetime.now() -
+                timedelta(seconds=self.change_limit)):
+            self.controller.publish(
+                "sensors",
+                sensor_data(self.controller,
+                            self.uid,
+                            str(self.value),
+                            {"type": self.brick_tag, }, ))
+
+    def update_values(self):
+        if (self.updated < datetime.now() -
+                timedelta(seconds=self.update_time)):
+            self.get_value()
+            self.publish()
 
     def __str__(self):
         if not self.value:  # todo: check for out of date value
@@ -81,22 +98,23 @@ class Sensor():
 
 class SensorModule(StateModule):
     menu_title = "Sensors"
+    always_tick = True
     sensors = {}
     current = 0
 
     def draw(self, clear=True):
-        if clear:
-            self.controller.screen.device.clear_display()
-        if not len(self.sensors):
-            self.controller.ipcon.enumerate()
-            self.controller.screen.draw("values", {})
-            return
-        sensor = self.sensors[self.sensors.keys()[self.current]]
-        sensor.get_value()
-        self.controller.screen.draw(
-            "values",
-            {"title": sensor.name,
-             "value": str(sensor)})
+        if self.controller.screen and self.controller.current_module == self:
+            if clear:
+                self.controller.screen.device.clear_display()
+            if not len(self.sensors):
+                self.controller.ipcon.enumerate()
+                self.controller.screen.draw("values", {})
+                return
+            sensor = self.sensors[self.sensors.keys()[self.current]]
+            self.controller.screen.draw(
+                "values",
+                {"title": sensor.name,
+                 "value": str(sensor)})
 
     def try_bricklet(self, uid, device_identifier, position):
         sensor = None
@@ -127,7 +145,7 @@ class SensorModule(StateModule):
             sensor = Sensor(self.controller, "reflectivity", uid)
         elif device_identifier == 240:
             sensor = Sensor(self.controller, "magfield", uid)
-        #elif device_identifier == 250:
+        # elif device_identifier == 250:
         #     sensor = Sensor(self.controller,"acceleration", uid)
         #    sensor = Sensor(self.controller, "acceleration_x", uid)
         #    sensor = Sensor(self.controller, "acceleration_y", uid)
@@ -156,4 +174,6 @@ class SensorModule(StateModule):
             self.draw()
 
     def tick(self):
+        for pk in self.sensors:
+            self.sensors[pk].update_values()
         self.draw(clear=False)
