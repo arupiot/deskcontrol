@@ -74,7 +74,7 @@ SENSORS = {
         "units": "V",
         "brick_tag": "Electrical_Power_Meter",
         "value_func": "get_voltage",
-        "multiplier": 0.01,
+        "multiplier": 0.001,
         "value_offset": 0,
         "callback_func": "CALLBACK_VOLTAGE",
     },
@@ -84,7 +84,7 @@ SENSORS = {
         "units": "A",
         "brick_tag": "Electrical_Power_Meter",
         "value_func": "get_current",
-        "multiplier": 0.01,
+        "multiplier": 0.001,
         "callback_func": "CALLBACK_CURRENT",
     },
     "power": {
@@ -93,7 +93,7 @@ SENSORS = {
         "units": "W",
         "brick_tag": "Electrical_Power_Meter",
         "value_func": "get_power",
-        "multiplier": 0.01,
+        "multiplier": 0.001,
         "callback_func": "CALLBACK_POWER",
     },
     "dist": {

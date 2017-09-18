@@ -4,3 +4,4 @@ rdflib
 influxdb
 pyjwt
 paho-mqtt
+netifaces 
