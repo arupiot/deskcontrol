@@ -44,7 +44,6 @@ SENSORS = {
         "value_func": "get_humidity",
         "multiplier": 0.1,
         "callback_func": "CALLBACK_HUMIDITY",
-        "variance": 0.5,
     },
     "light": {
         "name": "Ambient Light",
@@ -109,7 +108,7 @@ SENSORS = {
         "multiplier": 0.1,
         "callback_func": "CALLBACK_DISTANCE",
         "change_limit": 1,
-        "variance": 2,
+        "variance": 5,
     },
     "colour": {
         "name": "Colour",
