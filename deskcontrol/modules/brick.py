@@ -11,10 +11,10 @@ class BrickModule(StateModule):
 
     def build_sensor_list(self):
         self.sensor_list = []
-        if "SensorModule" in self.controller.modules:
-            sensors = self.controller.modules["SensorModule"].sensors
-            for pk in sensors:
-                self.sensor_list.append(sensors[pk])
+        # if "SensorModule" in self.controller.modules:
+        #     sensors = self.controller.modules["SensorModule"].sensors
+        #     for pk in sensors:
+        #         self.sensor_list.append(sensors[pk])
         self.updated = datetime.now()
         return self.sensor_list
 
