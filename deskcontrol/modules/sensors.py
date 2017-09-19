@@ -168,8 +168,6 @@ class SensorModule(StateModule):
 
         if sensor:
             self.sensors[sensor.uid] = sensor
-            if "BrickModule" in self.controller.modules:
-                self.controller.modules["BrickModule"].add_sensor(sensor)
 
     def navigate(self, direction):
         if direction == "back":

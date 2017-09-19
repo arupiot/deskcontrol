@@ -16,6 +16,7 @@ class SleepModule(StateModule):
         self.check_sleep()
 
     def try_bricklet(self, uid, device_identifier, position):
+        sensor = None
         if device_identifier == 233:
             sensor = Sensor(self.controller, "motion", uid)
             sensor.change_callbacks.append(self.motion_changed)
