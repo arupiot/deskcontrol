@@ -28,10 +28,9 @@ MODULES = [
     ("InputModule", "inputs", "Inputs"),
     ("SleepModule", "sleep", "Sleep"),
     ("RFIDModule", "rfid", "RFID"),
-    ("BrickModule", "brick", "Brick"),
     ("InfluxModule", "influx", "InfluxDB"),
     ("GoogleIoTModule", "googleiot", "GoogleIoT"),
-    ("CommanderModule", "commander", "Commander"),
+    ("BrickModule", "brick", "Brick"),
 ]
 
 MENU_MODULES = [

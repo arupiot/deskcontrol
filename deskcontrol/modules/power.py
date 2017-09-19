@@ -6,7 +6,6 @@ class PowerModule(StateModule):
     menu_title = "Power"
     relays = {}
     current = 0
-    afk = False
 
     def __init__(self, controller):
         super(PowerModule, self).__init__(controller)
