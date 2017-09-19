@@ -1,8 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from navigation import StateModule
 from sensor_types import SENSORS
 import numbers
-from helpers import sensor_data
+from helpers import sensor_data, seconds_past
 
 
 class Sensor():
@@ -17,6 +17,7 @@ class Sensor():
         self.update_time = 300
         self.change_limit = 5
         self.variance = 1
+        self.change_callbacks = []
         for attr in [
                 "brick_tag", "value_func", "units", "multiplier", "offset",
                 "update_time", "change_limit", "variance"]:
@@ -74,8 +75,7 @@ class Sensor():
         return self.value
 
     def publish(self):
-        if (self.published < datetime.now() -
-                timedelta(seconds=self.change_limit)):
+        if seconds_past(self.published, self.change_limit):
             self.published_value = self.value
             self.published = datetime.now()
             self.controller.publish(
@@ -86,16 +86,16 @@ class Sensor():
                             {"type": self.brick_tag, }, ))
 
     def roc(self):
-        if (self.updated < datetime.now() -
-                timedelta(seconds=self.change_limit)):
+        if seconds_past(self.updated, self.change_limit):
             if not self.published_value:
                 self.published_value = self.value
             self.get_value()
             if (self.value <= self.published_value - self.variance or
                     self.value >= self.published_value + self.variance):
                 self.publish()
-            if (self.published < datetime.now() -
-                    timedelta(seconds=self.update_time)):
+                for callback in self.change_callbacks:
+                    callback(self.value)
+            if seconds_past(self.published, self.update_time):
                 self.publish()
 
     def __str__(self):
@@ -108,9 +108,12 @@ class Sensor():
 
 class SensorModule(StateModule):
     menu_title = "Sensors"
-    always_tick = True
     sensors = {}
     current = 0
+
+    def __init__(self, controller):
+        super(SensorModule, self).__init__(controller)
+        self.update_sensors()
 
     def draw(self, clear=True):
         if self.controller.screen and self.controller.current_module == self:
@@ -183,7 +186,10 @@ class SensorModule(StateModule):
             # print("Sensor: " + str(list(self.sensors)[self.current]))
             self.draw()
 
-    def tick(self):
+    def update_sensors(self):
         for pk in self.sensors:
             self.sensors[pk].roc()
+        self.controller.scheduler.enter(1, 1, self.update_sensors, (),)
+
+    def tick(self):
         self.draw(clear=False)

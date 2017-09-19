@@ -16,6 +16,8 @@
 # Original source: https://github.com/GoogleCloudPlatform/python-docs-samples/
 #              blob/master/iot/api-client/mqtt_example/cloudiot_mqtt_example.py
 
+# Subscribe/Callback Docs https://eclipse.org/paho/clients/python/docs/
+
 from navigation import StateModule
 from datetime import datetime, timedelta
 import jwt
@@ -26,7 +28,6 @@ from config import GCLOUD_CONFIG
 
 class GoogleIoTModule(StateModule):
     client = None
-    always_tick = True
 
     def __init__(self, controller):
         super(GoogleIoTModule, self).__init__(controller)
@@ -65,7 +66,7 @@ class GoogleIoTModule(StateModule):
             print("Error connecting to GCloud:")
             print(e)
 
-    def publish(self, controller, topic, data):
+    def publish(self, topic, data):
         try:
             blob = json.dumps(data)
             # print('Publishing message: \'{}\''.format(blob))
@@ -73,9 +74,6 @@ class GoogleIoTModule(StateModule):
         except Exception as e:
             print("Error publishing to GCloud:")
             print(e)
-
-    def tick(self):
-        pass
 
     def create_jwt(self, project_id, private_key_file, algorithm):
         token = {

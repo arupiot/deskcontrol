@@ -26,7 +26,7 @@ GCLOUD_CONFIG = {
 MODULES = [
     ("MenuModule", "navigation", "Navigation"),
     ("InputModule", "inputs", "Inputs"),
-    ("SchedulerModule", "scheduler", "Schedule"),
+    ("SleepModule", "sleep", "Sleep"),
     ("RFIDModule", "rfid", "RFID"),
     ("BrickModule", "brick", "Brick"),
     ("InfluxModule", "influx", "InfluxDB"),
@@ -37,7 +37,7 @@ MODULES = [
 MENU_MODULES = [
     ("SensorModule", "sensors", "Sensors"),
     ("LightingModule", "lighting", "Lighting"),
-    # ("PowerModule", "power", "Power"),
+    ("PowerModule", "power", "Power"),
     ("NetworkModule", "network", "Network"),
 ]
 

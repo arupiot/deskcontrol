@@ -38,10 +38,18 @@ class Screen():
         self.device.clear_display()
         self.device.set_display_configuration(0, False)
         self.draw_splash()
+        controller.event_handlers.append(self.event_handler)
 
     def draw_splash(self):
         image = Image.open("images/splash.png")
         self.process_image(image)
+
+    def event_handler(self, name, data):
+        if name == "sleep":
+            self.device.clear_display()
+            self.controller.current_module = None
+        if name == "wake":
+            self.draw_splash()
 
     def process_image(self, image):
         image = image.convert("1")

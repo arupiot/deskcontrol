@@ -216,5 +216,7 @@ SENSORS = {
         "units": "",
         "brick_tag": "Motion_Detector",
         "value_func": "get_motion_detected",
+        "variance": 0.5,
+        "change_limit": 15,
     },
 }

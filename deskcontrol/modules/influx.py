@@ -20,7 +20,7 @@ class InfluxModule(StateModule):
             print("Error connecting to InfluxDB:")
             print(e)
 
-    def publish(self, controller, topic, data):
+    def publish(self, topic, data):
         try:
             if topic == "sensors":
                 self.client.write_points([data])

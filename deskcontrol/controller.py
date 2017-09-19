@@ -21,6 +21,7 @@ class Controller:
     modules = {}
     ticklist = []
     publishers = []
+    event_handlers = []
 
     scheduler = sched.scheduler(time.time, time.sleep)
 
@@ -56,14 +57,11 @@ class Controller:
             self.modules[module].tick()
         self.scheduler.enter(1, 1, desk.tick, (),)
 
-    def get_current_module(self):
-        return self.current_module
-
     def change_module(self, module):
         if self.current_module:
             self.previous_module = self.current_module
         if module in self.modules:
-            print("changing to " + module)
+            # print("changing to " + module)
             self.current_module = self.modules[module]
         self.current_module.draw()
 
@@ -72,6 +70,8 @@ class Controller:
             self.change_module(self.previous_module.id)
 
     def navigate(self, direction):
+        if "SleepModule" in self.modules:
+            self.modules["SleepModule"].motion_changed(1)
         if direction not in ["forward", "back", "up", "down", "enter"]:
             return
         if self.current_module:
@@ -89,7 +89,11 @@ class Controller:
 
     def publish(self, topic, data):
         for callback in self.publishers:
-            callback(self, topic, data)
+            callback(topic, data)
+
+    def event(self, name, data):
+        for callback in self.event_handlers:
+            callback(name, data)
 
 
 if __name__ == "__main__":

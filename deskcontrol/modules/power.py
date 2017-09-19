@@ -8,6 +8,10 @@ class PowerModule(StateModule):
     current = 0
     afk = False
 
+    def __init__(self, controller):
+        super(PowerModule, self).__init__(controller)
+        controller.event_handlers.append(self.event_handler)
+
     def draw(self, clear=True):
         if clear:
             self.controller.screen.device.clear_display()
@@ -38,16 +42,12 @@ class PowerModule(StateModule):
             if "LightingModule" in self.controller.modules:
                 self.controller.modules["LightingModule"].set_light()
 
-    def power_off(self):
-        if not self.afk:
-            self.afk = True
+    def event_handler(self, name, data):
+        if name == "sleep":
             for relay in self.relays:
                 #  TODO: Less hacky pls
                 self.relays[relay].instance.set_state(False, True)
-
-    def power_on(self):
-        if self.afk:
-            self.afk = False
+        if name == "wake":
             for relay in self.relays:
                 #  TODO: Less hacky pls
                 self.relays[relay].instance.set_state(False, False)

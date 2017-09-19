@@ -1,4 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+
+
+def seconds_past(datetime, seconds):
+    return (datetime < datetime.now() - timedelta(seconds=seconds))
 
 
 def sensor_data(controller, key, value, tags={}):
