@@ -15,8 +15,8 @@ class Sensor():
         self.controller = controller
         self.instance = sensor["class"](uid, controller.ipcon)
         self.update_time = 300
-        self.change_limit = 5
-        self.variance = 1
+        self.change_limit = 20
+        self.variance = 5
         self.change_callbacks = []
         for attr in [
                 "brick_tag", "value_func", "units", "multiplier", "offset",

@@ -24,7 +24,7 @@ SENSORS = {
         "value_func": "get_temperature",
         "multiplier": 0.01,
         "callback_func": "CALLBACK_TEMPERATURE",
-        "variance": 0.5,
+        "variance": 1,
     },
     "irtemp": {
         "name": "IR Temperature",
@@ -34,7 +34,7 @@ SENSORS = {
         "value_func": "get_object_temperature",
         "multiplier": 0.1,
         "callback_func": "CALLBACK_OBJECT_TEMPERATURE",
-        "variance": 0.5,
+        "variance": 1,
     },
     "humidity": {
         "name": "Humidity",
@@ -53,7 +53,6 @@ SENSORS = {
         "value_func": "get_illuminance",
         "multiplier": 0.01,
         "callback_func": "CALLBACK_ILLUMINANCE",
-        "variance": 5,
     },
     "sound": {
         "name": "Sound Intensity",
@@ -62,8 +61,6 @@ SENSORS = {
         "brick_tag": "Noise_Sensor",
         "value_func": "get_intensity",
         "callback_func": "CALLBACK_INTENSITY",
-        "change_limit": 20,
-        "variance": 10,
     },
     "co2": {
         "name": "Carbon Dioxide",
@@ -84,7 +81,6 @@ SENSORS = {
         "multiplier": 0.001,
         "value_offset": 0,
         "callback_func": "CALLBACK_VOLTAGE",
-        "change_limit": 20,
     },
     "current": {
         "name": "Current",
@@ -94,7 +90,6 @@ SENSORS = {
         "value_func": "get_current",
         "multiplier": 0.001,
         "callback_func": "CALLBACK_CURRENT",
-        "change_limit": 20,
     },
     "power": {
         "name": "Power",
@@ -104,7 +99,6 @@ SENSORS = {
         "value_func": "get_power",
         "multiplier": 0.001,
         "callback_func": "CALLBACK_POWER",
-        "change_limit": 20,
     },
     "dist": {
         "name": "Desk Height",
@@ -114,8 +108,6 @@ SENSORS = {
         "value_func": "get_distance",
         "multiplier": 0.1,
         "callback_func": "CALLBACK_DISTANCE",
-        "change_limit": 20,
-        "variance": 5,
     },
     "colour": {
         "name": "Colour",
@@ -159,7 +151,7 @@ SENSORS = {
         "callback_func": "CALLBACK_EDGE_COUNT",
     },
     "acceleration": {
-        "name": "Vibratio",
+        "name": "Vibration",
         "class": BrickletAccelerometer,
         "units": "g",
         "brick_tag": "Accelerometer_Sensor",
@@ -215,7 +207,5 @@ SENSORS = {
         "units": "",
         "brick_tag": "Motion_Detector",
         "value_func": "get_motion_detected",
-        "variance": 2,
-        "change_limit": 20,
     },
 }
