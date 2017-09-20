@@ -88,11 +88,11 @@ class Sensor():
             if not self.published_value:
                 self.published_value = self.value
             self.get_value()
+            for callback in self.change_callbacks:
+                callback(self.value)
             if (self.value <= self.published_value - self.variance or
                     self.value >= self.published_value + self.variance):
                 self.publish()
-                for callback in self.change_callbacks:
-                    callback(self.value)
             if seconds_past(self.published, self.update_time):
                 self.publish()
 
