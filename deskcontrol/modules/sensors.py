@@ -20,7 +20,7 @@ class Sensor():
         self.change_callbacks = []
         for attr in [
                 "brick_tag", "value_func", "units", "multiplier", "offset",
-                "update_time", "change_limit", "variance"]:
+                "update_time", "change_limit", "variance", "sequence"]:
             if attr in sensor:
                 setattr(self, attr, sensor[attr])
         self.uid = str(uid) + "_" + self.brick_tag
@@ -33,10 +33,8 @@ class Sensor():
         self.publish()
 
     def parse_value(self, value):
-        if self.sensor_type == "relay_a":
-            value = value[0]
-        elif self.sensor_type == "relay_b":
-            value = value[1]
+        if self.sensor_type == "dualrelay":
+            value = str(value[0]) + str(value[1])
         elif self.sensor_type == "acceleration_x":
             value = value[0]
         elif self.sensor_type == "acceleration_y":

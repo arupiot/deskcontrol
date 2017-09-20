@@ -18,8 +18,9 @@ class PowerModule(StateModule):
             self.controller.ipcon.enumerate()
             self.controller.screen.draw("values", {})
             return
-        relays = self.relays[self.relays.keys()[self.current]]
-        state = relays["instance"].get_state()[relays["relay"]]
+        key = self.relays.keys()[self.current]
+        relay = self.relays[key]
+        state = relay.instance.get_state()[int(key[-1:])]
         if state:
             state = "Off"
         else:
@@ -27,13 +28,14 @@ class PowerModule(StateModule):
 
         self.controller.screen.draw(
             "values",
-            {"title": relays["name"], "value": str(state), })
+            {"title": relay.name, "value": str(state), })
 
     def switch_relay(self):
         if self.relays:
-            relay = self.relays[self.relays.keys()[self.current]]
+            key = self.relays.keys()[self.current]
+            relay = self.relays[key]
             state = relay.instance.get_state()
-            if relay.instance:
+            if int(key[-1:]):
                 relay.instance.set_state(state[0], not state[1])
             else:
                 relay.instance.set_state(not state[0], state[1])
@@ -53,9 +55,10 @@ class PowerModule(StateModule):
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
-            for x in ["relay_a", "relay_b"]:
-                s = Sensor(self.controller, x, uid)
-                self.relays[s.uid] = s
+            s = Sensor(self.controller, "dualrelay", uid)
+            # Todo: labelling
+            self.relays[s.uid + "_0"] = s
+            self.relays[s.uid + "_1"] = s
 
     def navigate(self, direction):
         if direction == "back":

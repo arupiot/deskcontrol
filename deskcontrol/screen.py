@@ -50,6 +50,7 @@ class Screen():
             self.controller.current_module = None
         if name == "wake":
             self.draw_splash()
+            self.controller.current_module = None
 
     def process_image(self, image):
         image = image.convert("1")

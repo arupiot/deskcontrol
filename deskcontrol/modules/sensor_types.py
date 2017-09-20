@@ -202,15 +202,8 @@ SENSORS = {
         "value_func": "get_moisture_value",
         "callback_func": "CALLBACK_MOISTURE",
     },
-    "relay_a": {
-        "name": "Relay Channel 1",
-        "class": BrickletDualRelay,
-        "units": "",
-        "brick_tag": "Relay_Sensor",
-        "value_func": "get_state",
-    },
-    "relay_b": {
-        "name": "Relay Channel 2",
+    "dualrelay": {
+        "name": "Dual Relay Bricklet",
         "class": BrickletDualRelay,
         "units": "",
         "brick_tag": "Relay_Sensor",
