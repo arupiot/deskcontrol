@@ -35,7 +35,7 @@ MODULES = [
 
 MENU_MODULES = [
     ("SensorModule", "sensors", "Sensors"),
-    ("LightingModule", "lighting", "Lighting"),
+    #("LightingModule", "lighting", "Lighting"),
     ("PowerModule", "power", "Power"),
     ("NetworkModule", "network", "Network"),
 ]
