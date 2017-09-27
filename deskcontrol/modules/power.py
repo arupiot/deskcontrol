@@ -40,8 +40,6 @@ class PowerModule(StateModule):
             else:
                 relay.instance.set_state(not state[0], state[1])
             self.draw(False)
-            if "LightingModule" in self.controller.modules:
-                self.controller.modules["LightingModule"].set_light()
 
     def event_handler(self, name, data):
         if name == "sleep":

@@ -20,6 +20,10 @@ class LightingModule(StateModule):
         {"name": "Green", "color": (0, 255, 0)},
     ]
 
+    def __init__(self, controller):
+        super(LightingModule, self).__init__(controller)
+        self.set_light()
+
     def draw(self, clear=True):
         if clear:
             self.controller.screen.device.clear_display()
@@ -53,7 +57,6 @@ class LightingModule(StateModule):
             }
             self.device.set_chip_type(self.device.CHIP_TYPE_WS2811)
             self.device.set_channel_mapping(self.device.CHANNEL_MAPPING_BRG)
-            self.set_light()
             print("Created LEDBrick Output")
 
     def change_light(self, direction):
@@ -73,23 +76,26 @@ class LightingModule(StateModule):
                     self.color = len(self.colors) - 1
                 else:
                     self.color -= 1
-        self.set_light()
         # print "change " + direction + str(self.color)
 
     def set_light(self):
-        color = self.colors[self.color]["color"]
-        color = (int(color[0] * self.intens / 100),
-                 int(color[1] * self.intens / 100),
-                 int(color[2] * self.intens / 100))
-        r = [color[0] for i in range(16)]
-        b = [color[1] for i in range(16)]
-        g = [color[2] for i in range(16)]
-        self.device.set_rgb_values(0, 16, r, b, g)
+        print("tick")
+        if self.device:
+            color = self.colors[self.color]["color"]
+            color = (int(color[0] * self.intens / 100),
+                     int(color[1] * self.intens / 100),
+                     int(color[2] * self.intens / 100))
+            r = [color[0] for i in range(16)]
+            b = [color[1] for i in range(16)]
+            g = [color[2] for i in range(16)]
+            self.device.set_rgb_values(0, 16, r, b, g)
 
-        r = [255 for i in range(16)]
-        b = [0 for i in range(16)]
-        g = [0 for i in range(16)]
-        self.device.set_rgb_values(17, 1, r, b, g)
+            r = [255 for i in range(16)]
+            b = [0 for i in range(16)]
+            g = [0 for i in range(16)]
+            self.device.set_rgb_values(17, 1, r, b, g)
+
+        self.controller.scheduler.enter(1, 1, self.set_light, (),)
 
     def navigate(self, direction):
         output = self.outputs[self.outputs.keys()[self.current]]
