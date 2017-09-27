@@ -13,6 +13,7 @@ class RFIDModule(StateModule):
         "411713624212177128": "Ben",
         "45014924212177128": "Mike",
         "41166424212177128": "Francesco",
+        "19316121643": "Alvise",
     }
 
     def draw(self, clear=True):
