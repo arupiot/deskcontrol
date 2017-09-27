@@ -94,7 +94,8 @@ class Screen():
                 d.text((20, 12), "Nothing\nConnected", fill=255, font=font_t)
             else:
                 d.text((15, 7), params["title"].title(), fill=255, font=font_t)
-                d.text((20, 28), params["value"], fill=255, font=font_v)
+                if params["value"]:
+                    d.text((20, 28), params["value"], fill=255, font=font_v)
 
         elif layout == "edit":
             image.paste(back, (-5, 20))
