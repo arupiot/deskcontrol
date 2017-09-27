@@ -7,7 +7,7 @@ from modules.sensors import Sensor
 class SleepModule(StateModule):
     always_tick = True
     last_motion = datetime.now()
-    poweroff = 60
+    poweroff = 120
     awake = True
     sensor = None
 

@@ -89,7 +89,7 @@ class Sensor():
                 self.published_value = self.value
             self.get_value()
             for callback in self.change_callbacks:
-                callback(self.value)
+                    callback(self.value)
             if (self.value <= self.published_value - self.variance or
                     self.value >= self.published_value + self.variance):
                 self.publish()
