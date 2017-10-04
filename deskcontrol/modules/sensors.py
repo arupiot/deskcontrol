@@ -166,6 +166,7 @@ class SensorModule(StateModule):
 
         if sensor:
             self.sensors[sensor.uid] = sensor
+            self.controller.event("new-sensor", sensor.uid)
 
     def navigate(self, direction):
         if direction == "back":

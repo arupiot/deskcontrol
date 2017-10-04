@@ -31,16 +31,18 @@ MODULES = [
     ("InfluxModule", "influx", "InfluxDB"),
     ("GoogleIoTModule", "googleiot", "GoogleIoT"),
     ("BrickModule", "brick", "Brick"),
+    ("PickleModule", "pickle", "Local Storage"),
 ]
 
 MENU_MODULES = [
     ("SensorModule", "sensors", "Sensors"),
-    #("LightingModule", "lighting", "Lighting"),
+    # ("LightingModule", "lighting", "Lighting"),
     ("PowerModule", "power", "Power"),
     ("NetworkModule", "network", "Network"),
 ]
 
 SCHEMA_POST_URL = ""
+PICKLEDB = "deskcontrol.db"
 
 try:
     config_module = __import__('config_local',

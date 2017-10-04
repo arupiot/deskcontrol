@@ -20,8 +20,13 @@ class Controller:
 
     modules = {}
     ticklist = []
+
+    # Publishers receive data from modules to publish to an external system
     publishers = []
+    # Event handlers receive internal events to trigger actions
     event_handlers = []
+    # The local database stores key value pairs
+    localdb = None
 
     scheduler = sched.scheduler(time.time, time.sleep)
 
@@ -92,6 +97,7 @@ class Controller:
             callback(topic, data)
 
     def event(self, name, data):
+        print("event triggered", name, data)
         for callback in self.event_handlers:
             callback(name, data)
 
