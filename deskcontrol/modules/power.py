@@ -25,10 +25,15 @@ class PowerModule(StateModule):
             state = "Off"
         else:
             state = "On "
-
+        if self.controller.localdb:
+            unique_name = self.controller.localdb.get(relay.uid)
+        if unique_name:
+            name = unique_name
+        else:
+            name = relay.name
         self.controller.screen.draw(
             "values",
-            {"title": relay.name, "value": str(state), })
+            {"title": name, "value": str(state), })
 
     def switch_relay(self):
         if self.relays:

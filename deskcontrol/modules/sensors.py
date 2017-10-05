@@ -122,9 +122,15 @@ class SensorModule(StateModule):
                 self.controller.screen.draw("values", {})
                 return
             sensor = self.sensors[self.sensors.keys()[self.current]]
+            if self.controller.localdb:
+                unique_name = self.controller.localdb.get(sensor.uid)
+            if unique_name:
+                name = unique_name
+            else:
+                name = sensor.name
             self.controller.screen.draw(
                 "values",
-                {"title": sensor.name,
+                {"title": name,
                  "value": str(sensor)})
 
     def try_bricklet(self, uid, device_identifier, position):

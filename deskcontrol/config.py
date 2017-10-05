@@ -30,7 +30,7 @@ MODULES = [
     ("RFIDModule", "rfid", "RFID"),
     ("InfluxModule", "influx", "InfluxDB"),
     ("GoogleIoTModule", "googleiot", "GoogleIoT"),
-    ("BrickModule", "brick", "Brick"),
+    ("KilnModule", "kiln", "Kiln"),
     ("PickleModule", "pickle", "Local Storage"),
 ]
 

@@ -36,6 +36,9 @@ class GoogleIoTModule(StateModule):
             GCLOUD_CONFIG['device_id'])
         self.connect()
 
+    def on_message(self, userdata, message):
+        print(userdata, message)
+
     def connect(self):
         try:
             args = GCLOUD_CONFIG
@@ -55,6 +58,10 @@ class GoogleIoTModule(StateModule):
                     args['algorithm']))
 
             self.client.tls_set(ca_certs=args['ca_certs'])
+
+            self.client.on_message = self.on_message
+            self.client.subscribe('/devices/{}/events/commands'.format(
+                GCLOUD_CONFIG['device_id'], 1))
 
             self.client.connect(
                 args['mqtt_bridge_hostname'],
