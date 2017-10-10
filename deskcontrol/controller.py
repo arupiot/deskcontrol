@@ -21,10 +21,8 @@ class Controller:
     modules = {}
     ticklist = []
 
-    # Publishers receive data from modules to publish to an external system
-    publishers = []
-    # Event handlers receive internal events to trigger actions
-    event_handlers = []
+    # Event handlers handle internal events
+    event_handlers = {}
     # The local database stores key value pairs
     localdb = None
 
@@ -92,14 +90,17 @@ class Controller:
         for state in self.modules:
             self.modules[state].try_bricklet(uid, device_identifier, position)
 
-    def publish(self, topic, data):
-        for callback in self.publishers:
-            callback(topic, data)
+    def event(self, event, data):
+        print("event triggered", event, data)
+        if event in self.event_handlers:
+            for handler in self.event_handlers[event]:
+                handler(data)
 
-    def event(self, name, data):
-        print("event triggered", name, data)
-        for callback in self.event_handlers:
-            callback(name, data)
+    def add_event_handler(self, event, handler):
+        if event in self.event_handlers:
+            self.event_handlers[event].append(handler)
+        else:
+            self.event_handlers[event] = [handler, ]
 
 
 if __name__ == "__main__":

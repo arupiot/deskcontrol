@@ -13,7 +13,8 @@ class SleepModule(StateModule):
 
     def __init__(self, controller):
         super(SleepModule, self).__init__(controller)
-        controller.event_handlers.append(self.event_handler)
+        controller.add_event_handler("sleep", self.on_sleep)
+        controller.add_event_handler("wake", self.on_wake)
         self.check_sleep()
 
     def try_bricklet(self, uid, device_identifier, position):
@@ -38,8 +39,8 @@ class SleepModule(StateModule):
                 self.controller.event("sleep", True)
         self.controller.scheduler.enter(60, 1, self.check_sleep, (),)
 
-    def event_handler(self, name, data):
-        if name == "sleep":
-            self.awake = False
-        if name == "wake":
-            self.awake = True
+    def on_sleep(self, data):
+        self.awake = False
+
+    def on_wake(self, data):
+        self.awake = True

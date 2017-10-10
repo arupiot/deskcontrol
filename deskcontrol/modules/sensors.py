@@ -2,7 +2,7 @@ from datetime import datetime
 from navigation import StateModule
 from sensor_types import SENSORS
 import numbers
-from helpers import sensor_data, seconds_past
+from helpers import seconds_past
 
 
 class Sensor():
@@ -76,12 +76,7 @@ class Sensor():
         if seconds_past(self.published, self.change_limit):
             self.published_value = self.value
             self.published = datetime.now()
-            self.controller.publish(
-                "sensors",
-                sensor_data(self.controller,
-                            self.uid,
-                            str(self.value),
-                            {"type": self.brick_tag, }, ))
+            self.controller.event("sensor-publish", self)
 
     def roc(self):
         if seconds_past(self.updated, self.change_limit):

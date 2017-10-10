@@ -24,6 +24,7 @@ import jwt
 import json
 import paho.mqtt.client as mqtt
 from config import GCLOUD_CONFIG
+from helpers import sensor_data
 
 
 class GoogleIoTModule(StateModule):
@@ -31,7 +32,8 @@ class GoogleIoTModule(StateModule):
 
     def __init__(self, controller):
         super(GoogleIoTModule, self).__init__(controller)
-        controller.publishers.append(self.publish)
+        controller.add_event_handler("sensor-publish", self.publish_sensor)
+        controller.add_event_handler("kiln-publish", self.publish_kiln)
         self.mqtt_topic = '/devices/{}/events'.format(
             GCLOUD_CONFIG['device_id'])
         self.connect()
@@ -73,11 +75,24 @@ class GoogleIoTModule(StateModule):
             print("Error connecting to GCloud:")
             print(e)
 
-    def publish(self, topic, data):
+    def publish_sensor(self, data):
+        data = sensor_data(
+            self.controller,
+            data.uid,
+            str(data.value),
+            {"type": data.brick_tag, }, )
         try:
             blob = json.dumps(data)
             # print('Publishing message: \'{}\''.format(blob))
-            self.client.publish(self.mqtt_topic + '/' + topic, blob, qos=1)
+            self.client.publish(self.mqtt_topic + '/sensor', blob, qos=1)
+        except Exception as e:
+            print("Error publishing to GCloud:")
+            print(e)
+
+    def publish_kiln(self, data):
+        try:
+            blob = json.dumps(data)
+            self.client.publish(self.mqtt_topic + '/kiln', blob, qos=1)
         except Exception as e:
             print("Error publishing to GCloud:")
             print(e)

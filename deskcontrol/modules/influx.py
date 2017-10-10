@@ -1,6 +1,7 @@
 from navigation import StateModule
 from influxdb import InfluxDBClient
 from config import INFLUX_AUTH
+from helpers import sensor_data
 
 
 class InfluxModule(StateModule):
@@ -8,7 +9,7 @@ class InfluxModule(StateModule):
 
     def __init__(self, controller):
         super(InfluxModule, self).__init__(controller)
-        controller.publishers.append(self.publish)
+        controller.add_event_handler("sensor-publish", self.publish_sensor)
         self.connect(INFLUX_AUTH)
 
     def connect(self, auth):
@@ -20,10 +21,14 @@ class InfluxModule(StateModule):
             print("Error connecting to InfluxDB:")
             print(e)
 
-    def publish(self, topic, data):
+    def publish_sensor(self, data):
         try:
-            if topic == "sensors":
-                self.client.write_points([data])
+            data = sensor_data(
+                self.controller,
+                data.uid,
+                str(data.value),
+                {"type": data.brick_tag, }, )
+            self.client.write_points([data])
         except Exception as e:
             print("Error publishing to InfluxDB:")
             print(e)

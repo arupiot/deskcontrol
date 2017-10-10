@@ -9,7 +9,8 @@ class PowerModule(StateModule):
 
     def __init__(self, controller):
         super(PowerModule, self).__init__(controller)
-        controller.event_handlers.append(self.event_handler)
+        controller.add_event_handler("sleep", self.on_sleep)
+        controller.add_event_handler("wake", self.on_wake)
 
     def draw(self, clear=True):
         if clear:
@@ -46,15 +47,15 @@ class PowerModule(StateModule):
                 relay.instance.set_state(not state[0], state[1])
             self.draw(False)
 
-    def event_handler(self, name, data):
-        if name == "sleep":
-            for relay in self.relays:
-                #  TODO: Less hacky pls
-                self.relays[relay].instance.set_state(False, True)
-        if name == "wake":
-            for relay in self.relays:
-                #  TODO: Less hacky pls
-                self.relays[relay].instance.set_state(False, False)
+    def on_sleep(self, data):
+        for relay in self.relays:
+            #  TODO: Less hacky pls
+            self.relays[relay].instance.set_state(False, True)
+
+    def on_wake(self, data):
+        for relay in self.relays:
+            #  TODO: Less hacky pls
+            self.relays[relay].instance.set_state(False, False)
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
