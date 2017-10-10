@@ -36,8 +36,10 @@ MODULES = [
 
 MENU_MODULES = [
     ("SensorModule", "sensors", "Sensors"),
-    # ("LightingModule", "lighting", "Lighting"),
-    ("PowerModule", "power", "Power"),
+    ("LightingModule", "lighting", "Lighting"),
+    ("LightingAPIModule", "lighting_api", "Lighting"),
+    ("DCPowerModule", "dcpower", "Power"),
+    ("ACPowerModule", "acpower", "Power"),
     ("NetworkModule", "network", "Network"),
 ]
 

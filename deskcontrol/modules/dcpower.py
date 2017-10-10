@@ -2,13 +2,13 @@ from navigation import StateModule
 from sensors import Sensor
 
 
-class PowerModule(StateModule):
+class DCPowerModule(StateModule):
     menu_title = "Power"
     relays = {}
     current = 0
 
     def __init__(self, controller):
-        super(PowerModule, self).__init__(controller)
+        super(DCPowerModule, self).__init__(controller)
         controller.add_event_handler("sleep", self.on_sleep)
         controller.add_event_handler("wake", self.on_wake)
 
