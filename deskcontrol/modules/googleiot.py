@@ -83,8 +83,8 @@ class GoogleIoTModule(StateModule):
             {"type": data.brick_tag, }, )
         try:
             blob = json.dumps(data)
-            # print('Publishing message: \'{}\''.format(blob))
             self.client.publish(self.mqtt_topic + '/sensor', blob, qos=1)
+            # print("published to googleiot", blob)
         except Exception as e:
             print("Error publishing to GCloud:")
             print(e)
@@ -93,6 +93,7 @@ class GoogleIoTModule(StateModule):
         try:
             blob = json.dumps(data)
             self.client.publish(self.mqtt_topic + '/kiln', blob, qos=1)
+            # print("published to googleiot", blob)
         except Exception as e:
             print("Error publishing to GCloud:")
             print(e)

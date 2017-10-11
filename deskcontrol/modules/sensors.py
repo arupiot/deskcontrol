@@ -15,12 +15,13 @@ class Sensor():
         self.controller = controller
         self.instance = sensor["class"](uid, controller.ipcon)
         self.update_time = 300
-        self.change_limit = 20
+        self.publish_limit = 20
         self.variance = 5
         self.change_callbacks = []
+        self.published_value = None
         for attr in [
                 "brick_tag", "value_func", "units", "multiplier", "offset",
-                "update_time", "change_limit", "variance", "sequence"]:
+                "update_time", "publish_limit", "variance", "sequence"]:
             if attr in sensor:
                 setattr(self, attr, sensor[attr])
         self.uid = str(uid) + "_" + self.brick_tag
@@ -30,7 +31,6 @@ class Sensor():
                 self.callback)
         self.get_value()
         self.published = datetime.utcfromtimestamp(0)
-        self.publish()
 
     def parse_value(self, value):
         if self.sensor_type == "dualrelay":
@@ -73,13 +73,13 @@ class Sensor():
         return self.value
 
     def publish(self):
-        if seconds_past(self.published, self.change_limit):
+        if seconds_past(self.published, self.publish_limit):
             self.published_value = self.value
             self.published = datetime.now()
             self.controller.event("sensor-publish", self)
 
     def roc(self):
-        if seconds_past(self.updated, self.change_limit):
+        if seconds_past(self.published, self.publish_limit):
             if not self.published_value:
                 self.published_value = self.value
             self.get_value()
@@ -91,12 +91,15 @@ class Sensor():
             if seconds_past(self.published, self.update_time):
                 self.publish()
 
-    def __str__(self):
+    def get_value_display(self):
         if not self.value:
             self.get_value()
         if not self.value:
             return "None"
         return str(self.value) + " " + self.units
+
+    def __str__(self):
+        return self.uid
 
 
 class SensorModule(StateModule):
@@ -107,16 +110,17 @@ class SensorModule(StateModule):
     def __init__(self, controller):
         super(SensorModule, self).__init__(controller)
         self.update_sensors()
+        controller.add_event_handler("sensor-created", self.force_update)
 
     def draw(self, clear=True):
         if self.controller.screen and self.controller.current_module == self:
             if clear:
                 self.controller.screen.device.clear_display()
             if not len(self.sensors):
-                self.controller.ipcon.enumerate()
                 self.controller.screen.draw("values", {})
                 return
             sensor = self.sensors[self.sensors.keys()[self.current]]
+            sensor.get_value()
             if self.controller.localdb:
                 unique_name = self.controller.localdb.get(sensor.uid)
             if unique_name:
@@ -126,7 +130,7 @@ class SensorModule(StateModule):
             self.controller.screen.draw(
                 "values",
                 {"title": name,
-                 "value": str(sensor)})
+                 "value": str(sensor.get_value_display())})
 
     def try_bricklet(self, uid, device_identifier, position):
         sensor = None
@@ -167,7 +171,7 @@ class SensorModule(StateModule):
 
         if sensor:
             self.sensors[sensor.uid] = sensor
-            self.controller.event("new-sensor", sensor.uid)
+            self.controller.event("sensor-created", sensor)
 
     def navigate(self, direction):
         if direction == "back":
@@ -191,3 +195,6 @@ class SensorModule(StateModule):
 
     def tick(self):
         self.draw(clear=False)
+
+    def force_update(self, sensor):
+        sensor.publish()

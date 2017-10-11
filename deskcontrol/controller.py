@@ -43,7 +43,7 @@ class Controller:
 
         self.ipcon.register_callback(
             IPConnection.CALLBACK_ENUMERATE, self.assign_bricklets)
-        self.ipcon.enumerate()
+        self.scheduler.enter(2, 1, self.ipcon.enumerate, (),)
 
     def add_module(self, module):
         self.modules[module[0]] = getattr(
@@ -61,12 +61,17 @@ class Controller:
         self.scheduler.enter(1, 1, desk.tick, (),)
 
     def change_module(self, module):
-        if self.current_module:
-            self.previous_module = self.current_module
-        if module in self.modules:
-            # print("changing to " + module)
-            self.current_module = self.modules[module]
-        self.current_module.draw()
+        if not module:
+            self.current_module = None
+            if self.screen:
+                self.screen.draw_splash()
+        else:
+            if self.current_module:
+                self.previous_module = self.current_module
+            if module in self.modules:
+                # print("changing to " + module)
+                self.current_module = self.modules[module]
+            self.current_module.draw()
 
     def prev_module(self):
         if self.previous_module:
@@ -91,7 +96,7 @@ class Controller:
             self.modules[state].try_bricklet(uid, device_identifier, position)
 
     def event(self, event, data):
-        print("event triggered", event, data)
+        print("event triggered", str(event), str(data))
         if event in self.event_handlers:
             for handler in self.event_handlers[event]:
                 handler(data)

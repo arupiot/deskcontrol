@@ -29,17 +29,16 @@ MODULES = [
     ("SleepModule", "sleep", "Sleep"),
     ("RFIDModule", "rfid", "RFID"),
     ("InfluxModule", "influx", "InfluxDB"),
-    ("GoogleIoTModule", "googleiot", "GoogleIoT"),
-    ("KilnModule", "kiln", "Kiln"),
-    ("PickleModule", "pickle", "Local Storage"),
+    # ("GoogleIoTModule", "googleiot", "GoogleIoT"),
+    # ("KilnModule", "kiln", "Kiln"),
+    # ("PickleModule", "pickle", "Local Storage"),
 ]
 
 MENU_MODULES = [
     ("SensorModule", "sensors", "Sensors"),
-    ("LightingModule", "lighting", "Lighting"),
-    ("LightingAPIModule", "lighting_api", "Lighting"),
-    ("DCPowerModule", "dcpower", "Power"),
-    ("ACPowerModule", "acpower", "Power"),
+    # ("LightingModule", "lighting", "Lighting"),
+    # ("DCPowerModule", "dcpower", "Power"),
+    # ("ACPowerModule", "acpower", "Power"),  # Works on RPi only
     ("NetworkModule", "network", "Network"),
 ]
 

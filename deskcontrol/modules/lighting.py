@@ -28,20 +28,22 @@ class LightingModule(StateModule):
         if clear:
             self.controller.screen.device.clear_display()
         if not len(self.outputs):
-            self.controller.ipcon.enumerate()
             self.controller.screen.draw("values", {})
             return
         outputs = self.outputs[self.outputs.keys()[self.current]]
-
+        if self.edit:
+            name = outputs["name"] + "*"
+        else:
+            name = outputs["name"]
         if outputs["type"] == "dimmer":
             self.controller.screen.draw(
                 "values",
-                {"title": outputs["name"],
+                {"title": name,
                  "value": str(self.intens) + " %", })
         if outputs["type"] == "select":
             self.controller.screen.draw(
                 "values",
-                {"title": outputs["name"],
+                {"title": name,
                  "value": str(self.colors[self.color]["name"]), })
 
     def try_bricklet(self, uid, device_identifier, position):
@@ -97,11 +99,9 @@ class LightingModule(StateModule):
         self.controller.scheduler.enter(1, 1, self.set_light, (),)
 
     def navigate(self, direction):
-        output = self.outputs[self.outputs.keys()[self.current]]
         if not self.edit:
             if direction == "forward":
                 self.edit = True
-                output["name"] = output["name"] + " *"
                 self.draw()
             if direction == "back":
                 self.controller.prev_module()
@@ -119,7 +119,6 @@ class LightingModule(StateModule):
         else:
             if direction == "back":
                 self.edit = False
-                output["name"] = output["name"][:-1]
                 self.draw()
             if direction in ["down", "up"]:
                 self.change_light(direction)

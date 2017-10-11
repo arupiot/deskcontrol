@@ -1,6 +1,11 @@
 from navigation import StateModule
 from sensors import Sensor
 
+OUTLETS = {
+    "rCr_Relay_Sensor0": "Laptop",
+    "rCr_Relay_Sensor1": "Monitor",
+}
+
 
 class DCPowerModule(StateModule):
     menu_title = "Power"
@@ -27,10 +32,10 @@ class DCPowerModule(StateModule):
         else:
             state = "On "
         if self.controller.localdb:
-            unique_name = self.controller.localdb.get(relay.uid)
-        if unique_name:
-            name = unique_name
-        else:
+            name = self.controller.localdb.get(key)
+        if not name and key in OUTLETS:
+            name = OUTLETS[key]
+        if not name:
             name = relay.name
         self.controller.screen.draw(
             "values",
@@ -60,9 +65,8 @@ class DCPowerModule(StateModule):
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
             s = Sensor(self.controller, "dualrelay", uid)
-            # Todo: labelling
-            self.relays[s.uid + "_0"] = s
-            self.relays[s.uid + "_1"] = s
+            for instance in ["0", "1"]:
+                self.relays[s.uid + instance] = s
 
     def navigate(self, direction):
         if direction == "back":

@@ -29,12 +29,14 @@ class RFIDModule(StateModule):
         if state == nr.STATE_REQUEST_TAG_ID_READY:
             ret = nr.get_tag_id()
             card = str("".join(map(str, ret.tid[:ret.tid_length])))
-            print(card)
-            if card in self.users:
-                self.auth = self.users[card]
-            else:
-                self.auth = "Unknown"
-            self.controller.change_module("RFIDModule")
+            if card != self.previous:
+                self.previous = card
+                self.controller.event("rfid-read", [card])
+                if card in self.users:
+                    self.auth = self.users[card]
+                else:
+                    self.auth = "Unknown"
+                self.controller.change_module("RFIDModule")
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 246:
@@ -58,4 +60,6 @@ class RFIDModule(StateModule):
     def tick(self):
         self.tick_count += 1
         if self.tick_count > 5:
-            self.controller.change_module("MenuModule")
+            self.previous = None
+            self.tick_count = 0
+            self.controller.change_module(None)

@@ -30,19 +30,6 @@ class MenuModule(StateModule):
             "menu",
             {"title": self.items[self.current][1],
              "icon": self.items[self.current][1].lower()})
-        #    if clear:
-        #        self.controller.screen.clear_display()
-        #    pos = 0
-        #    start = max(0, min(self.current - 2, len(self.items) - 5))
-        #    while pos < min(5, len(self.items)):
-        #        self.controller.screen.write_line(pos+2, 0,
-        #            "  " + self.items[start+pos][1])
-        #        self.controller.screen.write_line(pos+2, 23, " ")
-        #        pos = pos + 1
-        #    cursor = min(start+self.current, max(
-        #                 min(self.current, 2),
-        #                 self.current + 5 - len(self.items)))
-        #    self.controller.screen.write_line(cursor+2, 23, ">")
 
     def add_menu_item(self, module):
         self.items.append((module.id, module.menu_title))
@@ -71,4 +58,4 @@ class MenuModule(StateModule):
             elif self.current < 0:
                 self.current = len(self.items) - 1
             self.draw(clear=False)
-            print("Menu: " + str(self.items[self.current][1]))
+            # print("Menu: " + str(self.items[self.current][1]))

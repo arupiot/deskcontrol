@@ -75,7 +75,6 @@ class NetworkModule(StateModule):
             value = menu["value"]
         if clear:
             self.controller.screen.device.clear_display()
-        print(value)
         self.controller.screen.draw(
             "values",
             {"title": menu["title"], "value": str(value).rstrip(), })

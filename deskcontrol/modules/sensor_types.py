@@ -69,7 +69,7 @@ SENSORS = {
         "brick_tag": "CO2_Sensor",
         "value_func": "get_co2_concentration",
         "callback_func": "CALLBACK_CO2_CONCENTRATION",
-        "change_limit": 10,
+        "publish_limit": 10,
         "variance": 50,
     },
     "voltage": {
