@@ -13,8 +13,8 @@ class Outlet():
     def __init__(self, outlet, controller):
         self.instance = Energenie(outlet)
         self.state = True
-        if self.controller.localdb:
-            unique_name = self.controller.localdb.get("outlet-" + outlet)
+        if controller.localdb:
+            unique_name = controller.localdb.get("outlet-" + str(outlet))
         if unique_name:
             self.name = unique_name
         else:

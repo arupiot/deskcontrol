@@ -63,7 +63,6 @@ class LightingAPIModule(StateModule):
         # print "change " + direction + str(self.color)
 
     def set_light(self):
-        print("tick")
         if self.device:
             color = self.colors[self.color]["color"]
             color = (int(color[0] * self.intens / 100),
