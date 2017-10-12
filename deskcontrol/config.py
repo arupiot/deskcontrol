@@ -8,7 +8,8 @@ INFLUX_AUTH = {
     "port": 8086,
     "user": "admin",
     "pass": "admin",
-    "db": "iotdesks"
+    "db": "iotdesks",
+    "ssl": False,
 }
 
 GCLOUD_CONFIG = {

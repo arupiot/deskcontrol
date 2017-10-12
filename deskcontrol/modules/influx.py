@@ -16,7 +16,7 @@ class InfluxModule(StateModule):
         try:
             self.client = InfluxDBClient(
                 auth["host"], auth["port"], auth["user"], auth["pass"],
-                auth["db"],)
+                auth["db"], auth["ssl"])
         except Exception as e:
             print("Error connecting to InfluxDB:")
             print(e)
