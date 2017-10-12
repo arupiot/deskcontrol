@@ -30,6 +30,7 @@ MODULES = [
     ("SleepModule", "sleep", "Sleep"),
     ("RFIDModule", "rfid", "RFID"),
     ("InfluxModule", "influx", "InfluxDB"),
+    ("HttpPushModule", "httppush", "HTTPpush"),
     # ("GoogleIoTModule", "googleiot", "GoogleIoT"),
     # ("KilnModule", "kiln", "Kiln"),
     # ("PickleModule", "pickle", "Local Storage"),

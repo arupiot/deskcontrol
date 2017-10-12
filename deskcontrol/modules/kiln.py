@@ -25,5 +25,6 @@ class KilnModule(StateModule):
 
     def update_kiln(self):
         self.build_sensor_list()
-        self.controller.event("kiln-publish", self.sensor_list)
-        self.controller.scheduler.enter(600, 1, self.update_kiln, (),)
+        if self.sensor_list:
+            self.controller.event("kiln-publish", self.sensor_list)
+            self.controller.scheduler.enter(600, 1, self.update_kiln, (),)
