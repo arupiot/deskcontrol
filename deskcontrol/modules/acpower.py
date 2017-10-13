@@ -92,10 +92,10 @@ class ACPowerModule(StateModule):
                 self.current = self.current + 1
             else:
                 self.current = self.current - 1
-            if self.current >= len(self.relays):
+            if self.current >= len(self.outlets):
                 self.current = 0
             elif self.current < 0:
-                self.current = len(self.relays) - 1
+                self.current = len(self.outlets) - 1
             # print("Output: " + str(list(self.outputs)[self.current]))
             self.draw()
 

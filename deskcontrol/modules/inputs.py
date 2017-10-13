@@ -28,6 +28,7 @@ class InputModule(StateModule):
                 self.multitouch)
 
     def joystick_position(self, x, y):
+        print("joystick", x, y)
         if "SchedulerModule" in self.controller.modules:
             self.controller.modules["SchedulerModule"].motion_detected()
         if y == 100:

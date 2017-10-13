@@ -25,10 +25,10 @@ class Sensor():
             if attr in sensor:
                 setattr(self, attr, sensor[attr])
         self.uid = str(uid) + "_" + self.brick_tag
-        if "callback_func" in sensor:
-            self.instance.register_callback(
-                getattr(self.instance, sensor["callback_func"]),
-                self.callback)
+        # if "callback_func" in sensor:
+        #    self.instance.register_callback(
+        #        getattr(self.instance, sensor["callback_func"]),
+        #        self.callback)
         self.get_value()
         self.published = datetime.utcfromtimestamp(0)
 
@@ -61,16 +61,21 @@ class Sensor():
         self.publish()
 
     def get_value(self):
-        if self.sensor_type == "magfield":
-            value = getattr(self.instance, self.value_func)(False)
-        else:
-            value = getattr(self.instance, self.value_func)()
+        try:
+            if self.sensor_type == "magfield":
+                value = getattr(self.instance, self.value_func)(False)
+            else:
+                value = getattr(self.instance, self.value_func)()
 
-        value = self.parse_value(value)
+            value = self.parse_value(value)
 
-        self.updated = datetime.now()
-        self.value = value
-        return self.value
+            self.updated = datetime.now()
+            self.value = value
+            return self.value
+        except Exception as e:
+            self.value = None
+            print("Error reading value from sensor:", e)
+            return self.value
 
     def publish(self):
         if seconds_past(self.published, self.publish_limit):
@@ -79,7 +84,7 @@ class Sensor():
             self.controller.event("sensor-publish", self)
 
     def roc(self):
-        if seconds_past(self.published, self.publish_limit):
+        if seconds_past(self.published, self.publish_limit) and self.value != None:
             if not self.published_value:
                 self.published_value = self.value
             self.get_value()
