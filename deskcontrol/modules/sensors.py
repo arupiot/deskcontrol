@@ -99,8 +99,12 @@ class Sensor():
     def get_value_display(self):
         if not self.value:
             self.get_value()
-        if not self.value:
+            value = self.value
+        if not value:
             return "None"
+        if self.sensor_type == "motion":
+            if self.value:
+                return "Yes"
         return str(self.value) + " " + self.units
 
     def __str__(self):
