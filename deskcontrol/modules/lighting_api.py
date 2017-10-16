@@ -2,12 +2,11 @@ from navigation import StateModule
 import requests
 
 
-class LightingModule(StateModule):
+class LightingAPIModule(StateModule):
     menu_title = "Lighting"
 
     outputs = {}
     edit = False
-    device = None
     current = 0
     intens = 100
     color = 0
@@ -21,8 +20,16 @@ class LightingModule(StateModule):
     ]
 
     def __init__(self, controller):
-        super(LightingModule, self).__init__(controller)
+        super(LightingAPIModule, self).__init__(controller)
         self.set_light()
+        self.outputs["taskint"] = {
+            "name": "Task Intensity",
+            "type": "dimmer",
+        }
+        self.outputs["taskcol"] = {
+            "name": "Task Colour",
+            "type": "select",
+        }
 
     def draw(self, clear=True):
         if clear:
@@ -63,18 +70,21 @@ class LightingModule(StateModule):
                     self.color = len(self.colors) - 1
                 else:
                     self.color -= 1
+        self.set_light()
         # print "change " + direction + str(self.color)
 
     def set_light(self):
-        if self.device:
-            color = self.colors[self.color]["color"]
-            self.intens
+        color = self.colors[self.color]["color"]
+        intens = int(float(self.intens) / 100 * 255)
+        try:
             requests.get(
                 'http://192.168.2.101:8000/color/5/%s/' % color,
                 timeout=0.5)
             requests.get(
-                'http://192.168.2.101:8000/color/5/%s/' % color,
+                'http://192.168.2.101:8000/level/5/%s/' % intens,
                 timeout=0.5)
+        except Exception as e:
+            print("Error pushing lighting values", e)
 
     def navigate(self, direction):
         if not self.edit:
