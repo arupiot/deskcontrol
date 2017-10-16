@@ -68,9 +68,9 @@ class ACPowerModule(StateModule):
         key = self.outlets.keys()[self.current]
         outlet = self.outlets[key]
         if outlet.state:
-            state = "Off"
-        else:
             state = "On "
+        else:
+            state = "Off"
         self.controller.screen.draw(
             "values",
             {"title": outlet.name, "value": str(state), })
