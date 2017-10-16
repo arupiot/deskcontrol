@@ -61,6 +61,8 @@ SENSORS = {
         "brick_tag": "Noise_Sensor",
         "value_func": "get_intensity",
         "callback_func": "CALLBACK_INTENSITY",
+        "publish_limit": 30,
+        "variance": 400,
     },
     "co2": {
         "name": "Carbon Dioxide",
