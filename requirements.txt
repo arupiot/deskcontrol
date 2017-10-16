@@ -6,4 +6,4 @@ pyjwt
 paho-mqtt
 netifaces
 pickledb
-gpiozero
+requests
