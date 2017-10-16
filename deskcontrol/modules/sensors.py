@@ -29,6 +29,7 @@ class Sensor():
         #    self.instance.register_callback(
         #        getattr(self.instance, sensor["callback_func"]),
         #        self.callback)
+        self.value = None
         self.get_value()
         self.published = datetime.utcfromtimestamp(0)
 
@@ -73,28 +74,27 @@ class Sensor():
             self.value = value
             return self.value
         except Exception as e:
-            self.value = None
             print("Error reading value from sensor:", e)
-            return self.value
 
     def publish(self):
-        if seconds_past(self.published, self.publish_limit):
+        if self.value and seconds_past(self.published, self.publish_limit):
             self.published_value = self.value
             self.published = datetime.now()
             self.controller.event("sensor-publish", self)
 
     def roc(self):
-        if seconds_past(self.published, self.publish_limit) and self.value != None:
+        if seconds_past(self.published, self.publish_limit):
             if not self.published_value:
                 self.published_value = self.value
             self.get_value()
-            for callback in self.change_callbacks:
-                    callback(self.value)
-            if (self.value <= self.published_value - self.variance or
-                    self.value >= self.published_value + self.variance):
-                self.publish()
-            if seconds_past(self.published, self.update_time):
-                self.publish()
+            if self.value:
+                for callback in self.change_callbacks:
+                        callback(self.value)
+                if (self.value <= self.published_value - self.variance or
+                        self.value >= self.published_value + self.variance):
+                    self.publish()
+                if seconds_past(self.published, self.update_time):
+                    self.publish()
 
     def get_value_display(self):
         if not self.value:
