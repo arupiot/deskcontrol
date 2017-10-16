@@ -2,10 +2,18 @@ from navigation import StateModule
 import energenie
 
 OUTLETS = {
-    1: "Laptop",
-    2: "Monitor 1",
-    3: "Monitor 2",
-    # 4: "USB",
+    1: {
+        "name": "Laptop",
+        "instance": energenie.Devices.ENER002(1),
+    },
+    2: {
+        "name": "Monitor 1",
+        "instance": energenie.Devices.ENER002(2),
+    },
+    3: {
+        "name": "Monitor 2",
+        "instance": energenie.Devices.ENER002(3),
+    },
 }
 
 
@@ -18,16 +26,17 @@ class Outlet():
         if unique_name:
             self.name = unique_name
         else:
-            self.name = OUTLETS[outlet]
+            self.name = OUTLETS[outlet]["name"]
+        self.instance = OUTLETS[outlet]["instance"]
 
     def on(self):
         if not self.state:
-            self.instance.on()
+            self.instance.turn_on()
             self.state = True
 
     def off(self):
         if self.state:
-            self.instance.off()
+            self.instance.turn_off()
             self.state = False
 
     def switch(self):
