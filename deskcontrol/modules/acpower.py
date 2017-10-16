@@ -1,17 +1,17 @@
 from navigation import StateModule
-from gpiozero import Energenie
+import energenie
 
 OUTLETS = {
     1: "Laptop",
-    2: "Monitor",
-    3: "Monitor",
+    2: "Monitor 1",
+    3: "Monitor 2",
     # 4: "USB",
 }
 
 
 class Outlet():
     def __init__(self, outlet, controller):
-        self.instance = Energenie(outlet)
+        energenie.init()
         self.state = True
         if controller.localdb:
             unique_name = controller.localdb.get("outlet-" + str(outlet))
