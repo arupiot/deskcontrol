@@ -29,7 +29,7 @@ class InfluxModule(StateModule):
                 str(data.value),
                 {"type": data.brick_tag, }, )
             self.client.write_points([data])
-            # print("published to influx", data)
+            print("published to influx", data)
         except Exception as e:
             print("Error publishing to InfluxDB:")
             print(e)
