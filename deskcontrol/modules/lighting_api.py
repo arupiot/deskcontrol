@@ -11,12 +11,12 @@ class LightingAPIModule(StateModule):
     intens = 100
     color = 0
     colors = [
-        {"name": "Warm", "color": "FF9922"},
-        {"name": "Cool", "color": "FFFF33"},
+        {"name": "Default", "color": "FFFF33"},
         {"name": "Red", "color": "FF0000"},
         {"name": "Blue", "color": "0000FF"},
         {"name": "Magenta", "color": "FF00FF"},
         {"name": "Green", "color": "00FF00"},
+        {"name": "Orange", "color": "FFCC00"},
     ]
 
     def __init__(self, controller):
