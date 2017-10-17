@@ -22,12 +22,12 @@ class LightingAPIModule(StateModule):
     def __init__(self, controller):
         super(LightingAPIModule, self).__init__(controller)
         self.set_light()
-        self.outputs["taskint"] = {
-            "name": "Task Intensity",
-            "type": "dimmer",
-        }
+        # self.outputs["taskint"] = {
+        #    "name": "'R' LED Intensity",
+        #    "type": "dimmer",
+        # }
         self.outputs["taskcol"] = {
-            "name": "Task Colour",
+            "name": "'R' LED Colour",
             "type": "select",
         }
 
@@ -78,10 +78,10 @@ class LightingAPIModule(StateModule):
         intens = int(float(self.intens) / 100 * 255)
         try:
             requests.get(
-                'http://192.168.2.101:8000/color/5/%s/' % color,
+                'http://192.168.2.101:8000/color/4/%s/' % color,
                 timeout=0.5)
             requests.get(
-                'http://192.168.2.101:8000/level/5/%s/' % intens,
+                'http://192.168.2.101:8000/level/4/%s/' % intens,
                 timeout=0.5)
         except Exception as e:
             print("Error pushing lighting values", e)
