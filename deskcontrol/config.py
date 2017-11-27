@@ -31,6 +31,8 @@ MODULES = [
     ("RFIDModule", "rfid", "RFID"),
     ("InfluxModule", "influx", "InfluxDB"),
     ("HttpPushModule", "httppush", "HTTPpush"),
+    ("TFScreen", "tfscreen", "TF Screen"),
+    # ("KivyScreen", "kivyscreen", "Kivy Screen"),
     # ("GoogleIoTModule", "googleiot", "GoogleIoT"),
     # ("KilnModule", "kiln", "Kiln"),
     # ("PickleModule", "pickle", "Local Storage"),

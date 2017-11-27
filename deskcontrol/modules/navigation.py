@@ -1,6 +1,3 @@
-from screen import Screen
-
-
 class StateModule(object):
     always_tick = False
 
@@ -33,14 +30,6 @@ class MenuModule(StateModule):
 
     def add_menu_item(self, module):
         self.items.append((module.id, module.menu_title))
-
-    def try_bricklet(self, uid, device_identifier, position):
-        if not self.controller.screen:
-            if device_identifier == 263:
-                self.controller.screen = Screen(self.controller, uid)
-                print("Screen Initialised")
-                return True
-            return False
 
     def navigate(self, direction):
         if direction == "forward":

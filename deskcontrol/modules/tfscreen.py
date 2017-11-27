@@ -28,22 +28,30 @@ def draw_matrix(scr, start_column, start_row, column_count, row_count, pixels):
         scr.write(block + [0] * (64 - len(block)))
 
 
-class Screen():
+class TFScreen():
     controller = None
     device = None
 
-    def __init__(self, controller, uid):
-        self.controller = controller
-        self.device = BrickletOLED128x64(uid, self.controller.ipcon)
-        self.device.clear_display()
-        self.device.set_display_configuration(0, False)
-        self.draw_splash()
+    def __init__(self, controller):
+        super(TFScreen, self).__init__(controller)
+        self.controller.screen = self
         controller.add_event_handler("sleep", self.on_sleep)
         controller.add_event_handler("wake", self.on_wake)
 
     def draw_splash(self):
         image = Image.open("images/splash.png")
         self.process_image(image)
+
+    def try_bricklet(self, uid, device_identifier, position):
+        if not self.controller.screen:
+            if device_identifier == 263:
+                self.device = BrickletOLED128x64(uid, self.controller.ipcon)
+                self.device.clear_display()
+                self.device.set_display_configuration(0, False)
+                self.draw_splash()
+                print("Screen Initialised")
+                return True
+            return False
 
     def on_sleep(self, data):
         self.device.clear_display()
