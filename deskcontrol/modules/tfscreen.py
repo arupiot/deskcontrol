@@ -1,3 +1,4 @@
+from navigation import StateModule
 from PIL import Image, ImageDraw, ImageFont
 from tinkerforge.bricklet_oled_128x64 import BrickletOLED128x64
 
@@ -28,7 +29,7 @@ def draw_matrix(scr, start_column, start_row, column_count, row_count, pixels):
         scr.write(block + [0] * (64 - len(block)))
 
 
-class TFScreen():
+class TFScreen(StateModule):
     controller = None
     device = None
 
