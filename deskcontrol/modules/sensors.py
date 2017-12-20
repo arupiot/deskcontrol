@@ -127,6 +127,7 @@ class SensorModule(StateModule):
                 return
             sensor = self.sensors[self.sensors.keys()[self.current]]
             sensor.get_value()
+            unique_name = None
             if self.controller.localdb:
                 unique_name = self.controller.localdb.get(sensor.uid)
             if unique_name:
