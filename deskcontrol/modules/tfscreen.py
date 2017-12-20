@@ -44,7 +44,7 @@ class TFScreen(StateModule):
         self.process_image(image)
 
     def try_bricklet(self, uid, device_identifier, position):
-        if not self.controller.screen:
+        if not self.device:
             if device_identifier == 263:
                 self.device = BrickletOLED128x64(uid, self.controller.ipcon)
                 self.device.clear_display()
@@ -63,18 +63,19 @@ class TFScreen(StateModule):
         self.controller.current_module = None
 
     def process_image(self, image):
-        image = image.convert("1")
-        image_data = image.load()
-        pixels = []
-        for row in range(64):
-            pixels.append([])
-            for column in range(128):
-                if column < image.size[0] and row < image.size[1]:
-                    pixel = image_data[column, row] > 0
-                else:
-                    pixel = False
-                pixels[row].append(pixel)
-        draw_matrix(self.device, 0, 0, 128, 8, pixels)
+        if self.device:
+            image = image.convert("1")
+            image_data = image.load()
+            pixels = []
+            for row in range(64):
+                pixels.append([])
+                for column in range(128):
+                    if column < image.size[0] and row < image.size[1]:
+                        pixel = image_data[column, row] > 0
+                    else:
+                        pixel = False
+                    pixels[row].append(pixel)
+            draw_matrix(self.device, 0, 0, 128, 8, pixels)
 
     def draw(self, layout, params):
         if layout in ["menu", "values"]:
