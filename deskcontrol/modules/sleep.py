@@ -6,7 +6,7 @@ from modules.sensors import Sensor
 
 class SleepModule(StateModule):
     last_motion = datetime.now()
-    poweroff = 150
+    sleeptime = 150
     awake = True
     sensor = None
 
@@ -15,6 +15,8 @@ class SleepModule(StateModule):
         controller.add_event_handler("sleep", self.on_sleep)
         controller.add_event_handler("wake", self.on_wake)
         self.check_sleep()
+        if controller.localdb:
+            self.sleeptime = controller.localdb.get("sleep-time")
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 233:
@@ -34,7 +36,7 @@ class SleepModule(StateModule):
 
     def check_sleep(self):
         if self.awake and self.sensor:
-            if seconds_past(self.last_motion, self.poweroff):
+            if seconds_past(self.last_motion, self.sleeptime):
                 self.controller.event("sleep", True)
         self.controller.scheduler.enter(60, 1, self.check_sleep, (),)
 

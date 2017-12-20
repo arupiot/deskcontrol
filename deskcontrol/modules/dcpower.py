@@ -55,12 +55,14 @@ class DCPowerModule(StateModule):
     def on_sleep(self, data):
         for relay in self.relays:
             #  TODO: Less hacky pls
-            self.relays[relay].instance.set_state(False, True)
+            pass
+            # self.relays[relay].instance.set_state(False, True)
 
     def on_wake(self, data):
         for relay in self.relays:
             #  TODO: Less hacky pls
-            self.relays[relay].instance.set_state(False, False)
+            pass
+            # self.relays[relay].instance.set_state(False, False)
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
