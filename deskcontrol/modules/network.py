@@ -33,7 +33,7 @@ def get_wlan_address(iface="wlan0"):
 
 
 def git_update():
-    subprocess.check_output(["git", "pull"])
+    subprocess.check_output(["git", "pull", "--all"])
     subprocess.check_output(["sudo", "service", "deskcontrol", "restart"])
 
 
