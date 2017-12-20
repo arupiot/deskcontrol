@@ -1,5 +1,5 @@
 from navigation import StateModule
-from config import SCHEMA_POST_URL
+from config import *
 import json
 import requests
 

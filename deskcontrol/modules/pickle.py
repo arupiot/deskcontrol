@@ -1,6 +1,6 @@
 from navigation import StateModule
 import pickledb
-from config import PICKLEDB
+from config import *
 
 
 class PickleModule(StateModule):

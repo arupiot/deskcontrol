@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 import jwt
 import json
 import paho.mqtt.client as mqtt
-from config import GCLOUD_CONFIG
+from config import *
 from helpers import sensor_data
 
 
