@@ -9,6 +9,9 @@ It will auto-detect bricklets compatible with the code and provide sensor readin
 ## Installation
 Requirements for Debian based systems:
 ```
+sudo apt-get install libusb-1.0-0 libudev0 pm-utils
+wget http://download.tinkerforge.com/tools/brickd/linux/brickd_linux_latest_armhf.deb
+sudo dpkg -i brickd_linux_latest_armhf.deb
 apt install python-dev python-setuptools libjpeg-dev python-cryptography 
 pip install -r requirements.txt
 ```
