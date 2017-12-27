@@ -36,6 +36,6 @@ sudo service deskcontrol start
 * Add microphone based sound sensor
 
 ## Credits
-Ben Hussey <ben.hussey@arup.com>
-Francesco Anselmo <francesco.anselmo@arup.com>
+* Ben Hussey <ben.hussey@arup.com>
+* Francesco Anselmo <francesco.anselmo@arup.com>
 
