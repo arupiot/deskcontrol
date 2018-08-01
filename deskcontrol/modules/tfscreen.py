@@ -1,4 +1,4 @@
-from navigation import StateModule
+from modules.navigation import StateModule
 from PIL import Image, ImageDraw, ImageFont
 from tinkerforge.bricklet_oled_128x64 import BrickletOLED128x64
 

@@ -1,4 +1,4 @@
-from navigation import StateModule
+from modules.navigation import StateModule
 import pickledb
 from config import *
 

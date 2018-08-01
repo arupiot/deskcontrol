@@ -14,6 +14,7 @@ from tinkerforge.bricklet_accelerometer import BrickletAccelerometer
 from tinkerforge.bricklet_moisture import BrickletMoisture
 from tinkerforge.bricklet_dual_relay import BrickletDualRelay
 from tinkerforge.bricklet_motion_detector import BrickletMotionDetector
+from tinkerforge.bricklet_uv_light import BrickletUVLight
 
 SENSORS = {
     "temp": {
@@ -209,5 +210,12 @@ SENSORS = {
         "units": "",
         "brick_tag": "Motion_Detector",
         "value_func": "get_motion_detected",
+    },
+    "uv": {
+        "name": "Ultraviolet",
+        "class": BrickletUVLight,
+        "units": "uW/cm2",
+        "brick_tag": "UV_Light",
+        "value_func": "get_uv_light",
     },
 }

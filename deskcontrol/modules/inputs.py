@@ -1,6 +1,6 @@
 from tinkerforge.bricklet_joystick import BrickletJoystick
 from tinkerforge.bricklet_multi_touch import BrickletMultiTouch
-from navigation import StateModule
+from modules.navigation import StateModule
 
 
 class InputModule(StateModule):

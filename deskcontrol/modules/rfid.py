@@ -1,5 +1,5 @@
 from tinkerforge.bricklet_nfc_rfid import BrickletNFCRFID
-from navigation import StateModule
+from modules.navigation import StateModule
 
 
 class RFIDModule(StateModule):

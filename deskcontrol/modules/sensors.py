@@ -1,6 +1,6 @@
 from datetime import datetime
-from navigation import StateModule
-from sensor_types import SENSORS
+from modules.navigation import StateModule
+from modules.sensor_types import SENSORS
 import numbers
 from helpers import seconds_past
 
@@ -125,7 +125,7 @@ class SensorModule(StateModule):
             if not len(self.sensors):
                 self.controller.screen.draw("values", {})
                 return
-            sensor = self.sensors[self.sensors.keys()[self.current]]
+            sensor = self.sensors[list(self.sensors.keys())[self.current]]
             sensor.get_value()
             unique_name = None
             if self.controller.localdb:
@@ -175,6 +175,8 @@ class SensorModule(StateModule):
         #    sensor = Sensor(self.controller, "acceleration_z", uid)
         elif device_identifier == 232:
             sensor = Sensor(self.controller, "moisture", uid)
+        elif device_identifier == 265:
+            sensor = Sensor(self.controller, "uv", uid)
 
         if sensor:
             self.sensors[sensor.uid] = sensor
