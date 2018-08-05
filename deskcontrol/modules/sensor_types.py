@@ -14,7 +14,16 @@ from tinkerforge.bricklet_accelerometer import BrickletAccelerometer
 from tinkerforge.bricklet_moisture import BrickletMoisture
 from tinkerforge.bricklet_dual_relay import BrickletDualRelay
 from tinkerforge.bricklet_motion_detector import BrickletMotionDetector
-from tinkerforge.bricklet_uv_light import BrickletUVLight
+from tinkerforge.bricklet_rgb_led_button import BrickletRGBLEDButton
+from tinkerforge.bricklet_dual_button import BrickletDualButton
+from tinkerforge.bricklet_motion_detector_v2 import BrickletMotionDetectorV2
+from tinkerforge.bricklet_rotary_poti import BrickletRotaryPoti
+from tinkerforge.bricklet_tilt import BrickletTilt
+from tinkerforge.bricklet_distance_us import BrickletDistanceUS
+from tinkerforge.bricklet_rotary_encoder_v2 import BrickletRotaryEncoderV2
+from tinkerforge.bricklet_linear_poti import BrickletLinearPoti
+from tinkerforge.bricklet_thermal_imaging import BrickletThermalImaging
+from tinkerforge.bricklet_line import BrickletLine
 
 SENSORS = {
     "temp": {
@@ -27,7 +36,7 @@ SENSORS = {
         "callback_func": "CALLBACK_TEMPERATURE",
         "variance": 1,
     },
-    "irtemp": {
+    "ir_temp": {
         "name": "IR Temperature",
         "class": BrickletTemperatureIR,
         "units": "degC",
@@ -211,11 +220,92 @@ SENSORS = {
         "brick_tag": "Motion_Detector",
         "value_func": "get_motion_detected",
     },
-    "uv": {
-        "name": "Ultraviolet",
-        "class": BrickletUVLight,
-        "units": "uW/cm2",
-        "brick_tag": "UV_Light",
-        "value_func": "get_uv_light",
+    "button_colour": {
+        "name": "RGB LED Button",
+        "class": BrickletRGBLEDButton,
+        "units": "",
+        "brick_tag": "RGB_LED_Button",
+        "value_func": "get_color",
     },
+    "rgb_button_state": {
+        "name": "RGB LED Button",
+        "class": BrickletRGBLEDButton,
+        "units": "",
+        "brick_tag": "RGB_LED_Button",
+        "value_func": "get_button_state()",
+        "callback_func": "CALLBACK_BUTTON_STATE_CHANGED",
+    },
+    "left_button_state": {
+        "name": "Dual Button",
+        "class": BrickletDualButton,
+        "units": "",
+        "brick_tag": "Dual_Button_L",
+        "value_func": "get_button_states",
+        "callback_func": "CALLBACK_STATE_CHANGED",
+    },
+    "motion_2": {
+        "name": "Motion Detector",
+        "class": BrickletMotionDetectorV2,
+        "units": "",
+        "brick_tag": "Motion_Detector",
+        "value_func": "get_motion_detected",
+        "callback_func": "CALLBACK_MOTION_DETECTED",
+    },
+    "rotation_poti": {
+        "name": "Rotary Poti",
+        "class": BrickletRotaryPoti,
+        "units": "",
+        "brick_tag": "Rotary_Poti",
+        "value_func": "get_position",
+        "callback_func": "CALLBACK_POSITION",
+    },
+    "tilt": {
+        "name": "Tilt",
+        "class": BrickletTilt,
+        "units": "",
+        "brick_tag": "Tilt",
+        "value_func": "get_tilt_state",
+        "callback_func": "CALLBACK_TILT_STATE",
+    },
+	"dist_us": {
+        "name": "Distance US",
+        "class": BrickletDistanceUS,
+        "units": "cm",
+        "brick_tag": "Range_Sensor",
+        "value_func": "get_distance_value",
+        "multiplier": 0.1,
+        "callback_func": "CALLBACK_DISTANCE",
+    },
+	"rotation_encoder": {
+        "name": "Rotary Encoder",
+        "class": BrickletRotaryEncoderV2,
+        "units": "",
+        "brick_tag": "Rotary_Encoder",
+        "value_func": "get_count",
+        "callback_func": "CALLBACK_COUNT",
+    },
+	"linear": {
+		    "name": "Linear Poti",
+		    "class": BrickletLinearPoti,
+		    "units": "",
+		    "brick_tag": "Linear_Poti",
+		    "value_func": "get_position",
+		    "callback_func": "CALLBACK_POSITION",
+	},
+	"thermal_image": {
+		    "name": "Thermal Imaging",
+		    "class": BrickletThermalImaging,
+		    "units": "K",
+		    "multiplier": 0.01,
+		    "brick_tag": "Thermal_Imaging",
+		    "value_func": "get_statistics",
+	},
+	"reflectivity": {
+		    "name": "Line",
+		    "class": BrickletLine,
+		    "units": "",
+		    "brick_tag": "Line",
+		    "value_func": "get_reflectivity",
+		    "callback_func": "CALLBACK_REFLECTIVITY",
+	},
 }
