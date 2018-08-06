@@ -1,5 +1,6 @@
 from tinkerforge.bricklet_temperature import BrickletTemperature
 from tinkerforge.bricklet_temperature_ir import BrickletTemperatureIR
+from tinkerforge.bricklet_uv_light import BrickletUVLight
 from tinkerforge.bricklet_humidity import BrickletHumidity
 from tinkerforge.bricklet_voltage_current import BrickletVoltageCurrent
 from tinkerforge.bricklet_sound_intensity import BrickletSoundIntensity
@@ -45,6 +46,13 @@ SENSORS = {
         "multiplier": 0.1,
         "callback_func": "CALLBACK_OBJECT_TEMPERATURE",
         "variance": 1,
+    },
+    "uv": {
+        "name": "Ultraviolet",
+        "class": BrickletUVLight,
+        "units": "uW/cm2",
+        "brick_tag": "UV_Light",
+        "value_func": "get_uv_light",
     },
     "humidity": {
         "name": "Humidity",
