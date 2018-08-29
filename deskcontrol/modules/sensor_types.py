@@ -25,6 +25,7 @@ from tinkerforge.bricklet_rotary_encoder_v2 import BrickletRotaryEncoderV2
 from tinkerforge.bricklet_linear_poti import BrickletLinearPoti
 from tinkerforge.bricklet_thermal_imaging import BrickletThermalImaging
 from tinkerforge.bricklet_line import BrickletLine
+from tinkerforge.bricklet_humidity_v2 import BrickletHumidityV2
 
 SENSORS = {
     "temp": {
@@ -145,6 +146,15 @@ SENSORS = {
         "value_func": "get_color_temperature",
         "callback_func": "CALLBACK_COLOR_TEMPERATURE",
     },
+	"colour_illuminance": {
+        "name": "Colour Illuminance",
+        "class": BrickletColor,
+        "units": "lux",
+        "multiplier": 700,
+        "brick_tag": "Colour_Illuminance_Sensor",
+        "value_func": "get_illuminance",
+        "callback_func": "CALLBACK_ILLUMINANCE",
+    },
     "air_pressure": {
         "name": "Air Pressure",
         "class": BrickletBarometer,
@@ -214,7 +224,7 @@ SENSORS = {
         "value_func": "get_moisture_value",
         "callback_func": "CALLBACK_MOISTURE",
     },
-    "dualrelay": {
+    "dual_relay": {
         "name": "Dual Relay Bricklet",
         "class": BrickletDualRelay,
         "units": "",
@@ -228,27 +238,27 @@ SENSORS = {
         "brick_tag": "Motion_Detector",
         "value_func": "get_motion_detected",
     },
-    "button_colour": {
+    "rgb_led_button_colour": {
         "name": "RGB LED Button",
         "class": BrickletRGBLEDButton,
         "units": "",
         "brick_tag": "RGB_LED_Button",
         "value_func": "get_color",
     },
-    "rgb_button_state": {
+    "rgb_led_button_state": {
         "name": "RGB LED Button",
         "class": BrickletRGBLEDButton,
         "units": "",
         "brick_tag": "RGB_LED_Button",
-        "value_func": "get_button_state()",
+        "value_func": "get_button_state",
         "callback_func": "CALLBACK_BUTTON_STATE_CHANGED",
     },
-    "left_button_state": {
+    "dual_button_state": {
         "name": "Dual Button",
         "class": BrickletDualButton,
         "units": "",
-        "brick_tag": "Dual_Button_L",
-        "value_func": "get_button_states",
+        "brick_tag": "Dual_Button",
+        "value_func": "get_button_state",
         "callback_func": "CALLBACK_STATE_CHANGED",
     },
     "motion_2": {
@@ -284,7 +294,7 @@ SENSORS = {
         "multiplier": 0.1,
         "callback_func": "CALLBACK_DISTANCE",
     },
-	"rotation_encoder": {
+	"rotation_encoder_2": {
         "name": "Rotary Encoder",
         "class": BrickletRotaryEncoderV2,
         "units": "",
@@ -292,7 +302,7 @@ SENSORS = {
         "value_func": "get_count",
         "callback_func": "CALLBACK_COUNT",
     },
-	"linear": {
+	"linear_poti": {
 		    "name": "Linear Poti",
 		    "class": BrickletLinearPoti,
 		    "units": "",
@@ -315,5 +325,23 @@ SENSORS = {
 		    "brick_tag": "Line",
 		    "value_func": "get_reflectivity",
 		    "callback_func": "CALLBACK_REFLECTIVITY",
+	},
+	"humidity_v2":{
+		    "name": "Humidity",
+		    "class": BrickletHumidityV2,
+		    "units": "%",
+		    "multiplier": 0.01,
+		    "brick_tag": "Humidity",
+		    "value_func": "get_humidity",
+		    "callback_func": "CALLBACK_HUMIDITY",
+	},
+	"humidity_temp":{
+		    "name": "Temperature",
+		    "class": BrickletHumidityV2,
+		    "units": "degC",
+		    "multiplier": 0.01,
+		    "brick_tag": "Humidity",
+		    "value_func": "get_temperature",
+		    "callback_func": "CALLBACK_TEMPERATURE",
 	},
 }
