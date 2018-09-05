@@ -9,11 +9,12 @@ class Sensor():
     def __init__(self, controller, sensor_type, uid):
         if sensor_type not in SENSORS:
             raise Exception
-        sensor = SENSORS[sensor_type]
-        self.name = sensor["name"]
+        self.raw_uid = uid
+        self.sensor = SENSORS[sensor_type]
+        self.name = self.sensor["name"]
         self.sensor_type = sensor_type
         self.controller = controller
-        self.instance = sensor["class"](uid, controller.ipcon)
+        self.instance = self.sensor["class"](self.raw_uid, controller.ipcon)
         self.update_time = 300
         self.publish_limit = 20
         self.variance = 5
@@ -22,9 +23,9 @@ class Sensor():
         for attr in [
                 "brick_tag", "value_func", "units", "multiplier", "offset",
                 "update_time", "publish_limit", "variance", "sequence"]:
-            if attr in sensor:
-                setattr(self, attr, sensor[attr])
-        self.uid = str(uid) + "_" + self.brick_tag
+            if attr in self.sensor:
+                setattr(self, attr, self.sensor[attr])             
+        self.uid = str(self.raw_uid) + "_" + self.brick_tag + "_" + self.name
         # if "callback_func" in sensor:
         #    self.instance.register_callback(
         #        getattr(self.instance, sensor["callback_func"]),
@@ -53,34 +54,34 @@ class Sensor():
                 value = value * self.multiplier
             if hasattr(self, "offset"):
                 value = value + self.offset
-
         return value
 
-    def callback(self, value=None):
+    def callback(sel, value=None):
         self.value = self.parse_value(value)
         self.updated = datetime.now()
         self.publish()
 
     def get_value(self):
         try:
-            if self.sensor_type == "magfield":
-                value = getattr(self.instance, self.value_func)(False)
-            else:
-                value = getattr(self.instance, self.value_func)()
-
-            value = self.parse_value(value)
-
-            self.updated = datetime.now()
-            self.value = value
-            return self.value
+			self.instance = self.sensor["class"](self.raw_uid, self.controller.ipcon)
+			if self.sensor_type == "magfield":
+				value = getattr(self.instance, self.value_func)(False)
+			else:
+				value = getattr(self.instance, self.value_func)()
+			value = self.parse_value(value)
+			print(self.name + ': ' + str(value) + self.sensor["units"])
+			self.updated = datetime.now()
+			self.value = value
+			return self.value
         except Exception as e:
             print("Error reading value from sensor:", e)
+            pass
 
     def publish(self):
         if self.value and seconds_past(self.published, self.publish_limit):
-            self.published_value = self.value
-            self.published = datetime.now()
-            self.controller.event("sensor-publish", self)
+			self.published_value = self.value
+			self.published = datetime.now()
+			self.controller.event("sensor-publish", self)
 
     def roc(self):
         if seconds_past(self.published, self.publish_limit):
@@ -140,48 +141,76 @@ class SensorModule(StateModule):
                  "value": str(sensor.get_value_display())})
 
     def try_bricklet(self, uid, device_identifier, position):
-        sensor = None
+        sensors = []
         if device_identifier == 216:
-            sensor = Sensor(self.controller, "temp", uid)
+            sensors.append(Sensor(self.controller, "temp", uid))
         elif device_identifier == 217:
-            sensor = Sensor(self.controller, "irtemp", uid)
+            sensors.append(Sensor(self.controller, "ir_temp", uid))
         elif device_identifier == 27:
-            sensor = Sensor(self.controller, "humidity", uid)
+            sensors.append(Sensor(self.controller, "humidity", uid))
         elif device_identifier == 259:
-            sensor = Sensor(self.controller, "light", uid)
+            sensors.append(Sensor(self.controller, "light", uid))
         elif device_identifier == 238:
-            sensor = Sensor(self.controller, "sound", uid)
+            sensors.append(Sensor(self.controller, "sound", uid))
         elif device_identifier == 262:
-            sensor = Sensor(self.controller, "co2", uid)
+            sensors.append(Sensor(self.controller, "co2", uid))
         elif device_identifier == 227:
-            sensor = Sensor(self.controller, "voltage", uid)
-            sensor = Sensor(self.controller, "current", uid)
-            sensor = Sensor(self.controller, "power", uid)
+            sensors.append(Sensor(self.controller, "voltage", uid))
+            sensors.append(Sensor(self.controller, "current", uid))
+            sensors.append(Sensor(self.controller, "power", uid))
         elif device_identifier == 25:
-            sensor = Sensor(self.controller, "dist", uid)
+            sensors.append(Sensor(self.controller, "dist", uid))
         elif device_identifier == 243:
-            sensor = Sensor(self.controller, "colour", uid)
-            sensor = Sensor(self.controller, "colour_temp", uid)
+##            sensors.append(Sensor(self.controller, "colour", uid))
+            sensors.append(Sensor(self.controller, "colour_temp", uid))
+            sensors.append(Sensor(self.controller, "colour_illuminance", uid))
         elif device_identifier == 221:
-            sensor = Sensor(self.controller, "air_pressure", uid)
+            sensors.append(Sensor(self.controller, "air_pressure", uid))
         elif device_identifier == 241:
-            sensor = Sensor(self.controller, "reflectivity", uid)
+            sensors.append(Sensor(self.controller, "reflectivity", uid))
         elif device_identifier == 240:
-            sensor = Sensor(self.controller, "magfield", uid)
+            sensors.append(Sensor(self.controller, "magfield", uid))
         # elif device_identifier == 250:
-        #     sensor = Sensor(self.controller,"acceleration", uid)
-        #    sensor = Sensor(self.controller, "acceleration_x", uid)
-        #    sensor = Sensor(self.controller, "acceleration_y", uid)
-        #    sensor = Sensor(self.controller, "acceleration_z", uid)
+        #     sensors.append(Sensor(self.controller,"acceleration", uid))
+        #    sensors.append(Sensor(self.controller, "acceleration_x", uid))
+        #    sensors.append(Sensor(self.controller, "acceleration_y", uid))
+        #    sensors.append(Sensor(self.controller, "acceleration_z", uid))
         elif device_identifier == 232:
-            sensor = Sensor(self.controller, "moisture", uid)
+            sensors.append(Sensor(self.controller, "moisture", uid))
         elif device_identifier == 265:
-            sensor = Sensor(self.controller, "uv", uid)
-
-        if sensor:
-            self.sensors[sensor.uid] = sensor
-            self.controller.event("sensor-created", sensor)
-
+            sensors.append(Sensor(self.controller, "uv", uid))
+        elif device_identifier == 26:
+            sensors.append(Sensor(self.controller, "dual_relay", uid))
+        elif device_identifier == 233:
+            sensors.append(Sensor(self.controller, "motion", uid))
+        elif device_identifier == 230:
+            sensors.append(Sensor(self.controller, "dual_button_state", uid))
+        elif device_identifier == 282:
+            sensors.append(Sensor(self.controller, "rgb_led_button_colour", uid))
+            sensors.append(Sensor(self.controller, "rgb_led_button_state", uid))
+        elif device_identifier == 292:
+            sensors.append(Sensor(self.controller, "motion_2", uid))
+        elif device_identifier == 215:
+            sensors.append(Sensor(self.controller, "rotation_poti", uid))
+        elif device_identifier == 239:
+            sensors.append(Sensor(self.controller, "tilt", uid))
+        elif device_identifier == 229:
+            sensors.append(Sensor(self.controller, "dist_us", uid))
+        elif device_identifier == 294:
+            sensors.append(Sensor(self.controller, "rotation_encoder_2", uid))
+        elif device_identifier == 213:
+            sensors.append(Sensor(self.controller, "linear_poti", uid))
+        elif device_identifier == 278:
+            sensors.append(Sensor(self.controller, "thermal_image", uid))
+        elif device_identifier == 241:
+            sensors.append(Sensor(self.controller, "reflectivity", uid))
+        elif device_identifier == 283:
+            sensors.append(Sensor(self.controller, "humidity_temp", uid))
+            sensors.append(Sensor(self.controller, "humidity_v2", uid))
+        for sensor in sensors:
+			self.sensors[sensor.sensor_type + "_" + uid] = sensor	
+			self.controller.event("sensor-created", sensor)
+	
     def navigate(self, direction):
         if direction == "back":
             self.controller.prev_module()
@@ -199,7 +228,7 @@ class SensorModule(StateModule):
 
     def update_sensors(self):
         for pk in self.sensors:
-            self.sensors[pk].roc()
+			self.sensors[pk].roc()
         self.controller.scheduler.enter(1, 1, self.update_sensors, (),)
 
     def tick(self):
