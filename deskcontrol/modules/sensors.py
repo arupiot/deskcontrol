@@ -48,6 +48,15 @@ class Sensor():
         elif self.sensor_type == "colour":
             r, g, b, c = [int(x / 257) for x in value]
             print(r, g, b, c)
+        elif self.sensor_type == "rgb_led_button_colour":
+            r,g,b = [int(x) for x in value]
+            value = (r+g+b)/3
+        elif self.sensor_type == "rgb_led_button_colour_r":
+            value = value[0]
+        elif self.sensor_type == "rgb_led_button_colour_g":
+            value = value[1]
+        elif self.sensor_type == "rgb_led_button_colour_b":
+            value = value[2]
 
         if isinstance(value, numbers.Number):
             if hasattr(self, "multiplier"):
@@ -161,7 +170,7 @@ class SensorModule(StateModule):
         elif device_identifier == 25:
             sensors.append(Sensor(self.controller, "dist", uid))
         elif device_identifier == 243:
-##            sensors.append(Sensor(self.controller, "colour", uid))
+            sensors.append(Sensor(self.controller, "colour", uid))
             sensors.append(Sensor(self.controller, "colour_temp", uid))
             sensors.append(Sensor(self.controller, "colour_illuminance", uid))
         elif device_identifier == 221:
@@ -188,6 +197,9 @@ class SensorModule(StateModule):
         elif device_identifier == 282:
             sensors.append(Sensor(self.controller, "rgb_led_button_colour", uid))
             sensors.append(Sensor(self.controller, "rgb_led_button_state", uid))
+            sensors.append(Sensor(self.controller, "rgb_led_button_colour_r", uid))
+            sensors.append(Sensor(self.controller, "rgb_led_button_colour_g", uid))
+            sensors.append(Sensor(self.controller, "rgb_led_button_colour_b", uid))
         elif device_identifier == 292:
             sensors.append(Sensor(self.controller, "motion_2", uid))
         elif device_identifier == 215:
