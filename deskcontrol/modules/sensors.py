@@ -72,25 +72,25 @@ class Sensor():
 
     def get_value(self):
         try:
-			self.instance = self.sensor["class"](self.raw_uid, self.controller.ipcon)
-			if self.sensor_type == "magfield":
-				value = getattr(self.instance, self.value_func)(False)
-			else:
-				value = getattr(self.instance, self.value_func)()
-			value = self.parse_value(value)
-			print(self.name + ': ' + str(value) + self.sensor["units"])
-			self.updated = datetime.now()
-			self.value = value
-			return self.value
+            self.instance = self.sensor["class"](self.raw_uid, self.controller.ipcon)
+            if self.sensor_type == "magfield":
+                value = getattr(self.instance, self.value_func)(False)
+            else:
+                value = getattr(self.instance, self.value_func)()
+            value = self.parse_value(value)
+            print(self.name + ': ' + str(value) + self.sensor["units"])
+            self.updated = datetime.now()
+            self.value = value
+            return self.value
         except Exception as e:
             print("Error reading value from sensor:", e)
             pass
 
     def publish(self):
         if self.value and seconds_past(self.published, self.publish_limit):
-			self.published_value = self.value
-			self.published = datetime.now()
-			self.controller.event("sensor-publish", self)
+            self.published_value = self.value
+            self.published = datetime.now()
+            self.controller.event("sensor-publish", self)
 
     def roc(self):
         if seconds_past(self.published, self.publish_limit):
@@ -220,8 +220,8 @@ class SensorModule(StateModule):
             sensors.append(Sensor(self.controller, "humidity_temp", uid))
             sensors.append(Sensor(self.controller, "humidity_v2", uid))
         for sensor in sensors:
-			self.sensors[sensor.sensor_type + "_" + uid] = sensor	
-			self.controller.event("sensor-created", sensor)
+            self.sensors[sensor.sensor_type + "_" + uid] = sensor	
+            self.controller.event("sensor-created", sensor)
 	
     def navigate(self, direction):
         if direction == "back":
@@ -240,7 +240,7 @@ class SensorModule(StateModule):
 
     def update_sensors(self):
         for pk in self.sensors:
-			self.sensors[pk].roc()
+            self.sensors[pk].roc()
         self.controller.scheduler.enter(1, 1, self.update_sensors, (),)
 
     def tick(self):
