@@ -43,8 +43,8 @@ class Sensor():
             value = value[1]
         elif self.sensor_type == "acceleration_z":
             value = value[2]
-        elif self.sensor_type == "acceleration":
-            x, y, z = value
+        #elif self.sensor_type == "acceleration":
+        #    x, y, z = value
         elif self.sensor_type == "colour":
             r, g, b, c = [int(x / 257) for x in value]
             print(r, g, b, c)
@@ -56,6 +56,36 @@ class Sensor():
         elif self.sensor_type == "rgb_led_button_colour_g":
             value = value[1]
         elif self.sensor_type == "rgb_led_button_colour_b":
+            value = value[2]
+        elif self.sensor_type == "heading":
+            value = value[0]
+        elif self.sensor_type == "roll":
+            value = value[1]
+        elif self.sensor_type == "pitch":
+            value = value[2]
+        elif self.sensor_type == "linear_acceleration_X":
+            value = value[0]
+        elif self.sensor_type == "linear_acceleration_Y":
+            value = value[1]
+        elif self.sensor_type == "linear_acceleration_Z":
+            value = value[2]
+        elif self.sensor_type == "gravity_acceleration_X":
+            value = value[0]
+        elif self.sensor_type == "gravity_acceleration_Y":
+            value = value[1]
+        elif self.sensor_type == "gravity_acceleration_Z":
+            value = value[2]
+        elif self.sensor_type == "IMU_acceleration_X":
+            value = value[0]
+        elif self.sensor_type == "IMU_acceleration_Y":
+            value = value[1]
+        elif self.sensor_type == "IMU_acceleration_Z":
+            value = value[2]
+        elif self.sensor_type == "angular_velocity_X":
+            value = value[0]
+        elif self.sensor_type == "angular_velocity_Y":
+            value = value[1]
+        elif self.sensor_type == "angular_velocity_Z":
             value = value[2]
 
         if isinstance(value, numbers.Number):
@@ -179,11 +209,11 @@ class SensorModule(StateModule):
             sensors.append(Sensor(self.controller, "reflectivity", uid))
         elif device_identifier == 240:
             sensors.append(Sensor(self.controller, "magfield", uid))
-        # elif device_identifier == 250:
-        #     sensors.append(Sensor(self.controller,"acceleration", uid))
-        #    sensors.append(Sensor(self.controller, "acceleration_x", uid))
-        #    sensors.append(Sensor(self.controller, "acceleration_y", uid))
-        #    sensors.append(Sensor(self.controller, "acceleration_z", uid))
+        elif device_identifier == 250:
+            sensors.append(Sensor(self.controller,"acceleration", uid))
+            sensors.append(Sensor(self.controller, "acceleration_x", uid))
+            sensors.append(Sensor(self.controller, "acceleration_y", uid))
+            sensors.append(Sensor(self.controller, "acceleration_z", uid))
         elif device_identifier == 232:
             sensors.append(Sensor(self.controller, "moisture", uid))
         elif device_identifier == 265:
@@ -219,6 +249,26 @@ class SensorModule(StateModule):
         elif device_identifier == 283:
             sensors.append(Sensor(self.controller, "humidity_temp", uid))
             sensors.append(Sensor(self.controller, "humidity_v2", uid))
+        elif device_identifier == 18:
+            sensors.append(Sensor(self.controller, "heading", uid))
+            sensors.append(Sensor(self.controller, "roll", uid))
+            sensors.append(Sensor(self.controller, "pitch", uid))
+            sensors.append(Sensor(self.controller, "linear_acceleration_Z", uid))
+            sensors.append(Sensor(self.controller, "linear_acceleration_Y", uid))
+            sensors.append(Sensor(self.controller, "linear_acceleration_X", uid))
+            sensors.append(Sensor(self.controller, "heading", uid))
+            sensors.append(Sensor(self.controller, "roll", uid))
+            sensors.append(Sensor(self.controller, "pitch", uid))
+            sensors.append(Sensor(self.controller, "gravity_acceleration_X", uid))
+            sensors.append(Sensor(self.controller, "gravity_acceleration_Y", uid))
+            sensors.append(Sensor(self.controller, "gravity_acceleration_Z", uid))
+            sensors.append(Sensor(self.controller, "IMU_leds", uid))
+            sensors.append(Sensor(self.controller, "IMU_acceleration_Y", uid))
+            sensors.append(Sensor(self.controller, "IMU_acceleration_X", uid))
+            sensors.append(Sensor(self.controller, "IMU_acceleration_Z", uid))
+            sensors.append(Sensor(self.controller, "angular_velocity_X", uid))
+            sensors.append(Sensor(self.controller, "angular_velocity_Y", uid))
+            sensors.append(Sensor(self.controller, "angular_velocity_Z", uid))
         for sensor in sensors:
             self.sensors[sensor.sensor_type + "_" + uid] = sensor	
             self.controller.event("sensor-created", sensor)
