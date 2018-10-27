@@ -3,6 +3,7 @@ from modules.navigation import StateModule
 from modules.sensor_types import SENSORS
 import numbers
 from helpers import seconds_past
+import math
 
 
 class Sensor():
@@ -37,14 +38,12 @@ class Sensor():
     def parse_value(self, value):
         if self.sensor_type == "dualrelay":
             value = str(value[0]) + str(value[1])
-        elif self.sensor_type == "acceleration_x":
+        elif self.sensor_type == "acceleration_X":
             value = value[0]
-        elif self.sensor_type == "acceleration_y":
+        elif self.sensor_type == "acceleration_Y":
             value = value[1]
-        elif self.sensor_type == "acceleration_z":
+        elif self.sensor_type == "acceleration_Z":
             value = value[2]
-        #elif self.sensor_type == "acceleration":
-        #    x, y, z = value
         elif self.sensor_type == "colour":
             r, g, b, c = [int(x / 257) for x in value]
             print(r, g, b, c)
@@ -63,30 +62,31 @@ class Sensor():
             value = value[1]
         elif self.sensor_type == "pitch":
             value = value[2]
-        elif self.sensor_type == "linear_acceleration_X":
+        elif self.sensor_type[-4:].lower() == "_xyz":
+            x,y,z = [int(x) for x in value]
+            value = math.sqrt(x**2+y**2+z**2)
+        elif self.sensor_type == "quaternion_W":
             value = value[0]
-        elif self.sensor_type == "linear_acceleration_Y":
-            value = value[1]
-        elif self.sensor_type == "linear_acceleration_Z":
-            value = value[2]
-        elif self.sensor_type == "gravity_acceleration_X":
-            value = value[0]
-        elif self.sensor_type == "gravity_acceleration_Y":
-            value = value[1]
-        elif self.sensor_type == "gravity_acceleration_Z":
-            value = value[2]
-        elif self.sensor_type == "IMU_acceleration_X":
-            value = value[0]
-        elif self.sensor_type == "IMU_acceleration_Y":
-            value = value[1]
-        elif self.sensor_type == "IMU_acceleration_Z":
-            value = value[2]
-        elif self.sensor_type == "angular_velocity_X":
-            value = value[0]
-        elif self.sensor_type == "angular_velocity_Y":
-            value = value[1]
-        elif self.sensor_type == "angular_velocity_Z":
-            value = value[2]
+        elif self.sensor_type[-2:].upper() == "_X":
+            if "quaternion" in self.sensor_type:
+                value = value[1]
+            else:
+                value = value[0]
+        elif self.sensor_type[-2:].upper() == "_Y":
+            if "quaternion" in self.sensor_type:
+                value = value[2]
+            else:
+                value = value[1]
+        elif self.sensor_type[-2:].upper() == "_Z":
+            if "quaternion" in self.sensor_type:
+                value = value[3]
+            else:
+                value = value[2]
+        elif isinstance(value,bool):
+            if value:
+                value = 1
+            else:
+                value = 0
 
         if isinstance(value, numbers.Number):
             if hasattr(self, "multiplier"):
@@ -139,9 +139,11 @@ class Sensor():
     def get_value_display(self):
         if not self.value:
             return "None"
-        if self.sensor_type == "motion":
-            if self.value:
+        if self.sensor_type == "motion" or self.sensor_type == "IMU_leds":
+            if self.value == 1:
                 return "Yes"
+            else:
+                return "No"
         return str(self.value) + " " + self.units
 
     def __str__(self):
@@ -210,10 +212,10 @@ class SensorModule(StateModule):
         elif device_identifier == 240:
             sensors.append(Sensor(self.controller, "magfield", uid))
         elif device_identifier == 250:
-            sensors.append(Sensor(self.controller,"acceleration", uid))
-            sensors.append(Sensor(self.controller, "acceleration_x", uid))
-            sensors.append(Sensor(self.controller, "acceleration_y", uid))
-            sensors.append(Sensor(self.controller, "acceleration_z", uid))
+            sensors.append(Sensor(self.controller,"acceleration_xyz", uid))
+            sensors.append(Sensor(self.controller, "acceleration_X", uid))
+            sensors.append(Sensor(self.controller, "acceleration_Y", uid))
+            sensors.append(Sensor(self.controller, "acceleration_Z", uid))
         elif device_identifier == 232:
             sensors.append(Sensor(self.controller, "moisture", uid))
         elif device_identifier == 265:
@@ -256,9 +258,6 @@ class SensorModule(StateModule):
             sensors.append(Sensor(self.controller, "linear_acceleration_Z", uid))
             sensors.append(Sensor(self.controller, "linear_acceleration_Y", uid))
             sensors.append(Sensor(self.controller, "linear_acceleration_X", uid))
-            sensors.append(Sensor(self.controller, "heading", uid))
-            sensors.append(Sensor(self.controller, "roll", uid))
-            sensors.append(Sensor(self.controller, "pitch", uid))
             sensors.append(Sensor(self.controller, "gravity_acceleration_X", uid))
             sensors.append(Sensor(self.controller, "gravity_acceleration_Y", uid))
             sensors.append(Sensor(self.controller, "gravity_acceleration_Z", uid))
@@ -269,6 +268,19 @@ class SensorModule(StateModule):
             sensors.append(Sensor(self.controller, "angular_velocity_X", uid))
             sensors.append(Sensor(self.controller, "angular_velocity_Y", uid))
             sensors.append(Sensor(self.controller, "angular_velocity_Z", uid))
+            sensors.append(Sensor(self.controller, "linear_acceleration_xyz", uid))
+            sensors.append(Sensor(self.controller, "gravity_acceleration_xyz", uid))
+            sensors.append(Sensor(self.controller, "IMU_acceleration_xyz", uid))
+            sensors.append(Sensor(self.controller, "angular_velocity_xyz", uid))
+            sensors.append(Sensor(self.controller, "quaternion_W", uid))
+            sensors.append(Sensor(self.controller, "quaternion_X", uid))
+            sensors.append(Sensor(self.controller, "quaternion_Y", uid))
+            sensors.append(Sensor(self.controller, "quaternion_Z", uid))
+            sensors.append(Sensor(self.controller, "IMU_temp", uid))
+            sensors.append(Sensor(self.controller, "magnetic_field_X", uid))
+            sensors.append(Sensor(self.controller, "magnetic_field_Y", uid))
+            sensors.append(Sensor(self.controller, "magnetic_field_Z", uid))
+            sensors.append(Sensor(self.controller, "magnetic_field_xyz", uid))
         for sensor in sensors:
             self.sensors[sensor.sensor_type + "_" + uid] = sensor	
             self.controller.event("sensor-created", sensor)

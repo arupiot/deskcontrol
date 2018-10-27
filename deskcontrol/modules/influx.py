@@ -1,4 +1,4 @@
-from navigation import StateModule
+from modules.navigation import StateModule
 from influxdb import InfluxDBClient
 from helpers import sensor_data
 from config import *
