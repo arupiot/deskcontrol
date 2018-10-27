@@ -87,7 +87,6 @@ class Sensor():
                 value = 1
             else:
                 value = 0
-
         if isinstance(value, numbers.Number):
             if hasattr(self, "multiplier"):
                 value = value * self.multiplier
@@ -127,7 +126,7 @@ class Sensor():
             if not self.published_value:
                 self.published_value = self.value
             self.get_value()
-            if self.value:
+            if self.value and self.value != None:
                 for callback in self.change_callbacks:
                         callback(self.value)
                 if (self.value <= self.published_value - self.variance or
