@@ -1,6 +1,9 @@
 from datetime import datetime
 from modules.navigation import StateModule
-from modules.sensor_types import SENSORS
+try:
+	from modules.sensor_types import SENSORS
+except:
+	from modules.sensor_types_no_ascii import SENSORS
 import numbers
 from helpers import seconds_past
 import math

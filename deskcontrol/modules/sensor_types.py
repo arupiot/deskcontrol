@@ -32,7 +32,7 @@ SENSORS = {
     "temp": {
         "name": "Temperature",
         "class": BrickletTemperature,
-        "units": "°C",
+        "units": "C",
         "brick_tag": "Temperature_Sensor",
         "value_func": "get_temperature",
         "multiplier": 0.01,
@@ -626,5 +626,3 @@ SENSORS = {
         "callback_func": "CALLBACK_MAGNETIC_FIELD",
     },
 }
-
-
