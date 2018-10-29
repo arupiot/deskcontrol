@@ -34,7 +34,6 @@ sudo service deskcontrol start
 * Implement lighting control functionality (protocol tbc)
 * Add touch interface using KiVi on WaveShare 3.5" touch screen for Raspberry Pi
 * Add microphone based sound sensor
-* Link to Wi-Fi Brick Extension
 
 ## Credits
 * Ben Hussey <ben.hussey@arup.com>
