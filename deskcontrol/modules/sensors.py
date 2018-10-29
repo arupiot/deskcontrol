@@ -129,14 +129,17 @@ class Sensor():
             if not self.published_value:
                 self.published_value = self.value
             self.get_value()
-            if self.value and self.value != None:
-                for callback in self.change_callbacks:
-                        callback(self.value)
-                if (self.value <= self.published_value - self.variance or
-                        self.value >= self.published_value + self.variance):
-                    self.publish()
-                if seconds_past(self.published, self.update_time):
-                    self.publish()
+            if self.value:
+				try:
+					for callback in self.change_callbacks:
+							callback(self.value)
+					if (self.value <= self.published_value - self.variance or
+							self.value >= self.published_value + self.variance):
+						self.publish()
+					if seconds_past(self.published, self.update_time):
+						self.publish()
+				except Exception as e:
+					print("Error publishing value from sensor:", e)
 
     def get_value_display(self):
         if not self.value:
