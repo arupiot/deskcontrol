@@ -6,6 +6,8 @@ Intended to run on a tinkerforge redbrick and Raspberry Pi but can run on any sy
 
 It will auto-detect bricklets compatible with the code and provide sensor readings / control of relays on a 128x64 OLED - joystick or multitouch can be used to navigate the menu.
 
+The code may need running twice before it runs successfully.
+
 ## Installation
 Requirements for Debian based systems:
 ```
