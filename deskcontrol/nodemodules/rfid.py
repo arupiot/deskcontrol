@@ -1,8 +1,8 @@
 from tinkerforge.bricklet_nfc_rfid import BrickletNFCRFID
-from modules.navigation import StateModule
+from iotnode.module import NodeModule
 
 
-class RFIDModule(StateModule):
+class RFIDModule(NodeModule):
     readers = {}
     previous = None
     tick_count = 0
@@ -16,10 +16,9 @@ class RFIDModule(StateModule):
         "19316121643": "Alvise",
     }
 
-    def draw(self, clear=True):
-        self.controller.screen.draw(
-            "values",
-            {"title": "Hello,", "value": self.auth, })
+    def draw(self):
+        self.push({"type": "render_data", "data": {
+            "title": "Hello,", "value": self.auth, }})
 
     def read_card(self, state, idle, nr):
         if idle:
@@ -55,11 +54,13 @@ class RFIDModule(StateModule):
             # print("Created Card Reader")
 
     def navigate(self, direction):
-        self.controller.change_module("MenuModule")
+        self.push({"type": "input", "switch": "MenuModule"})
 
     def tick(self):
-        self.tick_count += 1
-        if self.tick_count > 5:
-            self.previous = None
-            self.tick_count = 0
-            self.controller.change_module(None)
+        if self.active:
+            self.tick_count += 1
+            if self.tick_count > 6:
+                self.previous = None
+                self.tick_count = 0
+                self.push({"type": "input", "switch": "MenuModule"})
+        self.wait(0.2)

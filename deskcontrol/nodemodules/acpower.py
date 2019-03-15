@@ -1,4 +1,4 @@
-from navigation import StateModule
+from iotnode.module import NodeModule
 import energenie
 
 OUTLETS = {
@@ -46,34 +46,26 @@ class Outlet():
             self.on()
 
 
-class ACPowerModule(StateModule):
-    menu_title = "Power"
+class ACPowerModule(NodeModule):
     outlets = {}
     current = 1
 
-    def __init__(self, controller):
-        super(ACPowerModule, self).__init__(controller)
-        controller.add_event_handler("sleep", self.on_sleep)
-        controller.add_event_handler("wake", self.on_wake)
+    def __init__(self, *args, **kwargs):
+        super(ACPowerModule, self).__init__(*args, **kwargs)
         for outlet in OUTLETS:
-            self.outlets[outlet] = Outlet(outlet, controller)
+            self.outlets[outlet] = Outlet(outlet)
+        self.add_to_menu("Power")
 
-    def draw(self, clear=True):
-        if clear:
-            self.controller.screen.device.clear_display()
-        if not len(self.outlets):
-            self.controller.ipcon.enumerate()
-            self.controller.screen.draw("values", {})
-            return
+    def draw(self):
         key = self.outlets.keys()[self.current]
         outlet = self.outlets[key]
         if outlet.state:
-            state = "On "
+            state = "On"
         else:
             state = "Off"
-        self.controller.screen.draw(
-            "values",
-            {"title": outlet.name, "value": str(state), })
+
+        self.push({"type": "render_data", "data": {
+            "title": outlet.name, "value": str(state), }})
 
     def switch_relay(self):
         if self.outlets:
@@ -81,20 +73,21 @@ class ACPowerModule(StateModule):
             self.outlets[key].switch()
             self.draw(False)
 
-    def on_sleep(self, data):
-        for outlet in self.outlets:
-            # TODO: Less hacky!
-            if outlet != 1:
-                self.outlets[outlet].off()
+    def callback_sleep(self, data):
+        if 'sleep' in data:
+            for outlet in self.outlets:
+                # TODO: Less hacky!
+                if outlet != 1:
+                    self.outlets[outlet].off()
+        if 'wake' in data:
+            for outlet in self.outlets:
+                self.outlets[outlet].on()
 
-    def on_wake(self, data):
-        for outlet in self.outlets:
-            self.outlets[outlet].on()
-
-    def navigate(self, direction):
-        if direction == "back":
-            self.controller.prev_module()
-        if direction == "forward":
+    def callback_input(self, data):
+        direction = data["data"]
+        if direction in ["back", "left"]:
+            self.push({"type": "input", "switch": "MenuModule"})
+        if direction in ["enter", "right"]:
             self.switch_relay()
         if direction in ["down", "up"]:
             if direction == "down":
@@ -105,8 +98,4 @@ class ACPowerModule(StateModule):
                 self.current = 0
             elif self.current < 0:
                 self.current = len(self.outlets) - 1
-            # print("Output: " + str(list(self.outputs)[self.current]))
             self.draw()
-
-    def tick(self):
-        self.draw(clear=False)

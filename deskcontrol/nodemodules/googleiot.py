@@ -18,32 +18,30 @@
 
 # Subscribe/Callback Docs https://eclipse.org/paho/clients/python/docs/
 
-from navigation import StateModule
+from iotnode.module import NodeModule
 from datetime import datetime, timedelta
 import jwt
+import logging
 import json
 import paho.mqtt.client as mqtt
-from config import *
-from helpers import sensor_data
+from helpers import sensor_data_format
 
 
-class GoogleIoTModule(StateModule):
+class GoogleIoTModule(NodeModule):
     client = None
 
-    def __init__(self, controller):
-        super(GoogleIoTModule, self).__init__(controller)
-        controller.add_event_handler("sensor-publish", self.publish_sensor)
-        controller.add_event_handler("kiln-publish", self.publish_kiln)
+    def __init__(self, *args, **kwargs):
+        super(GoogleIoTModule, self).__init__(*args, **kwargs)
         self.mqtt_topic = '/devices/{}/events'.format(
-            GCLOUD_CONFIG['device_id'])
+            self.cache['_GCLOUD_CONFIG']['device_id'])
         self.connect()
 
     def on_message(self, userdata, message):
-        print(userdata, message)
+        logging.info("MQTT Message: ",userdata, message)
 
     def connect(self):
         try:
-            args = GCLOUD_CONFIG
+            args = self.cache['_GCLOUD_CONFIG']
             self.client = mqtt.Client(
                 client_id=(
                     'projects/{}/locations/{}/registries/{}/devices/{}'.format(
@@ -63,7 +61,7 @@ class GoogleIoTModule(StateModule):
 
             self.client.on_message = self.on_message
             self.client.subscribe('/devices/{}/events/commands'.format(
-                GCLOUD_CONFIG['device_id'], 1))
+                args['device_id'], 1))
 
             self.client.connect(
                 args['mqtt_bridge_hostname'],
@@ -72,10 +70,9 @@ class GoogleIoTModule(StateModule):
             self.client.loop_start()
 
         except Exception as e:
-            print("Error connecting to GCloud:")
-            print(e)
+            logging.error("Error connecting to GCloud: " + str(e))
 
-    def publish_sensor(self, data):
+    def callback_sensor_publish(self, data):
         data = sensor_data(
             self.controller,
             data.uid,
@@ -84,19 +81,15 @@ class GoogleIoTModule(StateModule):
         try:
             blob = json.dumps(data)
             self.client.publish(self.mqtt_topic + '/sensor', blob, qos=1)
-            # print("published to googleiot", blob)
         except Exception as e:
-            print("Error publishing to GCloud:")
-            print(e)
+            logging.error("Error publishing to GCloud: " + str(e))
 
-    def publish_kiln(self, data):
+    def callback_kiln_publish(self, data):
         try:
             blob = json.dumps(data)
             self.client.publish(self.mqtt_topic + '/kiln', blob, qos=1)
-            # print("published to googleiot", blob)
         except Exception as e:
-            print("Error publishing to GCloud:")
-            print(e)
+            logging.error("Error publishing to GCloud: " + str(e))
 
     def create_jwt(self, project_id, private_key_file, algorithm):
         token = {

@@ -1,24 +1,16 @@
-from navigation import StateModule
+from iotnode.module import NodeModule
 
 
-class KivyScreen(StateModule):
-    controller = None
-    device = None
-
-    def __init__(self, controller):
-        super(KivyScreen, self).__init__(controller)
-        self.controller.screen = self
-        controller.add_event_handler("sleep", self.on_sleep)
-        controller.add_event_handler("wake", self.on_wake)
+class KivyScreen(NodeModule):
 
     def draw_splash(self):
         pass
 
-    def on_sleep(self, data):
-        pass
-
-    def on_wake(self, data):
-        pass
+    def callback_sleep(self, data):
+        if 'sleep' in data:
+            pass
+        if 'wake' in data:
+            pass
 
     def draw(self, layout, params):
         # layout will be menu, values or edit

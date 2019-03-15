@@ -1,8 +1,8 @@
 from tinkerforge.bricklet_led_strip import BrickletLEDStrip
-from navigation import StateModule
+from iotnode.module import NodeModule
 
 
-class LightingModule(StateModule):
+class LightingModule(NodeModule):
     menu_title = "Lighting"
 
     outputs = {}
@@ -20,15 +20,14 @@ class LightingModule(StateModule):
         {"name": "Green", "color": (0, 255, 0)},
     ]
 
-    def __init__(self, controller):
-        super(LightingModule, self).__init__(controller)
+    def __init__(self, *args, **kwargs):
+        super(LightingModule, self).__init__(*args, **kwargs)
         self.set_light()
+        self.add_to_menu("Lighting")
 
-    def draw(self, clear=True):
-        if clear:
-            self.controller.screen.device.clear_display()
+    def draw(self):
         if not len(self.outputs):
-            self.controller.screen.draw("values", {})
+            self.push({"type": "render_data", "data": {}})
             return
         outputs = self.outputs[self.outputs.keys()[self.current]]
         if self.edit:
@@ -36,15 +35,13 @@ class LightingModule(StateModule):
         else:
             name = outputs["name"]
         if outputs["type"] == "dimmer":
-            self.controller.screen.draw(
-                "values",
-                {"title": name,
-                 "value": str(self.intens) + " %", })
+            self.push({"type": "render_data", "data": {
+                "title": name,
+                "value": str(self.intens) + " %", }})
         if outputs["type"] == "select":
-            self.controller.screen.draw(
-                "values",
-                {"title": name,
-                 "value": str(self.colors[self.color]["name"]), })
+            self.push({"type": "render_data", "data": {
+                "title": name,
+                "value": str(self.colors[self.color]["name"]), }})
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 231 and "taskint" not in self.outputs:
@@ -59,7 +56,6 @@ class LightingModule(StateModule):
             }
             self.device.set_chip_type(self.device.CHIP_TYPE_WS2811)
             self.device.set_channel_mapping(self.device.CHANNEL_MAPPING_BRG)
-            print("Created LEDBrick Output")
 
     def change_light(self, direction):
         if self.outputs[self.outputs.keys()[self.current]]["type"] == "dimmer":
@@ -78,7 +74,6 @@ class LightingModule(StateModule):
                     self.color = len(self.colors) - 1
                 else:
                     self.color -= 1
-        # print "change " + direction + str(self.color)
 
     def set_light(self):
         if self.device:
@@ -96,15 +91,14 @@ class LightingModule(StateModule):
             g = [0 for i in range(16)]
             self.device.set_rgb_values(17, 1, r, b, g)
 
-        self.controller.scheduler.enter(1, 1, self.set_light, (),)
-
-    def navigate(self, direction):
+    def navigate(self, data):
+        direction = data["data"]
         if not self.edit:
-            if direction == "forward":
+            if direction in ["enter", "right"]:
                 self.edit = True
                 self.draw()
-            if direction == "back":
-                self.controller.prev_module()
+            if direction in ["back", "left"]:
+                self.push({"type": "input", "switch": "MenuModule"})
             if direction in ["down", "up"]:
                 if direction == "down":
                     self.current = self.current + 1
@@ -117,12 +111,9 @@ class LightingModule(StateModule):
                 # print "Output: " + str(list(self.outputs)[self.current])
                 self.draw()
         else:
-            if direction == "back":
+            if direction in ["back", "left"]:
                 self.edit = False
                 self.draw()
             if direction in ["down", "up"]:
                 self.change_light(direction)
                 self.draw()
-
-    def tick(self):
-        self.draw(clear=False)

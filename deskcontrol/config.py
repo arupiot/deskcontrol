@@ -1,5 +1,4 @@
-HOST = "localhost"
-PORT = 4223
+TINKERFORGE = ("localhost", 4223)
 
 SHORT_IDENT = "XXXX"
 
@@ -32,18 +31,15 @@ MODULES = [
     ("InfluxModule", "influx", "InfluxDB"),
     ("HttpPushModule", "httppush", "HTTPpush"),
     ("TFScreen", "tfscreen", "TF Screen"),
-    # ("KivyScreen", "kivyscreen", "Kivy Screen"),
-    # ("GoogleIoTModule", "googleiot", "GoogleIoT"),
-    # ("KilnModule", "kiln", "Kiln"),
-    # ("PickleModule", "pickle", "Local Storage"),
-]
-
-MENU_MODULES = [
     ("SensorModule", "sensors", "Sensors"),
     # ("LightingModule", "lighting", "Lighting"),
     # ("DCPowerModule", "dcpower", "Power"),
     # ("ACPowerModule", "acpower", "Power"),  # Works on RPi only
     ("NetworkModule", "network", "Network"),
+    # ("KivyScreen", "kivyscreen", "Kivy Screen"),
+    # ("GoogleIoTModule", "googleiot", "GoogleIoT"),
+    # ("KilnModule", "kiln", "Kiln"),
+    # ("PickleModule", "pickle", "Local Storage"),
 ]
 
 SCHEMA_POST_URL = ""

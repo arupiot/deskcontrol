@@ -5,7 +5,7 @@ def seconds_past(datetime, seconds):
     return (datetime < datetime.now() - timedelta(seconds=seconds))
 
 
-def sensor_data(controller, key, value, tags={}):
+def sensor_data_format(controller, key, value, tags={}):
     ident = controller.identity
     data = {
         "measurement": str(ident + "_" + key),

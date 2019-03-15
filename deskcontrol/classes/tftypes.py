@@ -42,7 +42,7 @@ SENSORS = {
     "ir_temp": {
         "name": "IR Temperature",
         "class": BrickletTemperatureIR,
-        "units": "°C",
+        "units": "degC",
         "brick_tag": "IRTemperature_Sensor",
         "value_func": "get_object_temperature",
         "multiplier": 0.1,
@@ -52,7 +52,7 @@ SENSORS = {
     "uv": {
         "name": "Ultraviolet",
         "class": BrickletUVLight,
-        "units": "µW/cm2",
+        "units": "nanoW/cm2",
         "brick_tag": "UV_Light",
         "value_func": "get_uv_light",
     },
@@ -147,7 +147,7 @@ SENSORS = {
         "value_func": "get_color_temperature",
         "callback_func": "CALLBACK_COLOR_TEMPERATURE",
     },
-	"colour_illuminance": {
+    "colour_illuminance": {
         "name": "Colour Illuminance",
         "class": BrickletColor,
         "units": "lux",
@@ -307,7 +307,7 @@ SENSORS = {
         "value_func": "get_tilt_state",
         "callback_func": "CALLBACK_TILT_STATE",
     },
-	"dist_us": {
+    "dist_us": {
         "name": "Distance US",
         "class": BrickletDistanceUS,
         "units": "cm",
@@ -316,7 +316,7 @@ SENSORS = {
         "multiplier": 0.1,
         "callback_func": "CALLBACK_DISTANCE",
     },
-	"rotation_encoder_2": {
+    "rotation_encoder_2": {
         "name": "Rotary Encoder",
         "class": BrickletRotaryEncoderV2,
         "units": "",
@@ -324,52 +324,52 @@ SENSORS = {
         "value_func": "get_count",
         "callback_func": "CALLBACK_COUNT",
     },
-	"linear_poti": {
-		    "name": "Linear Poti",
-		    "class": BrickletLinearPoti,
-		    "units": "",
-		    "brick_tag": "Linear_Poti",
-		    "value_func": "get_position",
-		    "callback_func": "CALLBACK_POSITION",
-	},
-	"thermal_image": {
-		    "name": "Thermal Imaging",
-		    "class": BrickletThermalImaging,
-		    "units": "K",
-		    "multiplier": 0.01,
-		    "brick_tag": "Thermal_Imaging",
-		    "value_func": "get_statistics",
-	},
-	"reflectivity": {
-		    "name": "Line",
-		    "class": BrickletLine,
-		    "units": "",
-		    "brick_tag": "Line",
-		    "value_func": "get_reflectivity",
-		    "callback_func": "CALLBACK_REFLECTIVITY",
-	},
-	"humidity_v2":{
-		    "name": "Humidity",
-		    "class": BrickletHumidityV2,
-		    "units": "%",
-		    "multiplier": 0.01,
-		    "brick_tag": "Humidity",
-		    "value_func": "get_humidity",
-		    "callback_func": "CALLBACK_HUMIDITY",
-	},
-	"humidity_temp":{
-		    "name": "Temperature",
-		    "class": BrickletHumidityV2,
-		    "units": "°C",
-		    "multiplier": 0.01,
-		    "brick_tag": "Humidity",
-		    "value_func": "get_temperature",
-		    "callback_func": "CALLBACK_TEMPERATURE",
-	},
+    "linear_poti": {
+            "name": "Linear Poti",
+            "class": BrickletLinearPoti,
+            "units": "",
+            "brick_tag": "Linear_Poti",
+            "value_func": "get_position",
+            "callback_func": "CALLBACK_POSITION",
+    },
+    "thermal_image": {
+            "name": "Thermal Imaging",
+            "class": BrickletThermalImaging,
+            "units": "K",
+            "multiplier": 0.01,
+            "brick_tag": "Thermal_Imaging",
+            "value_func": "get_statistics",
+    },
+    "reflectivity": {
+            "name": "Line",
+            "class": BrickletLine,
+            "units": "",
+            "brick_tag": "Line",
+            "value_func": "get_reflectivity",
+            "callback_func": "CALLBACK_REFLECTIVITY",
+    },
+    "humidity_v2":{
+            "name": "Humidity",
+            "class": BrickletHumidityV2,
+            "units": "%",
+            "multiplier": 0.01,
+            "brick_tag": "Humidity",
+            "value_func": "get_humidity",
+            "callback_func": "CALLBACK_HUMIDITY",
+    },
+    "humidity_temp":{
+            "name": "Temperature",
+            "class": BrickletHumidityV2,
+            "units": "degC",
+            "multiplier": 0.01,
+            "brick_tag": "Humidity",
+            "value_func": "get_temperature",
+            "callback_func": "CALLBACK_TEMPERATURE",
+    },
     "heading": {
         "name": "Heading",
         "class": BrickIMUV2,
-        "units": "°",
+        "units": "deg",
         "brick_tag": "IMU",
         "multiplier":1/16,
         "value_func": "get_orientation",
@@ -378,7 +378,7 @@ SENSORS = {
     "roll": {
         "name": "Roll",
         "class": BrickIMUV2,
-        "units": "°",
+        "units": "deg",
         "brick_tag": "IMU",
         "offset": 180,
         "multiplier":2/16,
@@ -388,7 +388,7 @@ SENSORS = {
     "pitch": {
         "name": "Pitch",
         "class": BrickIMUV2,
-        "units": "°",
+        "units": "deg",
         "brick_tag": "IMU",
         "offset": 180,
         "value_func": "get_orientation",
@@ -398,7 +398,7 @@ SENSORS = {
     "linear_acceleration_X": {
         "name": "Linear Acceleration X-Axis",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_linear_acceleration",
         "multiplier": 0.01,
@@ -407,7 +407,7 @@ SENSORS = {
     "linear_acceleration_Y": {
         "name": "Linear Acceleration Y-Axis",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_linear_acceleration",
         "multiplier": 0.01,
@@ -416,7 +416,7 @@ SENSORS = {
     "linear_acceleration_Z": {
         "name": "Linear Acceleration Z-Axis",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_linear_acceleration",
         "multiplier": 0.01,
@@ -425,7 +425,7 @@ SENSORS = {
     "gravity_acceleration_X": {
         "name": "Gravity X-Axis",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_gravity_vector",
         "multiplier": 0.01,
@@ -434,7 +434,7 @@ SENSORS = {
     "gravity_acceleration_Y": {
         "name": "Gravity Y-Axis",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_gravity_vector",
         "multiplier": 0.01,
@@ -443,7 +443,7 @@ SENSORS = {
     "gravity_acceleration_Z": {
         "name": "Gravity Z-Axis",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_gravity_vector",
         "multiplier": 0.01,
@@ -459,7 +459,7 @@ SENSORS = {
     "IMU_acceleration_Z": {
         "name": "Acceleration Z-Axis",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_acceleration",
         "multiplier": 0.01,
@@ -468,7 +468,7 @@ SENSORS = {
     "IMU_acceleration_X": {
         "name": "Acceleration X-Axis",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_acceleration",
         "multiplier": 0.01,
@@ -477,7 +477,7 @@ SENSORS = {
     "IMU_acceleration_Y": {
         "name": "Acceleration Y-Axis",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_acceleration",
         "multiplier": 0.01,
@@ -486,7 +486,7 @@ SENSORS = {
     "angular_velocity_X": {
         "name": "Angular Velocity X-Axis",
         "class": BrickIMUV2,
-        "units": "°/s",
+        "units": "deg/s",
         "brick_tag": "IMU",
         "value_func": "get_angular_velocity",
         "multiplier": 0.01,
@@ -495,7 +495,7 @@ SENSORS = {
     "angular_velocity_Y": {
         "name": "Angular Velocity Y-Axis",
         "class": BrickIMUV2,
-        "units": "°/s",
+        "units": "deg/s",
         "brick_tag": "IMU",
         "value_func": "get_angular_velocity",
         "multiplier": 0.01,
@@ -504,7 +504,7 @@ SENSORS = {
     "angular_velocity_Z": {
         "name": "Angular Velocity Z-Axis",
         "class": BrickIMUV2,
-        "units": "°/s",
+        "units": "deg/s",
         "brick_tag": "IMU",
         "value_func": "get_angular_velocity",
         "multiplier": 0.01,
@@ -513,7 +513,7 @@ SENSORS = {
     "linear_acceleration_xyz": {
         "name": "Linear Acceleration",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_linear_acceleration",
         "multiplier": 0.01,
@@ -522,7 +522,7 @@ SENSORS = {
     "gravity_acceleration_xyz": {
         "name": "Gravity",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_gravity_vector",
         "multiplier": 0.01,
@@ -531,7 +531,7 @@ SENSORS = {
     "IMU_acceleration_xyz": {
         "name": "Acceleration",
         "class": BrickIMUV2,
-        "units": "m/s²",
+        "units": "m/s^2",
         "brick_tag": "IMU",
         "value_func": "get_acceleration",
         "multiplier": 0.01,
@@ -540,7 +540,7 @@ SENSORS = {
     "angular_velocity_xyz": {
         "name": "Angular Velocity",
         "class": BrickIMUV2,
-        "units": "°/s",
+        "units": "deg/s",
         "brick_tag": "IMU",
         "value_func": "get_angular_velocity",
         "multiplier": 0.01,
@@ -586,13 +586,13 @@ SENSORS = {
         "name": "IMU Temperature",
         "class": BrickIMUV2,
         "brick_tag": "IMU",
-        "units": "°C",
+        "units": "degC",
         "value_func": "get_temperature",
     },
     "magnetic_field_X": {
         "name": "Magnetic Field X-Axis",
         "class": BrickIMUV2,
-        "units": "µT",
+        "units": "nanoT",
         "brick_tag": "IMU",
         "value_func": "get_magnetic_field",
         "multiplier": 1/16.0,
@@ -601,7 +601,7 @@ SENSORS = {
     "magnetic_field_Y": {
         "name": "Magnetic Field Y-Axis",
         "class": BrickIMUV2,
-        "units": "µT",
+        "units": "nanoT",
         "brick_tag": "IMU",
         "value_func": "get_magnetic_field",
         "multiplier": 1/16.0,
@@ -610,7 +610,7 @@ SENSORS = {
     "magnetic_field_Z": {
         "name": "Magnetic Field Z-Axis",
         "class": BrickIMUV2,
-        "units": "µT",
+        "units": "nanoT",
         "brick_tag": "IMU",
         "value_func": "get_magnetic_field",
         "multiplier": 1/16.0,
@@ -619,7 +619,7 @@ SENSORS = {
     "magnetic_field_xyz": {
         "name": "Magnetic Field",
         "class": BrickIMUV2,
-        "units": "µT",
+        "units": "nanoT",
         "brick_tag": "IMU",
         "value_func": "get_magnetic_field",
         "multiplier": 1/16.0,

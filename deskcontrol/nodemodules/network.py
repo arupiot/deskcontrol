@@ -1,4 +1,4 @@
-from modules.navigation import StateModule
+from iotnode.module import NodeModule
 import netifaces as ni
 import subprocess
 
@@ -41,8 +41,7 @@ def reboot_pi():
     subprocess.check_output(["sudo", "reboot"])
 
 
-class NetworkModule(StateModule):
-    menu_title = "Network"
+class NetworkModule(NodeModule):
     current = 0
     triggered = False
     menu = {
@@ -66,18 +65,15 @@ class NetworkModule(StateModule):
         },
     }
 
-    def draw(self, clear=True):
+    def draw(self):
         key = self.menu.keys()[self.current]
         menu = self.menu[key]
         if "get_value" in menu:
             value = menu["get_value"]()
         else:
             value = menu["value"]
-        if clear:
-            self.controller.screen.device.clear_display()
-        self.controller.screen.draw(
-            "values",
-            {"title": menu["title"], "value": str(value).rstrip(), })
+        self.push({"type": "render_data", "data": {
+            "title": menu["title"], "data": str(value).rstrip(), }})
 
     def trigger(self):
         key = self.menu.keys()[self.current]
@@ -89,12 +85,13 @@ class NetworkModule(StateModule):
                 {"title": menu["title"], "value": "Please wait...", })
             menu["trigger"]()
 
-    def navigate(self, direction):
+    def callback_input(self, data):
+        direction = data["data"]
         if self.triggered:
             return
-        if direction == "back":
-            self.controller.prev_module()
-        if direction == "forward":
+        if direction in ["back", "left"]:
+            self.push({"type": "input", "switch": "MenuModule"})
+        if direction in ["enter", "right"]:
             self.trigger()
             self.draw()
         if direction in ["down", "up"]:

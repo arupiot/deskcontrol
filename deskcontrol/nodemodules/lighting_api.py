@@ -1,10 +1,9 @@
-from navigation import StateModule
+from iotnode.module import NodeModule
 import requests
+import logging
 
 
-class LightingAPIModule(StateModule):
-    menu_title = "Lighting"
-
+class LightingAPIModule(NodeModule):
     outputs = {}
     edit = False
     current = 0
@@ -19,39 +18,31 @@ class LightingAPIModule(StateModule):
         {"name": "Orange", "color": "FFCC00"},
     ]
 
-    def __init__(self, controller):
-        super(LightingAPIModule, self).__init__(controller)
+    def __init__(self, *args, **kwargs):
+        super(LightingAPIModule, self).__init__(*args, **kwargs)
         self.set_light()
-        # self.outputs["taskint"] = {
-        #    "name": "'R' LED Intensity",
-        #    "type": "dimmer",
-        # }
         self.outputs["taskcol"] = {
             "name": "'R' LED Colour",
             "type": "select",
         }
+        self.add_to_menu("Lighting")
 
-    def draw(self, clear=True):
-        if clear:
-            self.controller.screen.device.clear_display()
-        if not len(self.outputs):
-            self.controller.screen.draw("values", {})
-            return
+    def draw(self):
         outputs = self.outputs[self.outputs.keys()[self.current]]
         if self.edit:
             name = outputs["name"] + "*"
         else:
             name = outputs["name"]
         if outputs["type"] == "dimmer":
-            self.controller.screen.draw(
+            self.push({"type": "render_data", "data": {
                 "values",
                 {"title": name,
-                 "value": str(self.intens) + " %", })
+                 "value": str(self.intens) + " %", }}})
         if outputs["type"] == "select":
-            self.controller.screen.draw(
+            self.push({"type": "render_data", "data": {
                 "values",
                 {"title": name,
-                 "value": str(self.colors[self.color]["name"]), })
+                 "value": str(self.colors[self.color]["name"]), }}})
 
     def change_light(self, direction):
         if self.outputs[self.outputs.keys()[self.current]]["type"] == "dimmer":
@@ -71,7 +62,6 @@ class LightingAPIModule(StateModule):
                 else:
                     self.color -= 1
         self.set_light()
-        # print "change " + direction + str(self.color)
 
     def set_light(self):
         color = self.colors[self.color]["color"]
@@ -84,15 +74,16 @@ class LightingAPIModule(StateModule):
                 'http://192.168.2.101:8000/level/4/%s/' % intens,
                 timeout=0.5)
         except Exception as e:
-            print("Error pushing lighting values", e)
+            logging.error("Error pushing lighting values" + str(e))
 
-    def navigate(self, direction):
+    def callback_input(self, data):
+        direction = data["data"]
         if not self.edit:
-            if direction == "forward":
+            if direction in ["enter", "right"]:
                 self.edit = True
                 self.draw()
-            if direction == "back":
-                self.controller.prev_module()
+            if direction in ["back", "left"]:
+                self.push({"type": "input", "switch": "MenuModule"})
             if direction in ["down", "up"]:
                 if direction == "down":
                     self.current = self.current + 1
@@ -102,15 +93,11 @@ class LightingAPIModule(StateModule):
                     self.current = 0
                 elif self.current < 0:
                     self.current = len(self.outputs) - 1
-                # print "Output: " + str(list(self.outputs)[self.current])
                 self.draw()
         else:
-            if direction == "back":
+            if direction in ["back", "left"]:
                 self.edit = False
                 self.draw()
             if direction in ["down", "up"]:
                 self.change_light(direction)
                 self.draw()
-
-    def tick(self):
-        self.draw(clear=False)
