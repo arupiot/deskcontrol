@@ -26,7 +26,7 @@ class MenuModule(NodeModule):
     def callback_menu_add(self, data):
         self.items.append((data['_source'], data['title']))
 
-    def navigate(self, direction):
+    def callback_input(self, direction):
         if direction == "forward":
             self.controller.change_module(self.items[self.current][0])
         if direction == "back":

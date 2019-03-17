@@ -65,6 +65,10 @@ class NetworkModule(NodeModule):
         },
     }
 
+    def __init__(self, *args, **kwargs):
+        super(NetworkModule, self).__init__(*args, **kwargs)
+        self.add_to_menu("Network")
+
     def draw(self):
         key = self.menu.keys()[self.current]
         menu = self.menu[key]

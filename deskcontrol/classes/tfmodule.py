@@ -1,5 +1,6 @@
 from iotnode.module import NodeModule
 from tinkerforge.ip_connection import IPConnection
+import logging
 
 
 class TinkerForgeModule(NodeModule):
@@ -9,6 +10,7 @@ class TinkerForgeModule(NodeModule):
         super(TinkerForgeModule, self).__init__(*args, **kwargs)
 
         if not "_TINKERFORGE" in self.cache:
+            logging.error("No tinkerforge configuration found")
             exit()
         self.ipcon = IPConnection()
         self.ipcon.connect(
@@ -22,5 +24,4 @@ class TinkerForgeModule(NodeModule):
             firmware_version, device_identifier, enumeration_type):
         if enumeration_type == IPConnection.ENUMERATION_TYPE_DISCONNECTED:
             return
-        for state in self.modules:
-            self.try_bricklet(uid, device_identifier, position)
+        self.try_bricklet(uid, device_identifier, position)

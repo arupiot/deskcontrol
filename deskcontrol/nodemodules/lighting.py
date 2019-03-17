@@ -91,7 +91,7 @@ class LightingModule(NodeModule):
             g = [0 for i in range(16)]
             self.device.set_rgb_values(17, 1, r, b, g)
 
-    def navigate(self, data):
+    def callback_input(self, data):
         direction = data["data"]
         if not self.edit:
             if direction in ["enter", "right"]:

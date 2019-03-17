@@ -1,9 +1,9 @@
 from tinkerforge.bricklet_joystick import BrickletJoystick
 from tinkerforge.bricklet_multi_touch import BrickletMultiTouch
-from modules.navigation import StateModule
+from classes.tfmodule import TinkerForgeModule
 
 
-class InputModule(StateModule):
+class InputModule(TinkerForgeModule):
     inputs = {}
 
     def try_bricklet(self, uid, device_identifier, position):
@@ -27,26 +27,24 @@ class InputModule(StateModule):
                 self.inputs["multitouch"].CALLBACK_TOUCH_STATE,
                 self.multitouch)
 
+    def navigate(self, direction):
+        self.push({"type": "input", "data": direction})
+
     def joystick_position(self, x, y):
-        # print("joystick", x, y)
-        if "SchedulerModule" in self.controller.modules:
-            self.controller.modules["SchedulerModule"].motion_detected()
         if y == 100:
-            self.controller.navigate("up")
+            self.navigate("up")
         elif y == -100:
-            self.controller.navigate("down")
+            self.navigate("down")
 
         if x == 100:
-            self.controller.navigate("back")
+            self.navigate("left")
         elif x == -100:
-            self.controller.navigate("forward")
+            self.navigate("right")
 
     def joystick_pushed(self):
-        self.controller.navigate("forward")
+        self.navigate("enter")
 
     def multitouch(self, state):
-        if "SchedulerModule" in self.controller.modules:
-            self.controller.modules["SchedulerModule"].motion_detected()
         if state & (1 << 12):
             pass
         if (state & 0xfff) == 0:
@@ -54,12 +52,12 @@ class InputModule(StateModule):
         else:
             try:
                 if state & (1 << 0):
-                    self.controller.navigate("forward")
+                    self.navigate("right")
                 if state & (1 << 1):
-                    self.controller.navigate("back")
+                    self.navigate("left")
                 if state & (1 << 2):
-                    self.controller.navigate("up")
+                    self.navigate("up")
                 if state & (1 << 3):
-                    self.controller.navigate("down")
+                    self.navigate("down")
             except Exception:
                 pass

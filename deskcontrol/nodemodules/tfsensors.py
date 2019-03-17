@@ -1,15 +1,15 @@
-from iotnode.module import NodeModule
+from classes.tfmodule import TinkerForgeModule
 from classes.tfsensor import TinkerforgeSensor
 
 
-class TinkerforgeSensorModule(NodeModule):
+class TinkerforgeSensorModule(TinkerForgeModule):
     menu_title = "Sensors"
     sensors = {}
     current = 0
 
     def __init__(self, *args, **kwargs):
         super(TinkerforgeSensorModule, self).__init__(*args, **kwargs)
-        self.update_sensors()
+        self.add_to_menu("Sensors")
 
     def draw(self):
         if self.controller.screen and self.controller.current_module == self:
@@ -34,178 +34,179 @@ class TinkerforgeSensorModule(NodeModule):
         sensors = []
         if device_identifier == 216:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "temp"))
+                uid, "temp", self.ipcon))
         elif device_identifier == 217:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "ir_temp"))
+                uid, "ir_temp", self.ipcon))
         elif device_identifier == 27:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "humidity"))
+                uid, "humidity", self.ipcon))
         elif device_identifier == 259:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "light"))
+                uid, "light", self.ipcon))
         elif device_identifier == 238:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "sound"))
+                uid, "sound", self.ipcon))
         elif device_identifier == 262:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "co2"))
+                uid, "co2", self.ipcon))
         elif device_identifier == 227:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "voltage"))
+                uid, "voltage", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "current"))
+                uid, "current", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "power"))
+                uid, "power", self.ipcon))
         elif device_identifier == 25:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "dist"))
+                uid, "dist", self.ipcon))
         elif device_identifier == 243:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "colour"))
+                uid, "colour", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "colour_temp"))
+                uid, "colour_temp", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "colour_illuminance"))
+                uid, "colour_illuminance", self.ipcon))
         elif device_identifier == 221:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "air_pressure"))
+                uid, "air_pressure", self.ipcon))
         elif device_identifier == 241:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "reflectivity"))
+                uid, "reflectivity", self.ipcon))
         elif device_identifier == 240:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "magfield"))
+                uid, "magfield", self.ipcon))
         elif device_identifier == 250:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid,"acceleration_xyz"))
+                uid,"acceleration_xyz", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "acceleration_X"))
+                uid, "acceleration_X", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "acceleration_Y"))
+                uid, "acceleration_Y", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "acceleration_Z"))
+                uid, "acceleration_Z", self.ipcon))
         elif device_identifier == 232:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "moisture"))
+                uid, "moisture", self.ipcon))
         elif device_identifier == 265:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "uv"))
+                uid, "uv", self.ipcon))
         elif device_identifier == 26:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "dual_relay"))
+                uid, "dual_relay", self.ipcon))
         elif device_identifier == 233:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "motion"))
+                uid, "motion", self.ipcon))
         elif device_identifier == 230:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "dual_button_state"))
+                uid, "dual_button_state", self.ipcon))
         elif device_identifier == 282:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "rgb_led_button_colour"))
+                uid, "rgb_led_button_colour", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "rgb_led_button_state"))
+                uid, "rgb_led_button_state", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "rgb_led_button_colour_r"))
+                uid, "rgb_led_button_colour_r", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "rgb_led_button_colour_g"))
+                uid, "rgb_led_button_colour_g", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "rgb_led_button_colour_b"))
+                uid, "rgb_led_button_colour_b", self.ipcon))
         elif device_identifier == 292:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "motion_2"))
+                uid, "motion_2", self.ipcon))
         elif device_identifier == 215:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "rotation_poti"))
+                uid, "rotation_poti", self.ipcon))
         elif device_identifier == 239:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "tilt"))
+                uid, "tilt", self.ipcon))
         elif device_identifier == 229:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "dist_us"))
+                uid, "dist_us", self.ipcon))
         elif device_identifier == 294:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "rotation_encoder_2"))
+                uid, "rotation_encoder_2", self.ipcon))
         elif device_identifier == 213:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "linear_poti"))
+                uid, "linear_poti", self.ipcon))
         elif device_identifier == 278:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "thermal_image"))
+                uid, "thermal_image", self.ipcon))
         elif device_identifier == 241:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "reflectivity"))
+                uid, "reflectivity", self.ipcon))
         elif device_identifier == 283:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "humidity_temp"))
+                uid, "humidity_temp", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "humidity_v2"))
+                uid, "humidity_v2", self.ipcon))
         elif device_identifier == 18:
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "heading"))
+                uid, "heading", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "roll"))
+                uid, "roll", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "pitch"))
+                uid, "pitch", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "linear_acceleration_Z"))
+                uid, "linear_acceleration_Z", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "linear_acceleration_Y"))
+                uid, "linear_acceleration_Y", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "linear_acceleration_X"))
+                uid, "linear_acceleration_X", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "gravity_acceleration_X"))
+                uid, "gravity_acceleration_X", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "gravity_acceleration_Y"))
+                uid, "gravity_acceleration_Y", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "gravity_acceleration_Z"))
+                uid, "gravity_acceleration_Z", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "IMU_leds"))
+                uid, "IMU_leds", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "IMU_acceleration_Y"))
+                uid, "IMU_acceleration_Y", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "IMU_acceleration_X"))
+                uid, "IMU_acceleration_X", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "IMU_acceleration_Z"))
+                uid, "IMU_acceleration_Z", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "angular_velocity_X"))
+                uid, "angular_velocity_X", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "angular_velocity_Y"))
+                uid, "angular_velocity_Y", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "angular_velocity_Z"))
+                uid, "angular_velocity_Z", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "linear_acceleration_xyz"))
+                uid, "linear_acceleration_xyz", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "gravity_acceleration_xyz"))
+                uid, "gravity_acceleration_xyz", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "IMU_acceleration_xyz"))
+                uid, "IMU_acceleration_xyz", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "angular_velocity_xyz"))
+                uid, "angular_velocity_xyz", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "quaternion_W"))
+                uid, "quaternion_W", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "quaternion_X"))
+                uid, "quaternion_X", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "quaternion_Y"))
+                uid, "quaternion_Y", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "quaternion_Z"))
+                uid, "quaternion_Z", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "IMU_temp"))
+                uid, "IMU_temp", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "magnetic_field_X"))
+                uid, "magnetic_field_X", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "magnetic_field_Y"))
+                uid, "magnetic_field_Y", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "magnetic_field_Z"))
+                uid, "magnetic_field_Z", self.ipcon))
             sensors.append(TinkerforgeSensor(
-                self.ipcon, uid, "magnetic_field_xyz"))
+                uid, "magnetic_field_xyz", self.ipcon))
         for sensor in sensors:
+            sensor.register_callback(self.push)
             self.sensors[sensor.sensor_type + "_" + uid] = sensor
 	
-    def callback_request_sensor_metadata(self):
-        self.push({"type": "input", "data": self.sensors})
+    def callback_request_sensor_metadata(self, data):
+        self.push({"type": "sensor_metadata", "data": self.sensors})
 
-    def navigate(self, data):
+    def callback_input(self, data):
         direction = data["data"]
         if direction in ["back", "left"]:
             self.push({"type": "input", "switch": "MenuModule"})

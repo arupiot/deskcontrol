@@ -1,4 +1,4 @@
-from modules.navigation import StateModule
+from classes.tfmodule import TinkerForgeModule
 from PIL import Image, ImageDraw, ImageFont
 from tinkerforge.bricklet_oled_128x64 import BrickletOLED128x64
 
@@ -29,16 +29,12 @@ def draw_matrix(scr, start_column, start_row, column_count, row_count, pixels):
         scr.write(block + [0] * (64 - len(block)))
 
 
-class TFScreen(StateModule):
-    controller = None
+class TinkerForgeScreenModule(TinkerForgeModule):
     device = None
 
-    def __init__(self, controller):
-        super(TFScreen, self).__init__(controller)
-        self.controller.screen = self
-        controller.add_event_handler("sleep", self.on_sleep)
-        controller.add_event_handler("wake", self.on_wake)
-
+    def __init__(self, *args, **kwargs):
+        super(TinkerForgeScreenModule, self).__init__(*args, **kwargs)
+        
     def draw_splash(self):
         image = Image.open("images/splash.png")
         self.process_image(image)
@@ -54,13 +50,14 @@ class TFScreen(StateModule):
                 return True
             return False
 
-    def on_sleep(self, data):
-        self.device.clear_display()
-        self.controller.current_module = None
 
-    def on_wake(self, data):
-        self.draw_splash()
-        self.controller.current_module = None
+    def callback_sleep(self, data):
+        if self.device:
+            if 'sleep' in data:
+                self.device.clear_display()
+            if 'wake' in data:
+                self.draw_splash()
+
 
     def process_image(self, image):
         if self.device:

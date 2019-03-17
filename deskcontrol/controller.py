@@ -14,6 +14,12 @@ class DeskController(Controller):
 
         super(DeskController, self).__init__(*args, **kwargs)
 
+    def __handleInput(self, data):
+        super(DeskController, self).__handleInput(data)
+        if "SleepModule" in self.modules:
+            self.modules["SleepModule"]["queue"].put(data)
+
+
 if __name__ == "__main__":
     node = DeskController(MODULES)
     node.start()

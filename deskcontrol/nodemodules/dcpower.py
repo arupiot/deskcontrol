@@ -1,5 +1,5 @@
 from iotnode.module import NodeModule
-from sensors import Sensor
+from classes.tfsensor import TinkerforgeSensor
 
 OUTLETS = {
     "rCr_Relay_Sensor0": "Laptop",
@@ -55,11 +55,11 @@ class DCPowerModule(NodeModule):
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
-            s = Sensor(self.controller, "dualrelay", uid)
+            s = TinkerforgeSensor(uid, "dualrelay", self.connection)
             for instance in ["0", "1"]:
                 self.relays[s.uid + instance] = s
 
-    def navigate(self, data):
+    def callback_input(self, data):
         direction = data["data"]
         if direction in ["back", "left"]:
             self.push({"type": "input", "switch": "MenuModule"})

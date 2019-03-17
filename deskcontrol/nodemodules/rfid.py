@@ -53,7 +53,7 @@ class RFIDModule(NodeModule):
                 self.readers["card"]["instance"].TAG_TYPE_MIFARE_CLASSIC)
             # print("Created Card Reader")
 
-    def navigate(self, direction):
+    def callback_input(self, direction):
         self.push({"type": "input", "switch": "MenuModule"})
 
     def tick(self):
