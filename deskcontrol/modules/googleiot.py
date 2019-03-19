@@ -18,85 +18,54 @@
 
 # Subscribe/Callback Docs https://eclipse.org/paho/clients/python/docs/
 
-from navigation import StateModule
+from mqtt_module import MQTTModule
 from datetime import datetime, timedelta
 import jwt
-import json
-import paho.mqtt.client as mqtt
 from config import *
-from helpers import sensor_data
 
 
-class GoogleIoTModule(StateModule):
-    client = None
 
-    def __init__(self, controller):
-        super(GoogleIoTModule, self).__init__(controller)
-        controller.add_event_handler("sensor-publish", self.publish_sensor)
-        controller.add_event_handler("kiln-publish", self.publish_kiln)
-        self.mqtt_topic = '/devices/{}/events'.format(
+class GoogleIoTModule(MQTTModule):
+
+    @property
+    def publish_topic(self):
+        return '/devices/{}/events'.format(GCLOUD_CONFIG['device_id'])
+
+    @property
+    def subscribe_topic(self):
+        return '/devices/{}/events/commands'.format(GCLOUD_CONFIG['device_id'], 1)
+
+    @property
+    def username(self):
+        return 'unused'
+
+    @property
+    def client_id(self):
+        return 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
+            GCLOUD_CONFIG['project_id'],
+            GCLOUD_CONFIG['cloud_region'],
+            GCLOUD_CONFIG['registry_id'],
             GCLOUD_CONFIG['device_id'])
-        self.connect()
 
-    def on_message(self, userdata, message):
-        print(userdata, message)
+    @property
+    def password(self):
+        return self.create_jwt(
+            GCLOUD_CONFIG['project_id'],
+            GCLOUD_CONFIG['private_key_file'],
+            GCLOUD_CONFIG['algorithm']
+        )
 
-    def connect(self):
-        try:
-            args = GCLOUD_CONFIG
-            self.client = mqtt.Client(
-                client_id=(
-                    'projects/{}/locations/{}/registries/{}/devices/{}'.format(
-                        args['project_id'],
-                        args['cloud_region'],
-                        args['registry_id'],
-                        args['device_id'])))
+    @property
+    def mqtt_host_name(self):
+        return GCLOUD_CONFIG['mqtt_bridge_hostname']
 
-            self.client.username_pw_set(
-                username='unused',
-                password=self.create_jwt(
-                    args['project_id'],
-                    args['private_key_file'],
-                    args['algorithm']))
+    @property
+    def mqtt_port(self):
+        return GCLOUD_CONFIG['mqtt_bridge_port']
 
-            self.client.tls_set(ca_certs=args['ca_certs'])
+    def set_tls(self, client):
+        client.tls_set(ca_certs=GCLOUD_CONFIG['ca_certs'])
 
-            self.client.on_message = self.on_message
-            self.client.subscribe('/devices/{}/events/commands'.format(
-                GCLOUD_CONFIG['device_id'], 1))
-
-            self.client.connect(
-                args['mqtt_bridge_hostname'],
-                args['mqtt_bridge_port'])
-
-            self.client.loop_start()
-
-        except Exception as e:
-            print("Error connecting to GCloud:")
-            print(e)
-
-    def publish_sensor(self, data):
-        data = sensor_data(
-            self.controller,
-            data.uid,
-            str(data.value),
-            {"type": data.brick_tag, }, )
-        try:
-            blob = json.dumps(data)
-            self.client.publish(self.mqtt_topic + '/sensor', blob, qos=1)
-            # print("published to googleiot", blob)
-        except Exception as e:
-            print("Error publishing to GCloud:")
-            print(e)
-
-    def publish_kiln(self, data):
-        try:
-            blob = json.dumps(data)
-            self.client.publish(self.mqtt_topic + '/kiln', blob, qos=1)
-            # print("published to googleiot", blob)
-        except Exception as e:
-            print("Error publishing to GCloud:")
-            print(e)
 
     def create_jwt(self, project_id, private_key_file, algorithm):
         token = {
