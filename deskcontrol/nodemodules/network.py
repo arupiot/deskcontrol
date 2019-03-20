@@ -1,14 +1,14 @@
 from iotnode.module import NodeModule
 import netifaces as ni
 import subprocess
+import logging
 
 
 def get_git_revision_short_hash():
     try:
         return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'])
     except Exception as e:
-        print("Error Getting Get Revision:")
-        print(e)
+        logging.exception("Error Getting Get Revision")
         return None
 
 
@@ -17,8 +17,7 @@ def get_eth_address(iface="eth0"):
         ni.ifaddresses(iface)
         return ni.ifaddresses(iface)[ni.AF_INET][0]['addr']
     except Exception as e:
-        print("Error Getting IP Address:")
-        print(e)
+        logging.exception("Error Getting IP Address")
         return None
 
 
@@ -27,8 +26,7 @@ def get_wlan_address(iface="wlan0"):
         ni.ifaddresses(iface)
         return ni.ifaddresses(iface)[ni.AF_INET][0]['addr']
     except Exception as e:
-        print("Error Getting IP Address:")
-        print(e)
+        logging.exception("Error Getting IP Address")
         return None
 
 
@@ -84,9 +82,8 @@ class NetworkModule(NodeModule):
         menu = self.menu[key]
         if "trigger" in menu:
             self.triggered = True
-            self.controller.screen.draw(
-                "values",
-                {"title": menu["title"], "value": "Please wait...", })
+            self.push({"type": "render_data", "data": {
+                "values": {"title": menu["title"], "value": "Wait...", }}})
             menu["trigger"]()
 
     def callback_input(self, data):
@@ -107,5 +104,4 @@ class NetworkModule(NodeModule):
                 self.current = 0
             elif self.current < 0:
                 self.current = len(self.menu) - 1
-            # print("Output: " + str(list(self.outputs)[self.current]))
             self.draw()

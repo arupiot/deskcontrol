@@ -23,8 +23,8 @@ class Sensor():
         for attr in [
                 "brick_tag", "value_func", "units", "multiplier", "offset",
                 "update_time", "publish_limit", "variance", "sequence"]:
-            if attr in self.sensor:
-                setattr(self, attr, self.sensor[attr])
+            if attr in sensor_config:
+                setattr(self, attr, sensor_config[attr])
         self.uid = (str(self.raw_uid) + "_" + self.brick_tag + "_" + 
                     self.sensor_config["name"])
         self.get_value()
@@ -54,8 +54,6 @@ class Sensor():
             self.get_value()
             if self.value:
                 try:
-                    for callback in self.change_callbacks:
-                        callback(self.value)
                     if (self.value <= self.published_value - self.variance or
                         self.value >= self.published_value + self.variance):
                         self.publish()

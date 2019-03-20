@@ -1,5 +1,6 @@
 from classes.tfmodule import TinkerForgeModule
 from classes.tfsensor import TinkerforgeSensor
+import logging
 
 
 class TinkerforgeSensorModule(TinkerForgeModule):
@@ -12,23 +13,16 @@ class TinkerforgeSensorModule(TinkerForgeModule):
         self.add_to_menu("Sensors")
 
     def draw(self):
-        if self.controller.screen and self.controller.current_module == self:
-            if not len(self.sensors):
-                self.controller.screen.draw("values", {})
-                return
-            sensor = self.sensors[list(self.sensors.keys())[self.current]]
-            sensor.get_value()
-            unique_name = None
-            if self.controller.localdb:
-                unique_name = self.controller.localdb.get(sensor.uid)
-            if unique_name:
-                name = unique_name
-            else:
-                name = sensor.name
-            self.controller.screen.draw(
-                "values",
-                {"title": name,
-                 "value": str(sensor.get_value_display())})
+        if not len(self.sensors):
+            self.push({"type": "render_data", "data": {}})
+            return
+        sensor = self.sensors[list(self.sensors.keys())[self.current]]
+        sensor.get_value()
+        name = sensor.name
+        self.push({"type": "render_data", "data": {
+            "values",
+            {"title": name,
+             "value": sensor.value, }}})
 
     def try_bricklet(self, uid, device_identifier, position):
         sensors = []
@@ -224,4 +218,5 @@ class TinkerforgeSensorModule(TinkerForgeModule):
     def tick(self):
         for pk in self.sensors:
             self.sensors[pk].roc()
+            logging.debug("sensor tick")
         self.wait(1)

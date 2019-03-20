@@ -45,7 +45,7 @@ class LightingModule(NodeModule):
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 231 and "taskint" not in self.outputs:
-            self.device = BrickletLEDStrip(uid, self.controller.ipcon)
+            self.device = BrickletLEDStrip(uid, self.ipcon)
             self.outputs["taskint"] = {
                 "name": "Task Intensity",
                 "type": "dimmer",

@@ -73,8 +73,8 @@ class GoogleIoTModule(NodeModule):
             logging.error("Error connecting to GCloud: " + str(e))
 
     def callback_sensor_publish(self, data):
-        data = sensor_data(
-            self.controller,
+        data = sensor_data_format(
+            self.cache['IDENT_SHORT'],
             data.uid,
             str(data.value),
             {"type": data.brick_tag, }, )

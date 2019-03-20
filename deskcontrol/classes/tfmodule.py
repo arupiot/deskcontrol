@@ -15,9 +15,12 @@ class TinkerForgeModule(NodeModule):
         self.ipcon = IPConnection()
         self.ipcon.connect(
             self.cache["_TINKERFORGE"][0], self.cache["_TINKERFORGE"][1])
-
         self.ipcon.register_callback(
             IPConnection.CALLBACK_ENUMERATE, self.assign_bricklets)
+        self.ipcon.enumerate()
+
+    def cleanup(self):
+        self.ipcon.disconnect()
 
     def assign_bricklets(
             self, uid, connected_uid, position, hardware_version,
@@ -25,3 +28,6 @@ class TinkerForgeModule(NodeModule):
         if enumeration_type == IPConnection.ENUMERATION_TYPE_DISCONNECTED:
             return
         self.try_bricklet(uid, device_identifier, position)
+
+    def try_bricklet(self, uid, device_identifier, position):
+        pass

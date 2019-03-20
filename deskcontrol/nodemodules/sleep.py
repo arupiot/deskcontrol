@@ -17,11 +17,7 @@ class SleepModule(TinkerForgeModule):
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 233:
-            self.sensor = TinkerforgeSensor(uid, "motion", self.connection)
-            self.sensor.change_callbacks.append(self.motion_changed)
-        if self.sensor and "SensorModule" in self.controller.modules:
-            self.controller.modules["SensorModule"].sensors[
-                self.sensor.uid] = (self.sensor)
+            self.sensor = TinkerforgeSensor(uid, "motion", self.ipcon)
 
     def motion_changed(self, value):
         if not hasattr(self, "previous"):

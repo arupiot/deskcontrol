@@ -18,15 +18,10 @@ OUTLETS = {
 
 
 class Outlet():
-    def __init__(self, outlet, controller):
+    def __init__(self, outlet):
         energenie.init()
         self.state = True
-        if controller.localdb:
-            unique_name = controller.localdb.get("outlet-" + str(outlet))
-        if unique_name:
-            self.name = unique_name
-        else:
-            self.name = OUTLETS[outlet]["name"]
+        self.name = OUTLETS[outlet]["name"]
         self.instance = OUTLETS[outlet]["instance"]
 
     def on(self):

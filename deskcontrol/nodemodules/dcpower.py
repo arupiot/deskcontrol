@@ -17,8 +17,8 @@ class DCPowerModule(NodeModule):
 
     def draw(self):
         if not len(self.relays):
-            self.controller.ipcon.enumerate()
-            self.controller.screen.draw("values", {})
+            self.push({"type": "render_data", "data": {}})
+            self.updated()
             return
         key = self.relays.keys()[self.current]
         relay = self.relays[key]
@@ -33,6 +33,7 @@ class DCPowerModule(NodeModule):
             name = relay.name
         self.push({"type": "render_data", "data": {
             "title": name, "value": str(state), }})
+        self.updated()
 
     def switch_relay(self):
         if self.relays:
@@ -43,19 +44,20 @@ class DCPowerModule(NodeModule):
                 relay.instance.set_state(state[0], not state[1])
             else:
                 relay.instance.set_state(not state[0], state[1])
-            self.draw(False)
 
     def callback_sleep(self, data):
         if 'sleep' in data:
             for relay in self.relays:
                 self.relays[relay].instance.set_state(False, True)
+            self.updated()
         if 'wake' in data:
             for relay in self.relays:
                 self.relays[relay].instance.set_state(False, False)
+            self.updated()
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 26:
-            s = TinkerforgeSensor(uid, "dualrelay", self.connection)
+            s = TinkerforgeSensor(uid, "dualrelay", self.ipcon)
             for instance in ["0", "1"]:
                 self.relays[s.uid + instance] = s
 
@@ -74,4 +76,4 @@ class DCPowerModule(NodeModule):
                 self.current = 0
             elif self.current < 0:
                 self.current = len(self.relays) - 1
-            self.draw()
+        self.updated()

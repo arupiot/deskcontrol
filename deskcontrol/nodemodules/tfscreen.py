@@ -42,11 +42,10 @@ class TinkerForgeScreenModule(TinkerForgeModule):
     def try_bricklet(self, uid, device_identifier, position):
         if not self.device:
             if device_identifier == 263:
-                self.device = BrickletOLED128x64(uid, self.controller.ipcon)
+                self.device = BrickletOLED128x64(uid, self.ipcon)
                 self.device.clear_display()
                 self.device.set_display_configuration(0, False)
                 self.draw_splash()
-                print("Screen Initialised")
                 return True
             return False
 

@@ -30,17 +30,17 @@ class RFIDModule(NodeModule):
             card = str("".join(map(str, ret.tid[:ret.tid_length])))
             if card != self.previous:
                 self.previous = card
-                self.controller.event("rfid-read", [card])
+                self.push({"type": "rfid_read", "data": [card]})
                 if card in self.users:
                     self.auth = self.users[card]
                 else:
                     self.auth = "Unknown"
-                self.controller.change_module("RFIDModule")
+                self.push({"type": "input", "switch": "RFIDModule"})
 
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 246:
             self.readers["card"] = {
-                "instance": BrickletNFCRFID(uid, self.controller.ipcon),
+                "instance": BrickletNFCRFID(uid, self.ipcon),
                 "name": "card",
                 "relay": 0,
             }
@@ -51,7 +51,6 @@ class RFIDModule(NodeModule):
                     self.readers["card"]["instance"]))
             self.readers["card"]["instance"].request_tag_id(
                 self.readers["card"]["instance"].TAG_TYPE_MIFARE_CLASSIC)
-            # print("Created Card Reader")
 
     def callback_input(self, direction):
         self.push({"type": "input", "switch": "MenuModule"})

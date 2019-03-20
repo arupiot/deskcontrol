@@ -7,18 +7,18 @@ from classes.tftypes import SENSORS
 
 
 class TinkerforgeSensor(Sensor):
-    def __init__(self, uid, sensor_type, connection, **kwargs):
+    def __init__(self, uid, sensor_type, ipcon, **kwargs):
         if sensor_type not in SENSORS:
             logging.error("Sensor type not found")
             exit()
         
+        self.sensor_type = sensor_type
         self.sensor_config = SENSORS[sensor_type]
-        self.connection = connection
+        self.ipcon = ipcon
 
-        super(TinkerforgeSensor, self).__init__(
-            self, uid, self.sensor_config, **kwargs)
+        super(TinkerforgeSensor, self).__init__(uid, self.sensor_config)
 
-        self.instance = self.sensor["class"](self.raw_uid, connection)
+        self.instance = self.sensor_config["class"](self.raw_uid, ipcon)
 
     def parse_value(self, value):
         if self.sensor_type == "dualrelay":
@@ -31,7 +31,6 @@ class TinkerforgeSensor(Sensor):
             value = value[2]
         elif self.sensor_type == "colour":
             r, g, b, c = [int(x / 257) for x in value]
-            print(r, g, b, c)
         elif self.sensor_type == "rgb_led_button_colour":
             r,g,b = [int(x) for x in value]
             value = (r+g+b)/3
@@ -86,14 +85,14 @@ class TinkerforgeSensor(Sensor):
 
     def get_value(self):
         try:
-            self.instance = self.sensor["class"](self.raw_uid, self.connection)
+            self.instance = self.sensor_config["class"](self.raw_uid, self.ipcon)
             if self.sensor_type == "magfield":
                 value = getattr(self.instance, self.value_func)(False)
             else:
                 value = getattr(self.instance, self.value_func)()
             value = self.parse_value(value)
             logging.debug(self.sensor_config["name"] + ': ' + str(value) +
-                          self.sensor["units"])
+                          self.sensor_config["units"])
             self.updated = datetime.now()
             self.value = value
             return self.value

@@ -9,7 +9,7 @@ class InputModule(TinkerForgeModule):
     def try_bricklet(self, uid, device_identifier, position):
         if device_identifier == 210:
             self.inputs["joystick"] = BrickletJoystick(
-                uid, self.controller.ipcon)
+                uid, self.ipcon)
             self.inputs["joystick"].set_debounce_period(400)
             self.inputs["joystick"].register_callback(
                 self.inputs["joystick"].CALLBACK_POSITION_REACHED,
@@ -21,7 +21,7 @@ class InputModule(TinkerForgeModule):
                 "o", -99, 99, -99, 99)
         if device_identifier == 234:
             self.inputs["multitouch"] = BrickletMultiTouch(
-                uid, self.controller.ipcon)
+                uid, self.ipcon)
             self.inputs["multitouch"].set_electrode_sensitivity(125)
             self.inputs["multitouch"].register_callback(
                 self.inputs["multitouch"].CALLBACK_TOUCH_STATE,
