@@ -43,7 +43,6 @@ MODULES = [
 ]
 
 SCHEMA_POST_URL = ""
-PICKLEDB = "deskcontrol.db"
 
 try:
     config_module = __import__('config_local',

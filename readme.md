@@ -14,7 +14,7 @@ Requirements for Debian based systems:
 sudo apt-get install libusb-1.0-0 libudev0 pm-utils
 wget http://download.tinkerforge.com/tools/brickd/linux/brickd_linux_latest_armhf.deb
 sudo dpkg -i brickd_linux_latest_armhf.deb
-apt install python-dev python-setuptools libjpeg-dev python-cryptography 
+apt-get install python-dev python-setuptools libjpeg-dev python-cryptography 
 pip install -r requirements.txt
 ```
 
@@ -26,7 +26,7 @@ Testing mode:
 
 Installation on Redbrick / Debian Jessie:
 ```
-sudo cp deskcontrol /etc/init.d/deskcontrol
+sudo cp deskcontrol.init /etc/init.d/deskcontrol
 sudo update-rc.d deskcontrol defaults
 sudo service deskcontrol start
 ```
