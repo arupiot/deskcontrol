@@ -56,7 +56,7 @@ class MQTTModule(StateModule):
         return MQTT_CONFIG['mqtt_password']
 
     @property
-    def get_username(self):
+    def username(self):
         return MQTT_CONFIG['mqtt_username']
 
     @property
@@ -108,7 +108,7 @@ class MQTTModule(StateModule):
         try:
             blob = json.dumps(data)
             self.client.publish(self.mqtt_topic + '/sensor', blob, qos=1)
-            # print("published to googleiot", blob)
+            print("published to MQTT", blob)
         except Exception as e:
             print("Error publishing to MQTT:")
             print(e)
