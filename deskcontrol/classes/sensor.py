@@ -9,7 +9,6 @@ class Sensor():
     variance = 5
     published_value = None
     value = None
-    publish_callback = None
 
     def __init__(self, uid, sensor_config):
         # self.sensor_config = {
@@ -30,38 +29,32 @@ class Sensor():
         self.get_value()
         self.published = datetime.utcfromtimestamp(0)
 
-    def parse_value(self, value):
-        return value
-
     def get_value(self):
         return None
-
-    def register_callback(self, callback):
-        self.publish_callback = callable
 
     def publish(self):
         if self.value and seconds_past(self.published, self.publish_limit):
             self.published_value = self.value
             self.published = datetime.now()
-            if callable(self.publish_callback):
-                self.publish_callback(
-                    {"type": "sensor_publish", "data": self,})
+            return {"type": "sensor_publish", "data": self,}
+        return None
 
     def roc(self):
         if seconds_past(self.published, self.publish_limit):
             if not self.published_value:
                 self.published_value = self.value
             self.get_value()
-            if self.value:
+            if self.value != None:
                 try:
                     if (self.value <= self.published_value - self.variance or
                         self.value >= self.published_value + self.variance):
-                        self.publish()
+                        return self.publish()
                     if seconds_past(self.published, self.update_time):
-                        self.publish()
+                        return self.publish()
                 except Exception as e:
                     logging.error(
                         "Error publishing value from sensor:" + str(e))
+        return None
 
     def get_value_display(self):
         if not self.value:

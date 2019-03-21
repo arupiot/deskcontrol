@@ -194,9 +194,8 @@ class TinkerforgeSensorModule(TinkerForgeModule):
             sensors.append(TinkerforgeSensor(
                 uid, "magnetic_field_xyz", self.ipcon))
         for sensor in sensors:
-            sensor.register_callback(self.push)
             self.sensors[sensor.sensor_type + "_" + uid] = sensor
-	
+
     def callback_request_sensor_metadata(self, data):
         self.push({"type": "sensor_metadata", "data": self.sensors})
 
@@ -217,6 +216,7 @@ class TinkerforgeSensorModule(TinkerForgeModule):
 
     def tick(self):
         for pk in self.sensors:
-            self.sensors[pk].roc()
-            logging.debug("sensor tick")
+            publish = self.sensors[pk].roc()
+            if publish:
+                self.push(publish)
         self.wait(1)

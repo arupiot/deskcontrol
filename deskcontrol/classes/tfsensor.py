@@ -91,8 +91,6 @@ class TinkerforgeSensor(Sensor):
             else:
                 value = getattr(self.instance, self.value_func)()
             value = self.parse_value(value)
-            logging.debug(self.sensor_config["name"] + ': ' + str(value) +
-                          self.sensor_config["units"])
             self.updated = datetime.now()
             self.value = value
             return self.value

@@ -1,5 +1,5 @@
 from iotnode.module import NodeModule
-from tinkerforge.ip_connection import IPConnection
+from classes.ip_connection import IPConnection
 import logging
 
 
@@ -12,12 +12,16 @@ class TinkerForgeModule(NodeModule):
         if not "_TINKERFORGE" in self.cache:
             logging.error("No tinkerforge configuration found")
             exit()
+
+
+    def worker(self, *args, **kwargs):
         self.ipcon = IPConnection()
         self.ipcon.connect(
             self.cache["_TINKERFORGE"][0], self.cache["_TINKERFORGE"][1])
         self.ipcon.register_callback(
             IPConnection.CALLBACK_ENUMERATE, self.assign_bricklets)
         self.ipcon.enumerate()
+        super(TinkerForgeModule, self).worker(*args, **kwargs)
 
     def cleanup(self):
         self.ipcon.disconnect()
