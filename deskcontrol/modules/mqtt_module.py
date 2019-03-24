@@ -20,11 +20,10 @@
 
 from navigation import StateModule
 from datetime import datetime, timedelta
-import jwt
 import json
 import paho.mqtt.client as mqtt
 from config import *
-from helpers import sensor_data
+from helpers import mqtt_sensor_data
 
 
 class MQTTModule(StateModule):
@@ -100,14 +99,21 @@ class MQTTModule(StateModule):
             print(e)
 
     def publish_sensor(self, data):
-        data = sensor_data(
+        data = mqtt_sensor_data(
             self.controller,
             data.uid,
-            str(data.value),
-            {"type": data.brick_tag, }, )
+            data.value,
+            {
+                "sensor_type": data.brick_tag,
+                "device_name": DEVICE_NAME,
+                "name_authority": NAME_AUTHORITY
+             },
+        )
         try:
             blob = json.dumps(data)
-            self.client.publish(self.mqtt_topic + '/sensor', blob, qos=1)
+            result = self.client.publish(self.mqtt_topic + '/sensor', blob, qos=0)
+            print("trying to MQTT")
+            result.wait_for_publish()
             print("published to MQTT", blob)
         except Exception as e:
             print("Error publishing to MQTT:")

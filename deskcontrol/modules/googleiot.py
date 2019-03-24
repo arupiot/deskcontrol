@@ -23,6 +23,9 @@ from datetime import datetime, timedelta
 import jwt
 from config import *
 
+import json
+from helpers import sensor_data
+
 
 
 class GoogleIoTModule(MQTTModule):
@@ -78,3 +81,19 @@ class GoogleIoTModule(MQTTModule):
             private_key = f.read()
 
         return jwt.encode(token, private_key, algorithm=algorithm)
+
+    def publish_sensor(self, data):
+        data = sensor_data(
+            self.controller,
+            data.uid,
+            str(data.value),
+            {"type": data.brick_tag, }, )
+        try:
+            blob = json.dumps(data)
+            result = self.client.publish(self.mqtt_topic + '/sensor', blob, qos=0)
+            print("trying to MQTT")
+            result.wait_for_publish()
+            print("published to MQTT", blob)
+        except Exception as e:
+            print("Error publishing to MQTT:")
+            print(e)

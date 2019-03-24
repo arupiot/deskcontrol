@@ -16,3 +16,15 @@ def sensor_data(controller, key, value, tags={}):
         "fields": {"value": value, }
     }
     return data
+
+def mqtt_sensor_data(controller, key, value, tags={}):
+
+    ident = controller.identity
+    data = {
+        "measurement": str(ident + "_" + key),
+        "timestamp": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+        "tags": tags,
+        "value": value,
+    }
+    return data
+

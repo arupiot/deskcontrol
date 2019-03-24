@@ -1,5 +1,8 @@
 import os
 
+NAME_AUTHORITY = os.environ.get("NAME_AUTHORITY", "eightfitzroy.arupiot.com")
+DEVICE_NAME = os.environ.get("DEVICE_NAME", "TST-1")
+
 HOST = os.environ.get("BRICKD_HOST", "localhost")
 PORT = int(os.environ.get("BRICKD_PORT", "4223"))
 
@@ -28,6 +31,7 @@ MENU_MODULES = [
 ]
 
 MQTT_CONFIG = {}
+ZMQ_CONFIG = {}
 GCLOUD_CONFIG = {}
 INFLUX_AUTH = {}
 
@@ -92,6 +96,15 @@ if os.environ.get("ENABLE_MODULE_MQTT"):
         "mqtt_publish_topic": os.environ.get("MQTT_PUBLISH_TOPIC", "/ishiki/test/events"),
         "mqtt_subscribe_topic": os.environ.get("MQTT_SUBSCRIBE_TOPIC", "/ishiki/test/commands"),
     }
+
+if os.environ.get("ENABLE_MODULE_ZMQ"):
+    MODULES.append(("ZMQModule", "zmq_module", "ZMQ"))
+
+    ZMQ_CONFIG = {
+        "zmq_port": os.environ.get("ZMQ_PORT"),
+        "zmq_topic": os.environ.get("ZMQ_TOPIC"),
+    }
+
 
 if os.environ.get("ENABLE_MODULE_KILN"):
     MODULES.append(("KilnModule", "kiln", "Kiln"))
