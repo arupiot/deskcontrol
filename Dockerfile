@@ -4,7 +4,10 @@ RUN [ "cross-build-start" ]
 
 # install deps
 RUN sudo apt-get update
-RUN sudo apt-get -y install python-dev python-pip python-setuptools libjpeg-dev python-cryptography python-imaging build-essential
+RUN sudo apt-get -y install python-dev wget python-setuptools libjpeg-dev python-cryptography python-imaging build-essential
+RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN python get-pip.py
+
 RUN sudo mkdir /opt/ishiki
 COPY requirements.txt /opt/ishiki/requirements.txt
 
