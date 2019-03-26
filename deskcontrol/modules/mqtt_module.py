@@ -101,14 +101,16 @@ class MQTTModule(StateModule):
     def publish_sensor(self, data):
 
         data = {
-            "measurement": data.brick_tag,
+            "measurement": "%s_%s" % (DEVICE_NAME, data.brick_tag),
             "timestamp": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
             "tags": {
                 "sensor_type": data.brick_tag,
+                "sensor_name": data.name,
                 "device_name": DEVICE_NAME,
-                "name_authority": NAME_AUTHORITY
+                "name_authority": NAME_AUTHORITY,
+                "units": data.units
              },
-            data.uid: data.value,
+            "value": data.value,
         }
 
         try:
