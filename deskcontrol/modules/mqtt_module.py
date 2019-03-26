@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 import json
 import paho.mqtt.client as mqtt
 from config import *
-from helpers import mqtt_sensor_data
+
 
 
 class MQTTModule(StateModule):
@@ -99,16 +99,18 @@ class MQTTModule(StateModule):
             print(e)
 
     def publish_sensor(self, data):
-        data = mqtt_sensor_data(
-            self.controller,
-            data.uid,
-            data.value,
-            {
+
+        data = {
+            "measurement": data.brick_tag,
+            "timestamp": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+            "tags": {
                 "sensor_type": data.brick_tag,
                 "device_name": DEVICE_NAME,
                 "name_authority": NAME_AUTHORITY
              },
-        )
+            data.uid: data.value,
+        }
+
         try:
             blob = json.dumps(data)
             result = self.client.publish(self.mqtt_topic + '/sensor', blob, qos=0)
