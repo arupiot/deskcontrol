@@ -17,11 +17,8 @@ import hashlib
 import errno
 import threading
 import multiprocessing
-
-try:
-    import queue # Python 3
-except ImportError:
-    import Queue as queue # Python 2
+from queue import Empty
+from multiprocessing import Queue
 
 def get_uid_from_data(data):
     return struct.unpack('<I', data[0:4])[0]
@@ -338,9 +335,9 @@ class Device(object):
         self.high_level_callbacks = {}
         self.expected_response_function_id = None # protected by request_lock
         self.expected_response_sequence_number = None # protected by request_lock
-        self.response_queue = queue.Queue()
-        self.request_lock = multiprocessing.Lock()
-        self.stream_lock = multiprocessing.Lock()
+        self.response_queue = Queue()
+        self.request_lock = multiprocessing.Condition()
+        self.stream_lock = multiprocessing.Condition()
 
         self.response_expected = [Device.RESPONSE_EXPECTED_INVALID_FUNCTION_ID] * 256
         self.response_expected[IPConnection.FUNCTION_ADC_CALIBRATE] = Device.RESPONSE_EXPECTED_ALWAYS_TRUE
@@ -514,16 +511,16 @@ class IPConnection(object):
         self.auto_reconnect = True
         self.auto_reconnect_allowed = False
         self.auto_reconnect_pending = False
-        self.sequence_number_lock = multiprocessing.Lock()
+        self.sequence_number_lock = multiprocessing.Condition()
         self.next_sequence_number = 0 # protected by sequence_number_lock
-        self.authentication_lock = multiprocessing.Lock() # protects authentication handshake
+        self.authentication_lock = multiprocessing.Condition() # protects authentication handshake
         self.next_authentication_nonce = 0 # protected by authentication_lock
         self.devices = {}
         self.registered_callbacks = {}
         self.socket = None # protected by socket_lock
         self.socket_id = 0 # protected by socket_lock
-        self.socket_lock = multiprocessing.Lock()
-        self.socket_send_lock = multiprocessing.Lock()
+        self.socket_lock = multiprocessing.Condition()
+        self.socket_send_lock = multiprocessing.Condition()
         self.receive_flag = False
         self.receive_thread = None
         self.callback = None
@@ -737,9 +734,9 @@ class IPConnection(object):
         if self.callback is None:
             try:
                 self.callback = IPConnection.CallbackContext()
-                self.callback.queue = queue.Queue()
+                self.callback.queue = Queue()
                 self.callback.packet_dispatch_allowed = False
-                self.callback.lock = multiprocessing.Lock()
+                self.callback.lock = multiprocessing.Condition()
                 self.callback.thread = threading.Thread(name='Callback-Processor',
                                                         target=self.callback_loop,
                                                         args=(self.callback,))
@@ -786,7 +783,7 @@ class IPConnection(object):
         # create disconnect probe thread
         try:
             self.disconnect_probe_flag = True
-            self.disconnect_probe_queue = queue.Queue()
+            self.disconnect_probe_queue = Queue()
             self.disconnect_probe_thread = threading.Thread(name='Disconnect-Prober',
                                                             target=self.disconnect_probe_loop,
                                                             args=(self.disconnect_probe_queue,))
@@ -1096,7 +1093,7 @@ class IPConnection(object):
             try:
                 disconnect_probe_queue.get(True, IPConnection.DISCONNECT_PROBE_INTERVAL)
                 break
-            except queue.Empty:
+            except Empty:
                 pass
 
             if self.disconnect_probe_flag:
@@ -1169,7 +1166,7 @@ class IPConnection(object):
                             # ignore old responses that arrived after the timeout expired, but before setting
                             # expected_response_function_id and expected_response_sequence_number back to None
                             break
-                except queue.Empty:
+                except Empty:
                     msg = 'Did not receive response for function {0} in time'.format(function_id)
                     raise Error(Error.TIMEOUT, msg)
                 finally:

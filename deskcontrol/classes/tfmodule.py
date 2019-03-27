@@ -1,5 +1,5 @@
 from iotnode.module import NodeModule
-from classes.ip_connection import IPConnection
+from tinkerforge.ip_connection import IPConnection
 import logging
 
 
@@ -29,6 +29,7 @@ class TinkerForgeModule(NodeModule):
     def assign_bricklets(
             self, uid, connected_uid, position, hardware_version,
             firmware_version, device_identifier, enumeration_type):
+        pass
         if enumeration_type == IPConnection.ENUMERATION_TYPE_DISCONNECTED:
             return
         self.try_bricklet(uid, device_identifier, position)
