@@ -35,7 +35,7 @@ class Controller:
         for module in MODULES:
             self.add_module(module)
 
-        if self.modules["MenuModule"]:
+        if "MenuModule" in self.modules:
             for module in MENU_MODULES:
                 self.add_module(module)
                 self.modules["MenuModule"].add_menu_item(

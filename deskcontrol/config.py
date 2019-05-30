@@ -8,49 +8,46 @@ PORT = int(os.environ.get("BRICKD_PORT", "4223"))
 
 SHORT_IDENT = os.environ.get("SHORT_IDENT", "test")
 
-MODULES = [
-    # ("MenuModule", "navigation", "Navigation"),
-    # ("InputModule", "inputs", "Inputs"),
-    # ("SleepModule", "sleep", "Sleep"),
-    # ("RFIDModule", "rfid", "RFID"),
-    # ("InfluxModule", "influx", "InfluxDB"),
-    # ("HttpPushModule", "httppush", "HTTPpush"),
-    # ("TFScreen", "tfscreen", "TF Screen"),
-    # ("KivyScreen", "kivyscreen", "Kivy Screen"),
-    # ("GoogleIoTModule", "googleiot", "GoogleIoT"),
-    # ("KilnModule", "kiln", "Kiln"),
-    # ("PickleModule", "pickle", "Local Storage"),
-]
-
-MENU_MODULES = [
-    # ("SensorModule", "sensors", "Sensors"),
-    # ("LightingModule", "lighting", "Lighting"),
-    # ("DCPowerModule", "dcpower", "Power"),
-    # ("ACPowerModule", "acpower", "Power"),  # Works on RPi only
-    # ("NetworkModule", "network", "Network"),
-]
-
+MODULES = []
+MENU_MODULES = []
 MQTT_CONFIG = {}
 ZMQ_CONFIG = {}
 GCLOUD_CONFIG = {}
 INFLUX_AUTH = {}
 
+ENVAR_MODULES = {
+    "ENABLE_MODULE_MENU": ("MenuModule", "navigation", "Navigation"),
+    "ENABLE_MODULE_INPUT": ("InputModule", "inputs", "Inputs"),
+    "ENABLE_MODULE_SLEEP": ("SleepModule", "sleep", "Sleep"),
+    "ENABLE_MODULE_RFID": ("RFIDModule", "rfid", "RFID"),
+    "ENABLE_MODULE_INFLUX": ("InfluxModule", "influx", "InfluxDB"),
+    "ENABLE_MODULE_HTTP_PUSH": ("HttpPushModule", "httppush", "HTTPpush"),
+    "ENABLE_MODULE_TF_SCREEN": ("TFScreen", "tfscreen", "TF Screen"),
+    "ENABLE_MODULE_KIVY_SCREEN": ("KivyScreen", "kivyscreen", "Kivy Screen"),
+    "ENABLE_MODULE_GOOGLE_IOT": ("GoogleIoTModule", "googleiot", "GoogleIoT"),
+    "ENABLE_MODULE_MQTT": ("MQTTModule", "mqtt_module", "MQTT"),
+    "ENABLE_MODULE_ZMQ": ("ZMQModule", "zmq_module", "ZMQ"),
+    "ENABLE_MODULE_KILN": ("KilnModule", "kiln", "Kiln"),
+    "ENABLE_MODULE_PICKLE": ("PickleModule", "pickle", "Local Storage"),
+}
 
-if os.environ.get("ENABLE_MODULE_MENU"):
-    MODULES.append(("MenuModule", "navigation", "Navigation"))
+for envar in ENVAR_MODULES:
+    if os.environ.get(envar):
+        MODULES.append(ENVAR_MODULES[envar])
 
-if os.environ.get("ENABLE_MODULE_INPUT"):
-    MODULES.append(("InputModule", "inputs", "Inputs"))
+ENVAR_MENU_MODULES = {
+    "ENABLE_MENU_SENSOR": ("SensorModule", "sensors", "Sensors"),
+    "ENABLE_MENU_LIGHTING": ("LightingModule", "lighting", "Lighting"),
+    "ENABLE_MENU_DC_POWER": ("DCPowerModule", "dcpower", "Power"),
+    "ENABLE_MENU_AC_POWER": ("ACPowerModule", "acpower", "Power"), # Works on RPi only
+    "ENABLE_MENU_NETWORK": ("NetworkModule", "network", "Network")
+}
 
-if os.environ.get("ENABLE_MODULE_SLEEP"):
-    MODULES.append(("SleepModule", "sleep", "Sleep"))
-
-if os.environ.get("ENABLE_MODULE_RFID"):
-    MODULES.append(("RFIDModule", "rfid", "RFID"))
+for envar in ENVAR_MENU_MODULES:
+    if os.environ.get(envar):
+        MODULES.append(ENVAR_MENU_MODULES[envar])
 
 if os.environ.get("ENABLE_MODULE_INFLUX"):
-    MODULES.append(("InfluxModule", "influx", "InfluxDB"))
-
     INFLUX_AUTH = {
         "host": os.environ.get("INFLUXDB_HOST", "127.0.0.1"),
         "port": int(os.environ.get("INFLUXDB_PORT", "8086")),
@@ -60,18 +57,7 @@ if os.environ.get("ENABLE_MODULE_INFLUX"):
         "ssl": bool(os.environ.get("INFLUXDB_HOST"))
     }
 
-if os.environ.get("ENABLE_MODULE_HTTP_PUSH"):
-    MODULES.append(("HttpPushModule", "httppush", "HTTPpush"))
-
-if os.environ.get("ENABLE_MODULE_TF_SCREEN"):
-    MODULES.append(("TFScreen", "tfscreen", "TF Screen"))
-
-if os.environ.get("ENABLE_MODULE_KIVY_SCREEN"):
-    MODULES.append(("KivyScreen", "kivyscreen", "Kivy Screen"))
-
 if os.environ.get("ENABLE_MODULE_GOOGLE_IOT"):
-    MODULES.append(("GoogleIoTModule", "googleiot", "GoogleIoT"))
-
     GCLOUD_CONFIG = {
         "project_id": os.environ.get("GCLOUD_PROJECT_ID", "digital-building-0000000000000"),
         "cloud_region": os.environ.get("GCLOUD_REGION", "europe-west1"),
@@ -85,8 +71,6 @@ if os.environ.get("ENABLE_MODULE_GOOGLE_IOT"):
     }
 
 if os.environ.get("ENABLE_MODULE_MQTT"):
-    MODULES.append(("MQTTModule", "mqtt_module", "MQTT"))
-
     MQTT_CONFIG = {
         "mqtt_username": os.environ.get("MQTT_USERNAME"),
         "mqtt_password": os.environ.get("MQTT_PASSWORD"),
@@ -98,37 +82,10 @@ if os.environ.get("ENABLE_MODULE_MQTT"):
     }
 
 if os.environ.get("ENABLE_MODULE_ZMQ"):
-    MODULES.append(("ZMQModule", "zmq_module", "ZMQ"))
-
     ZMQ_CONFIG = {
         "zmq_port": os.environ.get("ZMQ_PORT"),
         "zmq_topic": os.environ.get("ZMQ_TOPIC"),
     }
-
-
-if os.environ.get("ENABLE_MODULE_KILN"):
-    MODULES.append(("KilnModule", "kiln", "Kiln"))
-
-if os.environ.get("ENABLE_MODULE_PICKLE"):
-    MODULES.append(("PickleModule", "pickle", "Local Storage"))
-
-##############################  MENUS  ########################################
-
-if os.environ.get("ENABLE_MENU_SENSOR"):
-    MENU_MODULES.append(("SensorModule", "sensors", "Sensors"))
-
-if os.environ.get("ENABLE_MENU_LIGHTING"):
-    MENU_MODULES.append(("LightingModule", "lighting", "Lighting"))
-
-if os.environ.get("ENABLE_MENU_DC_POWER"):
-    MENU_MODULES.append(("DCPowerModule", "dcpower", "Power"))
-
-if os.environ.get("ENABLE_MENU_AC_POWER"): # Works on RPi only
-    MENU_MODULES.append(("ACPowerModule", "acpower", "Power"))
-
-if os.environ.get("ENABLE_MENU_NETWORK"):
-    MENU_MODULES.append(("NetworkModule", "network", "Network"))
-
 
 SCHEMA_POST_URL = ""
 PICKLEDB = "deskcontrol.db"
