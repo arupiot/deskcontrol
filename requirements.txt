@@ -7,3 +7,4 @@ paho-mqtt
 netifaces
 pickledb
 requests
+pyzmq
