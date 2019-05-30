@@ -1,9 +1,9 @@
 from datetime import datetime
 from modules.navigation import StateModule
 try:
-	from modules.sensor_types import SENSORS
+	from modules.sensor_types_symbols import SENSORS
 except:
-	from modules.sensor_types_no_ascii import SENSORS
+	from modules.sensor_types_no_symbols import SENSORS
 import numbers
 from helpers import seconds_past
 import math
@@ -306,9 +306,11 @@ class SensorModule(StateModule):
             self.draw()
 
     def update_sensors(self):
+        self.update_time = 30
         for pk in self.sensors:
             self.sensors[pk].roc()
-        self.controller.scheduler.enter(1, 1, self.update_sensors, (),)
+            self.update_time = self.sensors[pk].update_time
+        self.controller.scheduler.enter(self.update_time, 1, self.update_sensors, (),)
 
     def tick(self):
         self.draw(clear=False)
