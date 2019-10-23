@@ -31,6 +31,16 @@ sudo update-rc.d deskcontrol defaults
 sudo service deskcontrol start
 ```
 
+## Useful dev commands
+
+Mount a remote filesystem on your local machine:
+
+e.g. on Hypriot
+
+```
+sudo sshfs -o allow_other,defer_permissions pirate@10.8.0.71:/home ./mnt
+```
+
 ## ToDo
 * Add menu items to disable/change motion detection timer (currently 10 mins)
 * Implement lighting control functionality (protocol tbc)
