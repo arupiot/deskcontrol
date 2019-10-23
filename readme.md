@@ -35,10 +35,10 @@ sudo service deskcontrol start
 
 Mount a remote filesystem on your local machine:
 
-e.g. on Hypriot
+e.g. on Hypriot OS
 
 ```
-sudo sshfs -o allow_other,defer_permissions pirate@10.8.0.71:/home ./mnt
+sudo sshfs -o allow_other,defer_permissions pirate@xxx.xxx.xxx.xxx:/home ./mnt
 ```
 
 ## ToDo
