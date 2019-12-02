@@ -9,7 +9,13 @@ The MQTT binding API is _not_ a push button setup. That would result in a wealth
 - Start the mqtt bindings with:
 
 ```
-sudo python3 tinkerforge_mqtt --debug --broker-host <host_ip>
+sudo python3 tinkerforge_mqtt --debug --broker-host $BROKER_IP
+```
+
+- mqtt bindings to a broker with tls (with much debug messaging and insecurity, not for production!)
+
+```
+python3 tinkerforge_mqtt --debug --broker-tls-insecure --broker-host $BROKER_IP --broker-certificate $CERT_PATH --broker-port 8080 --global-topic-prefix ishiki-mini/
 ```
 
 (debug is optional, of course)
@@ -42,4 +48,4 @@ mosquitto_pub -t tinkerforge/request/air_quality_bricklet/JyW/set_all_values_cal
 
 - Subscribe to the topic + visualise + do whatever you have to do
 
-Each directory here has some sample `mosquitto_pub` and `mosquitto_sub` commands. They're directly pulled from the  API docs in the link at the top of this readme 
+Each directory here has some sample `mosquitto_pub` and `mosquitto_sub` commands. They're directly pulled/modified from the  API docs in the link at the top of this readme 
