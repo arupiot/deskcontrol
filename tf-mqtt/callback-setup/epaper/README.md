@@ -10,3 +10,8 @@ then
 mosquitto_pub -t tinkerforge/request/e_paper_296x128_bricklet/JAS/draw -m ''
 
 ```
+
+
+A note on installing PIL:
+
+https://stackoverflow.com/questions/20060096/installing-pil-with-pip
